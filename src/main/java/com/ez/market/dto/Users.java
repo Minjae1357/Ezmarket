@@ -1,5 +1,11 @@
 package com.ez.market.dto;
 
-public class Users {
+import jakarta.persistence.Entity;
+import lombok.Data;
 
+@Entity
+@Data
+public class Users 
+{
+	
 }
