@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class product 
+public class Product 
 {
 	@Id
 	@Column(name="product_id")
@@ -33,7 +33,7 @@ public class product
 	private String ckind;
 	@Column(nullable = false)
 	private String imgnum;
-	@Column(name="s_id",nullable = false)
-	private String sid;
 	
+	@Column(name="s_id",nullable = false)
+	private String sid;	
 }
