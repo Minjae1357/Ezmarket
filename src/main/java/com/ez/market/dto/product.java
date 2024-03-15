@@ -31,8 +31,8 @@ public class product
 	private String brandId;
 	@Column(name="c_kind",nullable = false)
 	private String ckind;
-	@Column(nullable = false)
-	private String imgnum;
+	@Column(nullable = false, name="imgnum")
+	private Imgs img;
 	@Column(name="s_id",nullable = false)
 	private String sid;
 	

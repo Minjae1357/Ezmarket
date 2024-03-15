@@ -1,5 +1,9 @@
 package com.ez.market.service;
 
-public class UsersService  {
+import org.springframework.stereotype.Service;
+
+@Service
+public class UsersService  
+{
 
 }
