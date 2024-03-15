@@ -21,8 +21,19 @@ public class product
 	@Column(name="product_id")
 	@NonNull
 	private String productId;
-	@Column(name="product_price" , nullable = false)
+	@Column(name="product_price")
 	private String productPrice;
-	
+	@Column(name="product_name" , nullable = false)
+	private String productName;
+	@Column(name="c_name",nullable = false)
+	private String cname;
+	@Column(name="brand_id",nullable = false)
+	private String brandId;
+	@Column(name="c_kind",nullable = false)
+	private String ckind;
+	@Column(nullable = false)
+	private String imgnum;
+	@Column(name="s_id",nullable = false)
+	private String sid;
 	
 }

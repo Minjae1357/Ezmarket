@@ -1,5 +1,5 @@
 package com.ez.market.controller;
 
-public class UserController {
+public class UsersController {
 
 }
