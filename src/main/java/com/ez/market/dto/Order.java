@@ -16,25 +16,24 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Coments 
+public class Order
 {
 	@Id
 	@NonNull
-	@Column(name = "con_seq")
-	@SequenceGenerator(sequenceName="coment_seq", allocationSize=1, name="coment_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coment_seq")
-	private int cnum;
-	
+	@Column(name = "o_num")
+	@SequenceGenerator(sequenceName="o_seq", allocationSize=1, name="o_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "o_seq")
+	private int onum;
+
+
+	@Column(name = "oi_num", nullable = false)
+	private int oinum;
 	@Column(nullable = false)
-	private int pnum;
+	private int cnum;
+	@Column(nullable = false)
+	private String status;
+	@Column(nullable = false)
+	private java.sql.Date pdate;
 	@Column(nullable = false)
 	private String userid;
-
-	private String contents;
-
-	private int val;
-	@Column(name = "con_piture")
-	private String conPiture;
-	@Column(name = "con_date",nullable = false)
-	private java.sql.Date conDate;
 }
