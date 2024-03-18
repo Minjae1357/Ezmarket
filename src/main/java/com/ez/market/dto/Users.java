@@ -1,5 +1,7 @@
 package com.ez.market.dto;
 
+import java.sql.Date;
+
 import org.springframework.lang.NonNull;
 
 
@@ -9,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +36,8 @@ public class Users
 	@Column(nullable = false)
 	private String phone;
 	@Column(nullable = false)
-	private java.sql.Date regdate;
+	@Temporal(TemporalType.DATE)
+	private Date regdate;
 	@Column(nullable = false)
 	private String enabled;
 	@Column(nullable = false)

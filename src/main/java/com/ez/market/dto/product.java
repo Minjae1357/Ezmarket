@@ -29,10 +29,10 @@ public class product
 	private String cname;
 	@Column(name="brand_id",nullable = false)
 	private String brandId;
-	@Column(name="c_kind",nullable = false)
-	private String ckind;
+	@Column(name="c_num",nullable = false)
+	private int cnum; //옷종류 참조하려고 받는 시퀀스
 	@Column(nullable = false, name="imgnum")
-	private Imgs img;
+	private String img;
 	@Column(name="s_id",nullable = false)
 	private String sid;
 	
