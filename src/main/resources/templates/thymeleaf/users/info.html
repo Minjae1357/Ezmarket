@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="utf-8">
+<title>INDEX</title>
+</head>
+<body>
+<h2>Welcome</h2>
+	<p>Spring Security Thymeleaf tutorial</p>
+	<!--로그인 안한 사람에게만 보인다-->
+	<div sec:authorize="isAnonymous()">
+		You should login in for using this.
+		<a href="/board/loginForm">
+			<button type="button">로그인</button>
+		</a>
+	</div>
+
+	<!--권한에 따라서 보이는게 달라진다-->
+	<div sec:authorize="hasRole('USER')">
+		user 만 보이는 글자
+	</div>
+	<div sec:authorize="hasRole('ADMIN')">
+		admin 만 보이는 글자
+	</div>
+	<div sec:authorize="hasRole('GUEST')">
+		guest 만 보이는 글자
+	</div>
+	<!--<div sec:authorize="hasAnyRole('ADMIN','USER')">
+		admin 과 user 만 보이는 글자
+	</div>-->
+	<!--로그인 했다면 나오는 것-->
+	<div sec:authorize="isAuthenticated()">
+		<div>아이디 : 
+			<span sec:authentication="name"></span>
+		</div>
+		<div>권한 : 
+			<span sec:authentication="principal.authorities"></span>
+		</div>
+	</div>
+</body>
+</html>

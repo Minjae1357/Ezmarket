@@ -6,9 +6,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.ez.market.dto.Users;
 
-public interface UsersRepository extends JpaRepository<Users,String> 
-										,JpaSpecificationExecutor <Users>, 
-										QuerydslPredicateExecutor<Users> 
+public interface UsersRepository extends JpaRepository<Users,String>
 {
 
 }

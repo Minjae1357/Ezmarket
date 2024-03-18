@@ -15,14 +15,14 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class product 
+public class Product 
 {
 	@Id
 	@Column(name="product_id")
 	@NonNull
 	private String productId;
 	@Column(name="product_price")
-	private String productPrice;
+	private int productPrice;
 	@Column(name="product_name" , nullable = false)
 	private String productName;
 	@Column(name="c_name",nullable = false)
@@ -31,8 +31,8 @@ public class product
 	private String brandId;
 	@Column(name="c_kind",nullable = false)
 	private String ckind;
-	@Column(nullable = false, name="imgnum")
-	private Imgs img;
+	@Column(name="imgnum")
+	private int img;
 	@Column(name="s_id",nullable = false)
 	private String sid;
 	
