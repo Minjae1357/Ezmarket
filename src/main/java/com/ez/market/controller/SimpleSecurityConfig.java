@@ -26,11 +26,15 @@ public class SimpleSecurityConfig {
 	//Enable jdbc authentication
 	@Autowired
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-	    auth.jdbcAuthentication().dataSource(dataSource)
-	        .usersByUsernameQuery("select USERID, USERPWD, ENABLED from USERS where USERID=?")
-	        .authoritiesByUsernameQuery("select USERID, AUTHORITY from ATH where USERID=?")
+	    auth.jdbcAuthentication()
+	        .dataSource(dataSource)
+	        .usersByUsernameQuery("SELECT userid, userpwd, enabled FROM users WHERE userid=?")
+	        .authoritiesByUsernameQuery("SELECT userid, authority FROM authorities WHERE userid=?")
 	        .passwordEncoder(new BCryptPasswordEncoder());
 	}
+
+
+	
 	 @Autowired
 	    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 	
@@ -39,8 +43,8 @@ public class SimpleSecurityConfig {
 	BCryptPasswordEncoder passwordEncoder() { 
 		
 		BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
-
-		System.out.println("smith->" + enc.encode("smith"));
+		//이거는 암호화하는거
+		System.out.println("master->" + enc.encode("master"));
 		System.out.println("blake->" + enc.encode("blake"));
 		System.out.println("jones->" + enc.encode("jones")); 
 
@@ -58,7 +62,7 @@ public class SimpleSecurityConfig {
 	    System.out.println("접근제한 설정");
 	    
 	    http.authorizeHttpRequests((authz) -> authz
-	            .requestMatchers("/sec/check","/","/register","/auth/{code}","/sec/", "/sec/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
+	            .requestMatchers("/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
 	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/sec/list").hasAnyRole("USER", "ADMIN","MASTER")
@@ -71,32 +75,32 @@ public class SimpleSecurityConfig {
 	            .anyRequest().permitAll()
 	    )
 	    .formLogin(loginConf -> loginConf
-	            .loginPage("/sec/loginForm")
+	            .loginPage("/user/loginForm")
 	            .loginProcessingUrl("/doLogin")
 	            .failureHandler(customAuthenticationFailureHandler) 
-	            .defaultSuccessUrl("/sec/menu", true)
+	            .defaultSuccessUrl("/user/menu", true)
 	            .usernameParameter("USERID")
 	            .passwordParameter("USERPWD")
 	            .permitAll()
 	    )
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-	            .ignoringRequestMatchers("/sec/auth")
-	            .ignoringRequestMatchers("/sec/register")
+	            .ignoringRequestMatchers("/user/auth")
+	            .ignoringRequestMatchers("/user/register")
 	            .ignoringRequestMatchers("/sec/auth/{code}")
 	            .ignoringRequestMatchers("/login")
 	            .ignoringRequestMatchers("/logout")
-	            .ignoringRequestMatchers("/sec/check")
+	            .ignoringRequestMatchers("/user/check")
 	    )
 	    .logout(logoutConf -> logoutConf
 	            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	            .logoutSuccessUrl("/sec/loginForm?logout=T")
+	            .logoutSuccessUrl("/user/loginForm?logout=T")
 	            .invalidateHttpSession(true)
 	            .deleteCookies("JSESSIONID")
 	            .permitAll()
 	    )
 	    .exceptionHandling(exConf -> exConf
-	            .accessDeniedPage("/sec/loginForm")
+	            .accessDeniedPage("/user/loginForm")
 	    );
 
 	    return http.build();

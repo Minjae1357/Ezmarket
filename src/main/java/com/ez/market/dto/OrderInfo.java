@@ -32,7 +32,7 @@ public class OrderInfo
 	@Column(name = "res_address", nullable = false)
 	private String resAddress;
 	@Column(name = "res_phone", nullable = false)
-	private String resPhone;
+	private int resPhone;
 	@Column(name = "res_requirement")
 	private String resRequirement;
 	@Column(nullable = false)

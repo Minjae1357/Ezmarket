@@ -19,7 +19,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	        // 예를 들어, 실패 이유를 로그로 기록하고 실패한 URL로 리다이렉트할 수 있습니다.
 	        System.out.println("로그인 실패: " + exception.getMessage());
 	        request.setAttribute("errorReason", exception.getMessage());
-	        response.sendRedirect("/sec/loginForm?error=T");
+	        response.sendRedirect("/user/loginForm?error=T");
 	    }
 }
 

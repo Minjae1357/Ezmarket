@@ -34,7 +34,7 @@ public class Users
 	@Column(nullable = false)
 	private String email;
 	@Column(nullable = false)
-	private String phone;
+	private int phone;
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
 	private Date regdate;
