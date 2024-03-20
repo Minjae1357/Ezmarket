@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <script>
+        function update() {
+            var data = $('#updateForm').serialize();
+            var bnum = '[[${param.bnum}]]';
+             $.ajax({
+        url: '/sec/update', 
+        type: 'post',
+        data: data,
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader("[[${_csrf.headerName}]]","[[${_csrf.token}]]");
+        },
+        success: function(res) {
+            alert(res.ox ? '업데이트 성공' : '업데이트 실패'); 
+            location.href= '/sec/detail?bnum=' + bnum;
+        }
+    });
+
+    return false; // 폼 제출을 막기 위해 false를 반환
+}
+    </script>
+    <title>업데이트</title>
+</head>
+<body>
+    <main>
+        <form id="updateForm" method="post" onsubmit="return update()">
+			<input type="hidden" name="bnum" th:value="${param.bnum}">
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title">
+            <br>
+            <label for="content">내용:</label>
+            <textarea id="content" name="content"></textarea>
+            <br>
+            <button type="submit">게시글 추가</button>
+        </form>
+    </main>
+</body>
+</html>

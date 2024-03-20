@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+<style>
+  /* 네비게이션 바 스타일 */
+  ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333; 
+    overflow: hidden;
+  }
+
+  /* 네비게이션 바 아이템 스타일 */
+  ul.navbar li {
+    float: left;
+  }
+
+  ul.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  ul.navbar li a:hover {
+    background-color: #555; /* 호버 시 배경색 */
+  }
+
+  /* 하위 메뉴 스타일 */
+  ul.navbar ul {
+    display: none; 
+    position: absolute;
+    background-color: #555; 
+    min-width: 160px;
+  }
+
+  ul.navbar li:hover ul {
+    display: block; /* 호버 시 하위 메뉴 표시 */
+  }
+
+  ul.navbar ul li {
+    float: none; /* 수평 정렬 해제 */
+  }
+
+  ul.navbar ul li a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  ul.navbar ul li a:hover {
+    background-color: #666; /* 호버 시 배경색 */
+  }
+  .userid {
+	  text-align: right;
+	  color: white;
+  }
+</style>
+</head>
+<body>
+
+<ul class="navbar">
+  <li><a href="http://localhost/sec/menu">Home</a></li>
+  <li><a href="#">게시판</a>
+    <ul>
+      <li><a href="http://localhost/items/additems">게시물 작성하기</a></li>
+      <li><a href="http://localhost/items/list">내 게시물</a></li>
+    </ul>
+  </li>
+<li>
+  <div th:if="${userid == 'anonymousUser'}">
+    <a th:href="@{/sec/loginForm}">로그인</a>
+  </div>
+</li>
+<li>
+  <div th:if="${userid != 'anonymousUser'}">
+    <a th:href="@{/logout}">로그아웃</a>
+  </div>
+</li>
+  <div th:if="${userid != 'anonymousUser'}" class="userid">
+      <p>안녕하세요, <span th:text="${userid}">사용자</span>님!</p>
+  </div>
+</ul>
+
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>제품명</th>
+            <th>작성자</th>
+            <th>제작사</th>
+            <th>가격</th>
+            <th>제작일</th>
+        </tr>
+        <tr th:each="e : ${List}">
+            <td>
+                <a th:href="@{/sec/detail(bnum=${e.p_seq})}" th:text="${e.p_seq}"></a>
+            </td>
+            <td th:text="${e.pname}"></td>
+            <td th:text="${e.userid}"></td>
+            <td th:text="${e.pmaker}"></td>
+            <td th:text="${e.price}"></td>
+            <td th:text="${e.pdate}"></td>
+        </tr>
+    </table>
+</body>
+</html>
