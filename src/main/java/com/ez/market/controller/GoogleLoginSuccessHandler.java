@@ -44,7 +44,7 @@ public class GoogleLoginSuccessHandler implements AuthenticationSuccessHandler
             log.info(saved!=null ? "사용자 추가 성공":"사용자 추가 실패");
          }
       }
-      redirectUrl = "/user/loginForm";
+      redirectUrl = "/login/oauth2/code/google";
       new DefaultRedirectStrategy().sendRedirect(request, response, redirectUrl);
    }
 
