@@ -21,8 +21,6 @@ public class Sizes {
 	@Column(name="s_id")
 	private String sId;
 	
-	@Column(name="product_id", nullable=false)
-	private String productId;
 	@Column(name="s_shoulder")
 	private int shoulder;
 	@Column(name="s_chest")
@@ -37,10 +35,12 @@ public class Sizes {
 	private int rise;
 	@Column(name="s_legopening")
 	private int legopening;
-	@Column(name="size")
+	@Column(name="s_size")
 	private int size;
 	@Column(name="inventory", nullable=false)
 	private int inventory;
+	@Column(name="c_name", nullable=false)
+	private int cName;
 	
 	
 }

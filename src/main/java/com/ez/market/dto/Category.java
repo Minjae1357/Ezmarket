@@ -18,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 public class Category {
 	@Id
 	@NonNull
-	@Column(name="c_kind")
+	@Column(name="c_num")
+	private int cNum;
+	@Column(name="c_kind",nullable=false)
 	private String cKind;
-	@Column(name="top", nullable=false)
-	private String top;
+	@Column(name="c_gender", nullable=false)
+	private int cGender;
 }

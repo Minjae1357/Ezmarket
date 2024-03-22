@@ -21,10 +21,8 @@ public class Cart
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@NonNull
 	private int cnum;
-	@Column(nullable = false)
-	private String pnum;
+	@Column(name="product_id",nullable = false)
+	private int productId;
 	@Column(name = "userid" ,nullable = false)
 	private String userid;
-	@Column(nullable = false)
-	private java.sql.Date cdate;
 }

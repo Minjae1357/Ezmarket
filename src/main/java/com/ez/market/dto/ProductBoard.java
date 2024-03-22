@@ -25,10 +25,8 @@ public class ProductBoard
 	@NonNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int pnum;
-	@Column(name= "product_id",nullable = false)
-	private String pid;
 	@Column(nullable = false)
-	private Date pdate;
+	private java.sql.Date pdate;
 	@Column(name = "product_hit")
-	private int phit;
+	private int pHit;
 }

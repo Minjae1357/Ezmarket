@@ -15,25 +15,23 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class product 
+public class Product 
 {
 	@Id
 	@Column(name="product_id")
 	@NonNull
-	private String productId;
+	private int productId;
 	@Column(name="product_price")
-	private String productPrice;
-	@Column(name="product_name" , nullable = false)
+	private int productPrice;
+	@Column(name="product_name")
 	private String productName;
-	@Column(name="c_name",nullable = false)
-	private String cname;
 	@Column(name="brand_id",nullable = false)
 	private String brandId;
 	@Column(name="c_num",nullable = false)
-	private int cnum; //옷종류 참조하려고 받는 시퀀스
-	@Column(nullable = false, name="imgnum")
-	private String img;
+	private int cNum; //옷종류 참조하려고 받는 시퀀스
 	@Column(name="s_id",nullable = false)
-	private String sid;
+	private String sId;
+	@Column(nullable = false, name="pnum")
+	private int pnum;
 	
 }
