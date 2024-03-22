@@ -2,6 +2,7 @@ package com.ez.market.controller;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -35,9 +37,13 @@ public class SimpleSecurityConfig {
 
 
 	
-	 @Autowired
-	    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-	
+	@Autowired
+	private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+	@Qualifier("GoogleLoginSuccessHandler")
+	@Autowired
+	AuthenticationSuccessHandler googleLoginSuccessHandler;
+
 	@Bean
 	@Lazy
 	BCryptPasswordEncoder passwordEncoder() { 
@@ -59,10 +65,10 @@ public class SimpleSecurityConfig {
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    System.out.println("접근제한 설정");
-	    
+		log.info("접근제한 설정");
+		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
-	            .requestMatchers("/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
+	            .requestMatchers("/user/login","/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
 	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/sec/list").hasAnyRole("USER", "ADMIN","MASTER")
@@ -92,6 +98,10 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
 	    )
+	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
+	    		.successHandler(googleLoginSuccessHandler)
+	    		.failureUrl("/login?error=T")
+	    )
 	    .logout(logoutConf -> logoutConf
 	            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 	            .logoutSuccessUrl("/user/loginForm?logout=T")
@@ -106,20 +116,6 @@ public class SimpleSecurityConfig {
 	    return http.build();
 	}
 
-	/*
-	 * @Autowired public void configureGlobal(AuthenticationManagerBuilder
-	 * authenticationMgr) throws Exception {
-	 * authenticationMgr.inMemoryAuthentication() 메모리 기반 인증(Authentication)
-	 * .withUser("employee").password(
-	 * "$2a$10$MZ2ANCUXIj5mrAVbytojruvzrPv9B3v9CXh8qI9qP13kU8E.mq7yO") // 비밀번호
-	 * employee .authorities("ROLE_USER") .and() .withUser("imadmin").password(
-	 * "$2a$10$FA8kEOhdRwE7OOxnsJXx0uYQGKaS8nsHzOXuqYCFggtwOSGRCwbcK") // 비밀번호
-	 * imadmin .authorities("ROLE_USER", "ROLE_ADMIN") .and()
-	 * .withUser("guest").password(
-	 * "$2a$10$ABxeHaOiDbdnLaWLPZuAVuPzU3rpZ30fl3IKfNXybkOG2uZM4fCPq") //비밀번호 guest
-	 * .authorities("ROLE_GUEST") .and() .withUser("master").password(
-	 * "$2a$10$MkWQu2mNglt7qA2M8xEkWOqjhjSICI6i34uzIIErDKH/SMhrjQWh6")
-	 * .authorities("ROLE_USER", "ROLE_ADMIN", "ROLE_GUEST","ROLE_MASTER"); }
-	 */
+
 
 }

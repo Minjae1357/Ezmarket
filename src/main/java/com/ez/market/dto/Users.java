@@ -40,8 +40,4 @@ public class Users
 	private Date regdate;
 	@Column(nullable = false)
 	private String enabled;
-	@Column(nullable = false)
-	private String gender;
-	@Column(nullable = false)
-	private int age;
 }

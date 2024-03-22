@@ -23,12 +23,17 @@ public class UsersController
 	UsersService usersvc;
 	
 	
-	
-	@ResponseBody
-	@GetMapping("/엄")
-	public String q() {
-		return "엄";
-	}
+		@GetMapping("/login")
+	   public String googleLogin()
+	   {
+	      return "user/GoogleLogin";
+	   }
+		 @GetMapping("/main")
+		   @ResponseBody
+		   public String main()
+		   {
+		      return "main";
+		   }
 	
 	@ResponseBody
 	@PostMapping("/check")
@@ -42,7 +47,7 @@ public class UsersController
 	
 	@GetMapping("/loginForm")
 	public String loginForm(){
-		return "user/loginForm";
+		return "/user/loginForm";
 	}
 	@GetMapping("/register")
 	public String register() {
