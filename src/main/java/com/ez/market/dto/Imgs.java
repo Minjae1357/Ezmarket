@@ -27,6 +27,8 @@ public class Imgs {
 	@Column(name="imgnum")
 	private int imgnum;
 	
-	@Column(name="img_src")
+	@Column(name="img_src",nullable=false)
 	private String imgSrc;
+	@Column(name="product_id",nullable=false)
+	private String productId;
 }

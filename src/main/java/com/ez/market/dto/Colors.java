@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 public class Colors {
 	@Id
 	@NonNull
-	@Column(name="c_name")
-	private String cName;
-	@Column(name="c_rgb")
-	private String cRgb;
+	@Column(name="c_name",nullable=false)
+	private int cName;
+	@Column(name="c_rgb",nullable=false)
+	private String cColors;
 	
 }

@@ -25,16 +25,15 @@ public class Coments
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coment_seq")
 	private int cnum;
 	
-	@Column(nullable = false)
-	private int pnum;
-	@Column(nullable = false)
-	private String userid;
-
 	private String contents;
-
+	@Column(nullable=false)
 	private int val;
-	@Column(name = "con_piture")
-	private String conPiture;
+	@Column(name = "con_picture")
+	private String conPicture;
 	@Column(name = "con_date",nullable = false)
 	private java.sql.Date conDate;
+	@Column(nullable = false)
+	private String userid;
+	@Column(nullable = false)
+	private int pnum;
 }
