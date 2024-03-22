@@ -26,8 +26,10 @@ public class Authorities
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_seq_gen")
 	@Column(name = "s_seq",nullable = false)
 	private int anum;
+	@ManyToOne
+	@JoinColumn(name ="userid")
 	@Column(nullable = false)
-	private String userid;
+	private Users user;
 	@Column(nullable = false)
 	private String authority;
 }

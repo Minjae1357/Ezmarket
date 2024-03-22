@@ -22,9 +22,9 @@ public class Cart
 	@NonNull
 	private int cnum;
 	@Column(nullable = false)
-	private int pnum;
+	private ProductBoard pnum;
 	@Column(name = "userid" ,nullable = false)
-	private String userid;
+	private Users userinfo;
 	@Column(nullable = false)
 	private java.sql.Date cdate;
 }
