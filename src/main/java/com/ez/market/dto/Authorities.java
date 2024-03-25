@@ -1,4 +1,4 @@
-package com.ez.market.dto;
+	package com.ez.market.dto;
 
 import org.springframework.lang.NonNull;
 
@@ -26,10 +26,8 @@ public class Authorities
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_seq_gen")
 	@Column(name = "s_seq",nullable = false)
 	private int anum;
-	@ManyToOne
-	@JoinColumn(name ="userid")
-	@Column(nullable = false)
-	private Users user;
+	@Column(name = "userid",nullable = false)
+	private String userid;
 	@Column(nullable = false)
 	private String authority;
 }

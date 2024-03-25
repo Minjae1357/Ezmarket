@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+<script>
+    function delete1() {
+        var bnum = document.getElementById('bnum').innerText; // '번호' span 요소의 내용을 가져옴
+          $.ajax({
+        url: '/sec/delete?bnum=' + bnum, 
+        type: 'post',
+        dataType: 'json',
+        beforeSend: function(xhr) {
+        xhr.setRequestHeader("[[${_csrf.headerName}]]","[[${_csrf.token}]]");
+        },
+        success: function(res) {
+            alert(res.ox ? '삭제 성공' : '삭제 실패');
+            location.href= '/sec/list';
+        }
+    });
+    return false;
+}
+</script>
+<meta charset="UTF-8">
+<title>상세정보</title>
+<style>
+  /* 네비게이션 바 스타일 */
+  ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333; 
+    overflow: hidden;
+  }
+
+  /* 네비게이션 바 아이템 스타일 */
+  ul.navbar li {
+    float: left;
+  }
+
+  ul.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  ul.navbar li a:hover {
+    background-color: #555; /* 호버 시 배경색 */
+  }
+
+  /* 하위 메뉴 스타일 */
+  ul.navbar ul {
+    display: none; 
+    position: absolute;
+    background-color: #555; 
+    min-width: 160px;
+  }
+
+  ul.navbar li:hover ul {
+    display: block; /* 호버 시 하위 메뉴 표시 */
+  }
+
+  ul.navbar ul li {
+    float: none; /* 수평 정렬 해제 */
+  }
+
+  ul.navbar ul li a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  ul.navbar ul li a:hover {
+    background-color: #666; /* 호버 시 배경색 */
+  }
+
+  /* 게시글 스타일 */
+  .post {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+  }
+
+  .post p {
+    margin: 0;
+    padding: 5px 0;
+  }
+
+  .post span {
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<ul class="navbar">
+  <li><a href="http://localhost/sec/menu">Home</a></li>
+  <li><a href="#">게시판</a>
+    <ul>
+      <li><a href="http://localhost/sec/addBoard">게시물 작성하기</a></li>
+      <li><a href="http://localhost/sec/list">내 게시물</a></li>
+    </ul>
+  </li>
+  <li>
+    <div th:if="${userid == 'anonymousUser'}">
+      <a th:href="@{/sec/loginForm}">로그인</a>
+    </div>
+  </li>
+  <li>
+    <div th:if="${userid != 'anonymousUser'}">
+      <a th:href="@{/logout}">로그아웃</a>
+    </div>
+  </li>
+  <div th:if="${userid != 'anonymousUser'}" class="userid">
+    <p>안녕하세요, <span th:text="${userid}">사용자</span>님!</p>
+  </div>
+</ul>
+
+<div class="post">
+    <p><span>번호:</span> <span th:text="${detail.bnum}" id="bnum"></span></p>
+    <p><span>제목:</span> <span th:text="${detail.title}"></span></p>
+    <p><span>작성자:</span> <span th:text="${detail.userid}"></span></p>
+    <p><span>내용:</span> <span th:text="${detail.content}"></span></p>
+    <a th:href="@{http://localhost/sec/update(bnum=${detail.bnum})}">업데이트폼</a>
+    <form id="minoboard" action="/sec/minoboard" method="get">
+        <input type="hidden" th:field="*{detail.bnum}">
+        <input type="text" id="content">
+        <button type="submit">댓글 추가</button>
+    </form>
+    <p>
+<div><button type="button" onclick="delete1()">삭제</button></div>
+</body>
+</html>

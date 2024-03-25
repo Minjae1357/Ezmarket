@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ez.market.dto.UsersOrder;
 
-public interface OrderRepository extends JpaRepository<UsersOrder, Integer>
+public interface UsersOrderRepository extends JpaRepository<UsersOrder, Integer>
 {
 
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			$('#authForm').submit(function(event) {
+				event.preventDefault(); // 기본 제출 방지
+				
+				var data = $(this).serialize(); // 폼 데이터 시리얼라이즈
+				
+				$.ajax({
+					type: 'POST', // POST 방식 요청
+					url: '/sec/auth', // 인증 요청 URL
+					data: data, // 폼 데이터
+					dataType: 'json',
+					success: function(res) {
+						if (res.auth) {
+							alert('회원가입 완료');
+							location.href = "/sec/loginForm";
+						} else {
+							alert('메일 인증 실패 다시 가입해주세요');
+							location.href = "/sec/register";
+						}
+					}
+				});
+			});
+		});
+	</script>
+    <meta charset="UTF-8">
+    <title>Email Verification</title>
+</head>
+<body>
+    <h1>이메일 인증</h1>
+    <p>인증번호를 입력해주세요 :</p>
+    <form id="authForm" method="post">
+        <input type="text" name="code" placeholder="Enter verification code">
+        <button type="submit">인증</button>
+    </form>
+    <!-- 에러 메시지 표시 -->
+    <p th:if="${error}" style="color: red;">${error}</p>
+</body>
+</html>
