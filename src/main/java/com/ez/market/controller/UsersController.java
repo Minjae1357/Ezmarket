@@ -39,6 +39,7 @@ public class UsersController
 	@PostMapping("/check")
 	public Map<String,Object> Idcheck(@RequestParam String userid)
 	{
+		System.out.println("엄");
 		boolean idcheck = usersvc.IdCheck(userid);
 		Map<String,Object> map = new HashMap<>();
 		map.put("check", idcheck);
@@ -47,7 +48,7 @@ public class UsersController
 	
 	@GetMapping("/loginForm")
 	public String loginForm(){
-		return "/user/loginForm";
+		return "user/loginForm";
 	}
 	@GetMapping("/register")
 	public String register() {

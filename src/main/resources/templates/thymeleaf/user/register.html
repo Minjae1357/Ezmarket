@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
@@ -143,11 +144,25 @@
         $('#userid').on('input', function() {
             var userid = $(this).val();
             
+            //이부분은 한글 확인하해서 alert 띄우는 창
+            var isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(userid);
+            
+            if(isKorean){
+				alert('한글은 아이디로 사용할 수 없습니다.');
+				$(this).val('');
+				return;
+			}
+            
             // 아이디 입력값이 없는 경우 중복 메시지 초기화
             if (userid.trim() === '') {
                 $('#duplicateMessage').text('');
                 return;
             }
+            if(userid.length>15){
+				alert('id는 15자를 넘길수없습니다')
+				$(this).val('');
+				return;
+			}
             
             // AJAX를 사용하여 서버에 아이디 중복 확인 요청
             $.ajax({

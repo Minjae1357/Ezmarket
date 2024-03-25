@@ -1,40 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>로그인폼</title>
+<style>
+  body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    form {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 490px; /* 폼의 너비를 지정 */
+    }
+
+    table {
+        width: 100%;
+    }
+
+    td {
+        padding: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+        width: calc(70% - 5px); /* 버튼 너비를 50%로 설정 */
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button[type="reset"] {
+        background-color: #ccc;
+        color: #000;
+        border: none;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover,
+    button[type="reset"]:hover {
+        background-color: #0056b3;
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
 </head>
 <body>
-	<main>
-		<form id="loginForm" action="/doLogin" method="post">
-			<table>
-				<tr>
-					<td colspan="2">
-						<div th:if="${param.error}">
-        					<p style="color: red;">로그인에 실패했습니다. 다시 시도하세요.</p>
-    					</div>
-					</td>
-				</tr>
-				<tr>
-					<td><div>아이디</div></td>
-					<td><input type="text" name="USERID" value="username"></td>
-				</tr>
-				<tr>
-					<td><div>비밀번호</div></td>
-					<td><input type="password" name="USERPWD" value="userpwd"></td>
-				</tr>
-				<tr>
-					<td><button type="submit">로그인</button></td>
-					<td><button type="reset">취소</button></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<h4><a th:href="@{/user/login}">구글로그인</a></h4>
-						<a href="http://localhost/user/register">회원가입</a>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</main>
+    <main>
+        <form id="loginForm" action="/doLogin" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <div th:if="${param.error}">
+                            <p style="color: red;">로그인에 실패했습니다. 다시 시도하세요.</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><div>아이디</div></td> 
+                    <td><input type="text" name="USERID" value="username"></td>
+                </tr>
+                <tr>
+                    <td><div>비밀번호</div></td>
+                    <td><input type="password" name="USERPWD" value="userpwd"></td>
+                </tr>
+                <tr>
+                    <td><button type="submit">로그인</button></td>
+                    <td><button type="reset">취소</button></td>
+                </tr> 
+                <tr>
+                    <td colspan="2">
+                        <h4><a th:href="@{/user/login}">구글로그인</a></h4>
+                        <a href="http://localhost/user/register">회원가입</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </main>
 </body>
 </html>

@@ -15,7 +15,10 @@ public class UsersService
 	
 	public boolean IdCheck(String userid) {
 		Optional<Users> userOptional = userrepo.findById(userid);
+		System.out.println(userOptional);
 		boolean checkuserid = userOptional.isPresent();
+		System.out.println(checkuserid);
 		return checkuserid;
 	}
 }
+ 

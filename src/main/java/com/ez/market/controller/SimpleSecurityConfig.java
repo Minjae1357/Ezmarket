@@ -68,7 +68,7 @@ public class SimpleSecurityConfig {
 		log.info("접근제한 설정");
 		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
-	            .requestMatchers("/user/login","/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
+	            .requestMatchers("/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
 	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/sec/list").hasAnyRole("USER", "ADMIN","MASTER")
@@ -83,7 +83,7 @@ public class SimpleSecurityConfig {
 	    .formLogin(loginConf -> loginConf
 	            .loginPage("/user/loginForm")
 	            .loginProcessingUrl("/doLogin")
-	            .failureHandler(customAuthenticationFailureHandler) 
+	            .failureHandler(customAuthenticationFailureHandler)  
 	            .defaultSuccessUrl("/user/menu", true)
 	            .usernameParameter("USERID")
 	            .passwordParameter("USERPWD")
