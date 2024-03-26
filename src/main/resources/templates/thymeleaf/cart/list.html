@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>게시판</title>
+</head>
+<body>
+	<h3>장바구니</h3>
+    <table>
+        <tr>
+            <th>카트번호</th><th>상품아이디</th><th>장바구니담은사람</th> <!--나중에 조건으로 로그인한 사람의 리스트만 뽑아오게 할 것-->
+        </tr>
+        <tr th:each="c : ${clist}">
+            <td th:text="${c.cnum}"></td>
+            <td th:text="${c.productId}"></td>
+            <td th:text="${c.userid}"></td>
+        </tr>
+    </table>
+    <h3>주문</h3>
+    <table>
+        <tr>
+            <th>주문번호</th>
+            <th>상태</th>
+            <th>주문날짜</th>
+            <th>총가격</th>
+            <th>상품아이디</th>
+            <th>수량</th>
+            <th>구매완료</th>
+            <th>구매자아이디</th>
+        </tr>
+        <tr th:each="uo : ${uolist}">
+            <td th:text="${uo.oNum}"></td>
+            <td th:text="${uo.status}"></td>
+            <td th:text="${uo.pdate}"></td>
+            <td th:text="${uo.totalPrice}"></td>
+            <td th:text="${uo.productId}"></td>
+            <td th:text="${uo.orderQty}"></td>
+            <td th:text="${uo.orderResult}"></td>
+            <td th:text="${uo.userid}"></td>
+        </tr>
+    </table>
+    
+    <h3>장바구니 주문 조인</h3>
+
+<!--    <table>
+		<tr>
+            <th>주문번호(cart)</th>
+            <th>날짜(userorder)</th>
+            <th>총가격(userorder)</th>
+            <th>수량(orderQty)</th>
+        </tr>
+		<tr th:each="idx:${#numbers.sequence(0,cuoList.size()-1)}" th:with="data=${cuoList.toArray()}">
+		    <td th:text="${data[idx]}"></td>
+		</tr>
+	</table>-->
+	
+<!--    <table>
+		<tr>
+            <th>주문번호(cart)</th>
+            <th>날짜(userorder)</th>
+            <th>총가격(userorder)</th>
+            <th>수량(orderQty)</th>
+        </tr>
+		<tr th:each="idx:${#numbers.sequence(0,cuoList.size()-1)}" th:with="data=${cuoList.toArray()}">
+            <td th:text="${data[idx]}"></td>
+        </tr>
+	</table>-->
+    
+<!--    <table>
+        <tr>
+            <th>주문번호(cart)</th>
+            <th>날짜(userorder)</th>
+            <th>총가격(userorder)</th>
+            <th>수량(orderQty)</th>
+        </tr>
+        <tr th:each="cuo : ${cuoList}">
+            <td th:text="${cuo.cnum}"></td>
+            <td th:text="${cuo.pdate}"></td>
+            <td th:text="${cuo.totalPrice}"></td>
+            <td th:text="${cuo.orderQty}"></td>
+        </tr>
+    </table>-->
+    
+    <table>
+    <tr>
+        <th>주문번호(cart)</th>
+        <th>날짜(userorder)</th>
+        <th>총가격(userorder)</th>
+        <th>수량(userorder)</th>
+    </tr>
+    <tr th:each="cuo : ${cuoList}">
+	    <td th:text="${cuo.cnum}"></td>
+	    <td th:text="${cuo.pdate}"></td>
+        <td th:text="${cuo.totalPrice}"></td>
+        <td th:text="${cuo.orderQty}"></td>
+	</tr>
+</table>
+</body>
+</html>
