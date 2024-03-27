@@ -97,6 +97,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/login")
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
+	            .ignoringRequestMatchers("/product/addBrand")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
 	    		.successHandler(googleLoginSuccessHandler)
