@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>로그인폼</title>
 <style>
@@ -112,5 +113,12 @@
             </table>
         </form>
     </main>
+<script th:inline="javascript">
+    var sessionMsg = /*[[${session.message}]]*/ null; // 세션 메시지 가져오기
+    if (sessionMsg && sessionMsg.trim() === "이미 존재하는 계정입니다.") {
+        alert(sessionMsg);
+    }
+</script>
+
 </body>
 </html>
