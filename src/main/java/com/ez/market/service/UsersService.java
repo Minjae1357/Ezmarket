@@ -1,6 +1,7 @@
 package com.ez.market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -21,17 +22,27 @@ import jakarta.transaction.Transactional;
 public class UsersService  
 {
 	@Autowired
-	Authorities authorities;
+ 	private BCryptPasswordEncoder passwordEncoder; 
 	@Autowired
-	UsersGenderAge usersgenderage;
+	private Authorities authorities;
 	@Autowired
-	UsersRepository userrepo;
+	private TempTable temptable;
 	@Autowired
-	TempTableRepository temptablerepository;
+	private UsersRepository userrepo;
 	@Autowired
-	UsersGenderAgeRepository usersgenderagereposiroty;
+	private TempTableRepository temptablerepository;
 	@Autowired
-	AuthoritiesRepository authoritiesrepository;
+	private UsersGenderAgeRepository usersgenderagereposiroty;
+	@Autowired
+	private AuthoritiesRepository authoritiesrepository;
+	
+	
+	public boolean tempEmailSave(String userEmail) {
+		temptable.setEmail(userEmail);
+		return temptablerepository.save(temptable)!=null;
+	}
+	
+	
 	
 	public boolean idCheck(String userid) {
 		Optional<Users> userOptional = userrepo.findById(userid);
@@ -40,14 +51,19 @@ public class UsersService
 		System.out.println(checkuserid);
 		return checkuserid;
 	} 
+	public boolean usersEmailCheck(String email) {
+		return userrepo.findByEmail(email) ==null;
+	}
 	
-	public boolean emailcheck(String email) 
+	public boolean tempEmailCheck(String email) 
 	{
 		return temptablerepository.findByEmail(email)!=null;
 	}
 	@Transactional
 	public boolean userSave(Users user) 
 	{
+		String encryptPassword = passwordEncoder.encode(user.getUserpwd());
+		user.setUserpwd(encryptPassword);
 		java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis()); //나중에 최신거로바꾸어야함
 		user.setRegdate(currentDate);
 		user.setEnabled("y");
