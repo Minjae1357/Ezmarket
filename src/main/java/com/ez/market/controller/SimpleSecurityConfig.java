@@ -96,6 +96,9 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/login")
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
+
+	            .ignoringRequestMatchers("/product/addBrand")
+
 	            .ignoringRequestMatchers("/user/sendVerificationEmail")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/clearSessionMessage")
