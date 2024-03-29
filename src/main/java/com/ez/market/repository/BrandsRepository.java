@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ez.market.dto.Brands;
 
-public interface BrandsRepository extends JpaRepository<Brands,String>{
+public interface BrandsRepository extends JpaRepository<Brands,Integer>{
 
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <meta charset="UTF-8">
 <title>로그인폼</title>
 <style>
@@ -112,5 +113,27 @@
             </table>
         </form>
     </main>
+<script th:inline="javascript">
+    var sessionMsg = /*[[${session.message}]]*/ null; // 세션 메시지 가져오기
+    if (sessionMsg && sessionMsg.trim() === "이미 존재하는 계정입니다.") {
+        alert(sessionMsg);
+    }
+    
+     $(document).ready(function() {
+        // 페이지가 로드된 후 5초 후에 세션 메시지를 숨깁니다.
+        setTimeout(function() {
+            $.ajax({
+                type: 'POST',
+                url: '/user/clearSessionMessage', // 세션 메시지를 삭제하는 엔드포인트 URL
+                success: function(response) {
+                    console.log("세션 메시지가 삭제되었습니다.");
+                },
+                error: function(xhr, status, error) {
+                    console.error("세션 메시지 삭제에 실패했습니다.");
+                }
+            });
+        }, 1000); // 1초 후에 실행됩니다.
+    });
+</script>
 </body>
 </html>

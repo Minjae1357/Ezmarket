@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ez.market.dto.Brands;
 import com.ez.market.service.BrandsService;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -35,7 +37,7 @@ public class ProductController {
 	
 	@PostMapping("/addBrand")
 	@ResponseBody
-	public Map<String,Object> upload(@RequestParam("brand") String brandName,@RequestParam("files")MultipartFile[] files) 
+	public Map<String,Object> upload(HttpServletRequest request,@RequestParam("brand") String brandName,@RequestParam("files")MultipartFile[] files) 
 	{
 		Map<String,Object> map = new HashMap<>();
 		
@@ -43,7 +45,8 @@ public class ProductController {
 		Brands brand = new Brands();
 	    brand.setBrandName(brandName);
 	    // 이미지 파일을 저장할 경로
-	    String uploadPath = "/src/main/webapp/WEB-INF/images/brands";
+	    ServletContext context = request.getServletContext();
+	    String uploadPath = context.getRealPath("/WEB-INF/images/brands");
 	    
 	    File uploadDir = new File(uploadPath);
 	    // 이미지 파일을 서버에 저장하고, 저장된 경로를 브랜드 객체에 설정
@@ -57,15 +60,22 @@ public class ProductController {
                 // 브랜드 객체에 이미지 파일의 경로 설정
                 brand.setBrandImg(filePath);
             }
+            boolean addBrand = brandSvc.saveBrand(brandName,uploadPath);
+            map.put("added",addBrand);
+            return map;
         } catch (IOException e) {
             e.printStackTrace();
             map.put("added", false); // 실패 시 응답 설정
+            map.put("error", "File upload failed: " + e.getMessage()); // 실패 이유 추가
+            return map;
+            // 나중에 트랜잭션으로 연결하는게 좋아보임.
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("added", false); // 실패 시 응답 설정
+            map.put("error", "Database save failed: " + e.getMessage()); // 실패 이유 추가
             return map;
         }
 	    
-		boolean addBrand = brandSvc.saveBrand(brand);
-		map.put("added",addBrand);
-		return map;
 	}
 }
 	

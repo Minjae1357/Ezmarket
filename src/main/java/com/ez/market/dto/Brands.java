@@ -22,9 +22,9 @@ public class Brands {
 	@Id
 	@NonNull
 	@Column(name="brand_id")
-    @SequenceGenerator(name="brand_seq", sequenceName="brand_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brand_seq")
-	private String brandId;
+    @SequenceGenerator(name="brand_seq", sequenceName="brand_seq", allocationSize=1)
+	private int brandId;
 	
 	@Column(name="brand_name")
 	private String brandName;

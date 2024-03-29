@@ -11,9 +11,14 @@ public class BrandsService {
 	@Autowired
 	BrandsRepository brandsRepo;
 	
-	public boolean saveBrand(Brands brand) {
+	public boolean saveBrand(String brandName, String brandImg) {
         try {
+        	Brands brand = new Brands();
+        	brand.setBrandName(brandName);
+            brand.setBrandImg(brandImg);
+            System.out.println(brand);
             brandsRepo.save(brand);
+            brandsRepo.flush();
             return true; // 저장 성공
         } catch (Exception e) {
             return false; // 저장 실패
@@ -22,7 +27,7 @@ public class BrandsService {
 	
 	
 	// 브랜드 아이디를 가져옴. updatedBrand로 수정.
-	public boolean updateBrand(String brandId, Brands updatedBrand) {
+	public boolean updateBrand(int brandId, Brands updatedBrand) {
         // brandId로 해당 브랜드를 찾아서 업데이트
         Brands existingBrand = brandsRepo.findById(brandId).orElse(null);
         if (existingBrand != null) {
