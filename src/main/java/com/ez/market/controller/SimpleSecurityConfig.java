@@ -68,7 +68,10 @@ public class SimpleSecurityConfig {
 		log.info("접근제한 설정");
 		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
-	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**","/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu").permitAll()
+	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
+	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
+	            		"/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu"
+	            		).permitAll()
 	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
@@ -96,12 +99,10 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/login")
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
-
-	            .ignoringRequestMatchers("/product/addBrand")
-
 	            .ignoringRequestMatchers("/user/sendVerificationEmail")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/clearSessionMessage")
+	            .ignoringRequestMatchers("/product/addBrand")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
 	    		.successHandler(googleLoginSuccessHandler)

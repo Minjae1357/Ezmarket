@@ -18,7 +18,7 @@
                 dataType: 'json',
                 success: function(res) {
                     alert(res.added ? '저장 성공' : '저장 실패'); 
-                    location.href="http://localhost/sec/menu"
+                    location.href="http://localhost/"// 후에 관리페이지로 이동시킬것.
                 }
             });
 
@@ -29,9 +29,10 @@
 </head>
 <body>
 <h3>브랜드 추가하기 폼</h3>
-<form id="addForm"enctype="multipart/form-data" onsubmit="return addBrand()">
-   브랜드이름 <input type="text" name="brand"><br>
-   File <input type="file" id = "files" name="files" multiple="multiple"><br>
+
+<form id="addForm" enctype="multipart/form-data" onsubmit="return addBrand()">
+   브랜드이름 <input type="text" id="brand" name="brand"><br>
+   File <input type="file"id="files" name="files" multiple="multiple"><br>
    <button type="submit">업로드</button>
 </body>
 </html>
