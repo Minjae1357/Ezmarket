@@ -14,7 +14,7 @@
                 type: 'post',
                 data: formData,
                 processData: false,
-		        contentType: false,
+       			contentType: false,
                 dataType: 'json',
                 success: function(res) {
                     alert(res.added ? '저장 성공' : '저장 실패'); 
@@ -29,6 +29,7 @@
 </head>
 <body>
 <h3>브랜드 추가하기 폼</h3>
+
 <form id="addForm" enctype="multipart/form-data" onsubmit="return addBrand()">
    브랜드이름 <input type="text" id="brand" name="brand"><br>
    File <input type="file"id="files" name="files" multiple="multiple"><br>
