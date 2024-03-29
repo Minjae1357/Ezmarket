@@ -47,9 +47,8 @@ public class ProductController {
 	    // 이미지 파일을 저장할 경로
 	    ServletContext context = request.getServletContext();
 	    String uploadPath = context.getRealPath("/WEB-INF/images/brands");
-	    
 	    File uploadDir = new File(uploadPath);
-	    // 이미지 파일을 서버에 저장하고, 저장된 경로를 브랜드 객체에 설정
+	     // 이미지 파일을 서버에 저장하고, 저장된 경로를 브랜드 객체에 설정
         try {
             for (MultipartFile file : files) {
                 String fileName = file.getOriginalFilename();
