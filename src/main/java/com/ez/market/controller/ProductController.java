@@ -39,8 +39,10 @@ public class ProductController {
 	@ResponseBody
 	public Map<String,Object> upload(HttpServletRequest request,@RequestParam("brand") String brandName,@RequestParam("files")MultipartFile[] files) 
 	{
+		System.out.println("brand이름");
 		Map<String,Object> map = new HashMap<>();
 		
+		System.out.println("brand이름"+brandName);
 		//브랜드 객체 생성 및 이름 설정
 		Brands brand = new Brands();
 	    brand.setBrandName(brandName);
