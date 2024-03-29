@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>옷 종류 추가하기</title>
+</head>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <script>
+        function addCategory() {
+            var data = $('#addForm').serialize();
+
+            $.ajax({
+                url: '/product/addCategory', 
+                type: 'post',
+                data: data,
+                dataType: 'json',
+                success: function(res) {
+                    alert(res.added ? '저장 성공' : '저장 실패'); 
+                    location.href="http://localhost/"//관리자페이지이동추가할것
+                }
+            });
+
+            return false; // 폼 제출을 막기 위해 false를 반환
+        }
+    </script>
+<body>
+<h3>옷종류 추가하기 폼</h3>
+	<main>
+        <form id="addForm" method="post" onsubmit="return addCategory()">
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <label>성별:</label><br>
+			<input type="radio" id="gender0" name="gender" value="0">
+			<label for="gender0">남여공용</label><br>
+			<input type="radio" id="gender1" name="gender" value="1">
+			<label for="gender1">남자</label><br>
+			<input type="radio" id="gender2" name="gender" value="2">
+			<label for="gender2">여자</label><br>
+            <br>
+            <label for="cKind">옷 종류:</label>
+            <input type="text" id="cKind" name="cKind">
+            <button type="submit">옷 등록</button>
+        </form>
+    </main>
+</body>
+</html>

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ez.market.dto.Brands;
 import com.ez.market.service.BrandsService;
+import com.ez.market.service.CategoryService;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	@Autowired
 	BrandsService brandSvc;
+	@Autowired
+	CategoryService cateSvc;
 	
 	//브랜드 추가하기
 	@GetMapping("/uploadBrand")
@@ -76,7 +79,21 @@ public class ProductController {
             map.put("error", "Database save failed: " + e.getMessage()); // 실패 이유 추가
             return map;
         }
-	    
+	}
+	
+	@GetMapping("uploadCategory")
+	public String uploadCategory() {
+		return "product/uploadCategory";
+	}
+	
+	@PostMapping("/addCategory")
+	@ResponseBody
+	public Map<String,Boolean> addCategory(@RequestParam("cKind")String cKind,@RequestParam("gender") int cGender)
+	{
+		Map<String,Boolean> map = new HashMap<>();
+		boolean addCate = cateSvc.saveCategory(cKind,cGender);
+		map.put("added",addCate);
+		return map;
 	}
 }
 	
