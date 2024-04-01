@@ -71,8 +71,9 @@ public class SimpleSecurityConfig {
 	    http.authorizeHttpRequests((authz) -> authz
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
-	            		"/user/loginForm","/logout","/main/menu"
+	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled"
 	            		).permitAll()
+	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
 	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
 	            .requestMatchers("/user/detail").hasAnyRole("USER", "ADMIN", "MASTER")
@@ -85,17 +86,19 @@ public class SimpleSecurityConfig {
 	    )
 	    .formLogin(loginConf -> loginConf
 	            .loginPage("/user/loginForm")
-	            .loginProcessingUrl("/doLogin")
+	            .loginProcessingUrl("/doLogin") 
 	            .successHandler(customAuthenticationSuccessHandler)
 	            .failureHandler(customAuthenticationFailureHandler)  
 	            //.defaultSuccessUrl("/main/menu", true)
 	            .usernameParameter("USERID")
 	            .passwordParameter("USERPWD")
-	            .permitAll()
+	            .permitAll() 
 	    )
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+	            //.ignoringRequestMatchers("/admin/updateEnabled")
 	            .ignoringRequestMatchers("/main/menu")
+	            .ignoringRequestMatchers("/admin/users")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/register")
 	            .ignoringRequestMatchers("/login")

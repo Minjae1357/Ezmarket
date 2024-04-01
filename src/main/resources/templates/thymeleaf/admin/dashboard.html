@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="dashboard-nav">
+            <a href="#" class="brand">Admin Dashboard</a>
+            <div class="nav-items">
+                <a href="javascript:void(0);" onclick="updateContent('home')">Home</a>
+                <a href="javascript:void(0);" onclick="updateContent('settings')">Settings</a>
+                <a th:href="@{/logout}">Logout</a>
+            </div>
+        </nav>
+        <aside class="dashboard-sidebar">
+            <ul>           
+                <li><a href="javascript:void(0);" onclick="updateContent('users')">Users</a></li>
+                <li><a href="javascript:void(0);" onclick="updateContent('orders')">Orders</a></li>
+                <li><a href="javascript:void(0);" onclick="updateContent('products')">Products</a></li>
+                <li><a href="javascript:void(0);" onclick="updateContent('reports')">Reports</a></li>
+            </ul>
+        </aside>
+        <main class="dashboard-content" id="dashboard-content">
+            <h1>관리자 데시보드</h1>
+            <p>관리자 페이지</p>
+        </main>
+    </div>
+   <script>
+    function updateContent(pageName) {
+        var url = "/admin/" + pageName;
+
+        if (pageName === "products") {
+            var $productsSubMenu = $("#productsSubMenu");
+            var isSubMenuVisible = $productsSubMenu.length > 0;
+
+            if (isSubMenuVisible) {
+                $productsSubMenu.toggle();
+            } else {
+                var sidebarHTML = `
+                    <ul id="productsSubMenu" class="sub-menu">
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('color')">- Color</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('brand')">- Brand</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('addproduct')">- AddProductd</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('category')">- Cartegory</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('size')">- Size</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('img')">- Img</a></li>
+                    </ul>
+                `;
+                $('li:contains("Products")').after(sidebarHTML);
+            }
+        } else {
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(response) {
+                    $("#dashboard-content").html(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX request failed:", status, error);
+                }
+            });
+        }
+    }
+
+    // 예제로 추가된 updateProductContent 함수
+    function updateProductContent(subPageName) {
+        // 서브 페이지 내용을 업데이트하는 로직을 여기에 구현
+        console.log("Updating product content for:", subPageName);
+        // 실제로는 여기에 AJAX 요청을 사용해 서브 페이지 내용을 업데이트할 수 있습니다.
+    }
+</script>
+
+</body>
+</html>
