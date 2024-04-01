@@ -121,6 +121,7 @@
     
      $(document).ready(function() {
         // 페이지가 로드된 후 5초 후에 세션 메시지를 숨깁니다.
+        //특정 시간 지연 후 단 한 번 함수를 실행하도록 예약
         setTimeout(function() {
             $.ajax({
                 type: 'POST',

@@ -35,7 +35,8 @@ public class SimpleSecurityConfig {
 	        .passwordEncoder(new BCryptPasswordEncoder());
 	}
 
-
+	@Autowired
+	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	
 	@Autowired
 	private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
@@ -70,10 +71,9 @@ public class SimpleSecurityConfig {
 	    http.authorizeHttpRequests((authz) -> authz
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
-	            		"/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu"
+	            		"/user/loginForm","/logout","/main/menu"
 	            		).permitAll()
-	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
+	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
 	            .requestMatchers("/user/detail").hasAnyRole("USER", "ADMIN", "MASTER")
 	            .requestMatchers("/user/addboard").hasAnyRole("USER", "ADMIN", "MASTER")
@@ -86,14 +86,16 @@ public class SimpleSecurityConfig {
 	    .formLogin(loginConf -> loginConf
 	            .loginPage("/user/loginForm")
 	            .loginProcessingUrl("/doLogin")
+	            .successHandler(customAuthenticationSuccessHandler)
 	            .failureHandler(customAuthenticationFailureHandler)  
-	            .defaultSuccessUrl("/user/menu", true)
+	            //.defaultSuccessUrl("/main/menu", true)
 	            .usernameParameter("USERID")
 	            .passwordParameter("USERPWD")
 	            .permitAll()
 	    )
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+	            .ignoringRequestMatchers("/main/menu")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/register")
 	            .ignoringRequestMatchers("/login")
@@ -101,7 +103,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/user/check")
 	            .ignoringRequestMatchers("/user/sendVerificationEmail")
 	            .ignoringRequestMatchers("/user/auth")
-	            .ignoringRequestMatchers("/user/clearSessionMessage")
+	            .ignoringRequestMatchers("/user/clearSessionMessage") 
 	            .ignoringRequestMatchers("/product/addBrand")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
