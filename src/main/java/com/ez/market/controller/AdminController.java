@@ -29,6 +29,10 @@ public class AdminController
 	@Autowired
 	private AdminService adminsvc;
 	
+	@GetMapping("orders")
+	public String userorder() {
+		return"main/userorder";
+	}
 	
 	
 	@GetMapping("/dashboard")
