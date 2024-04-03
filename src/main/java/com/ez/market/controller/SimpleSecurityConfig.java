@@ -73,7 +73,7 @@ public class SimpleSecurityConfig {
 	    http.authorizeHttpRequests((authz) -> authz
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
-	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled"
+	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage"
 	            		).permitAll() 
 	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
 	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
