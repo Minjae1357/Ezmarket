@@ -70,11 +70,31 @@
         button:hover {
             background-color: #0056b3;
         }
+.radio-wrapper {
+    display: flex;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+}
+
+.radio-item label {
+    display: inline-block;
+    width: 80px; /* 라벨의 너비를 조정하여 일정한 간격을 유지합니다. */
+}
+
+.radio-item input[type="radio"] {
+    margin-right: 5px;
+}
+
+
     </style>
 </head>
 <body>
 <div class="container">
     <form id="registerForm" class="form">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <h2>회원가입</h2>
         <div class="form-group">
             <label for="userid">아이디</label>
@@ -84,24 +104,46 @@
         <div class="form-group">
             <label for="userpwd">비밀번호</label>
             <input type="password" name="userpwd" id="userpwd" placeholder="비밀번호를 입력하세요" required>
-        </div>
-        <div class="form-group">
-            <label for="email">이메일</label>
-            <input type="email" name="email" id="email" placeholder="이메일을 입력하세요" required>
-        </div>
+     	<div class="form-group" th:if="${email}">
+		    <label for="email">이메일</label>
+		    <input type="email" name="email" id="email" required th:value="${email}" th:readonly="${email != null}">
+		</div>
+		<div class="form-group" th:unless="${email}">
+		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+		    <label for="email">이메일</label>
+		    <input type="email" name="email" id="email" placeholder="이메일을 입력하세요" required>
+		    <button type="button" onclick="sendVerificationEmail(); return false;">이메일 확인</button>
+		</div>
+		<div id="codeInput" style="display:none;">
+		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+		    <input type="text" id="verificationCode" placeholder="인증 코드를 입력하세요">
+		    <button id="verifyButton">확인</button>
+		</div>
+
         <div class="form-group">
             <label for="username">닉네임</label>
             <input type="text" name="username" id="username" placeholder="닉네임을 입력해주세요" required>
         </div>
-        <div class="form-group">
-            <label for="phone">번호</label>
-            <input type="text" name="phone" id="phone" placeholder="번호를 입력해주세요" required>
+		<div class="form-group">
+		    <label for="phone">번호</label>
+		    <input type="text" name="phone" id="phone" placeholder="번호를 입력해주세요" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+		</div>
+<div class="form-group">
+    <label for="gender">성별</label><br>
+    <div class="radio-wrapper">
+        <div class="radio-item">
+            <input type="radio" id="male" name="gender" value="male" required>
+            <label for="male">남자</label>
         </div>
-        <div class="form-group">
-            <label>성별</label><br>
-            <input type="radio" name="gender" value="male" required> 남자
-            <input type="radio" name="gender" value="female" required> 여자
+        <div class="radio-item">
+            <input type="radio" id="female" name="gender" value="female" required>
+            <label for="female">여자</label>
         </div>
+    </div>
+</div>
+
+
+
         <div class="form-group">
             <label for="birthday">생년월일</label>
             <input type="date" name="birthday" id="birthday" required>
@@ -111,6 +153,49 @@
 </div>
 
 <script>
+// #verifyButton 버튼에 클릭 이벤트 핸들러 등록
+document.getElementById("verifyButton").addEventListener("click", function(event) {
+    // 이벤트의 기본 동작 중지
+    event.preventDefault();
+    $.ajax({
+        url: '/user/auth',
+        data: { authCode: document.getElementById("verificationCode").value },
+        type: 'post',
+        success: function(response) {
+            if (response.success) {
+                alert(response.msg);
+            } else {
+                alert(response.msg);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
+});
+	
+	//자체 회원가입 할떄 필요한 이메일인증
+	function sendVerificationEmail() {
+	    var email = document.getElementById("email").value;
+
+	    $.ajax({
+	        url: '/user/sendVerificationEmail',
+	        type: 'post',
+	        data: { email: email },
+	        success: function(response) {
+				if(response.sendemail){
+					document.getElementById("codeInput").style.display = "block";
+				}else{
+					alert(response.msg);
+				}
+	            
+	        },
+	        error: function(xhr, status, error) {
+	            console.error(xhr.responseText);
+	        }
+	    });
+	}
+	
     // 사용자 아이디 중복 체크 및 회원가입 처리
     function add() {
         var userid = $('#userid').val();
@@ -129,9 +214,17 @@
             url: '/user/register',
             type: 'post',
             data: data,
+            dataType:'json',
             success: function(response) {
-                // 회원가입 성공 시 로그인 페이지로 이동
-                location.href = "/sec/auth";
+				if(response.save)
+				{
+					alert('어서오세요')
+					// 회원가입 성공 시 로그인 페이지로 이동
+	                location.href = "/user/main";
+	                
+				}else {
+					alert(response.msg)
+				}        
             },
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);
@@ -163,6 +256,7 @@
 				$(this).val('');
 				return;
 			}
+			
             
             // AJAX를 사용하여 서버에 아이디 중복 확인 요청
             $.ajax({

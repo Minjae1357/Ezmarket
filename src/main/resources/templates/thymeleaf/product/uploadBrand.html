@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <script>
+        function addBrand() {
+        var formData = new FormData();
+        formData.append('brand', $('#brand').val());
+        formData.append('files', $('#files')[0].files[0]);
+
+            $.ajax({
+                url: '/product/addBrand', 
+                type: 'post',
+                data: formData,
+                processData: false,
+       			contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    alert(res.added ? '저장 성공' : '저장 실패'); 
+                    location.href="http://localhost/"// 후에 관리페이지로 이동시킬것.
+                }
+            });
+
+            return false; // 폼 제출을 막기 위해 false를 반환
+        }
+    </script>
+<title>브랜드 추가 하기</title>
+</head>
+<body>
+<h3>브랜드 추가하기 폼</h3>
+
+<form id="addForm" enctype="multipart/form-data" onsubmit="return addBrand()">
+   브랜드이름 <input type="text" id="brand" name="brand"><br>
+   File <input type="file"id="files" name="files" multiple="multiple"><br>
+   <button type="submit">업로드</button>
+</body>
+</html>

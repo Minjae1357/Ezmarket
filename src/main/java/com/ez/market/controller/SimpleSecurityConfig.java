@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -35,7 +37,8 @@ public class SimpleSecurityConfig {
 	        .passwordEncoder(new BCryptPasswordEncoder());
 	}
 
-
+	@Autowired
+	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	
 	@Autowired
 	private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
@@ -55,48 +58,59 @@ public class SimpleSecurityConfig {
 		System.out.println("jones->" + enc.encode("jones")); 
 
  
-		return enc;
+		return enc; 
 	}
 
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
 		return (webSecurity) -> webSecurity.ignoring().requestMatchers("/resources/**", "/ignore2");
 	}
-
+ 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		log.info("접근제한 설정");
 		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
-	            .requestMatchers("/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}","/sec/", "/user/loginForm", "/sec/denied", "/logout", "/sec/menu", "/cart/delete", "/cart/list", "/cart/buyPage").permitAll()
-	            .requestMatchers("/register").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/auth/{code}").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/sec/list").hasAnyRole("USER", "ADMIN","MASTER")
-	            .requestMatchers("/sec/detail").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/sec/addboard").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/sec/update").hasAnyRole("USER", "ADMIN", "MASTER")
-	            .requestMatchers("/sec/delete").hasAnyRole("USER", "ADMIN","MASTER")
-	            .requestMatchers("/sec/minoboard").hasAnyRole("ADMIN", "MASTER")
+	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
+	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
+	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage"
+	            		).permitAll() 
+	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
+	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
+	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
+	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
+	            .requestMatchers("/user/detail").hasAnyRole("USER", "ADMIN", "MASTER")
+	            .requestMatchers("/user/addboard").hasAnyRole("USER", "ADMIN", "MASTER")
+	            .requestMatchers("/user/update").hasAnyRole("USER", "ADMIN", "MASTER")
+	            .requestMatchers("/user/delete").hasAnyRole("USER", "ADMIN","MASTER")
+	            .requestMatchers("/user/minoboard").hasAnyRole("ADMIN", "MASTER")
 	            .requestMatchers("/items/additems").hasAnyRole("USER","ADMIN","MASTER")
 	            .anyRequest().permitAll()
 	    )
 	    .formLogin(loginConf -> loginConf
 	            .loginPage("/user/loginForm")
-	            .loginProcessingUrl("/doLogin")
+	            .loginProcessingUrl("/doLogin") 
+	            .successHandler(customAuthenticationSuccessHandler)
 	            .failureHandler(customAuthenticationFailureHandler)  
-	            .defaultSuccessUrl("/user/menu", true)
+	            //.defaultSuccessUrl("/main/menu", true)
 	            .usernameParameter("USERID")
 	            .passwordParameter("USERPWD")
-	            .permitAll()
+	            .permitAll() 
 	    )
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+	            //.ignoringRequestMatchers("/admin/updateEnabled")
+	            .ignoringRequestMatchers("/main/menu")
+	            .ignoringRequestMatchers("/admin/users")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/register")
-	            .ignoringRequestMatchers("/sec/auth/{code}")
-	            .ignoringRequestMatchers("/login")
+	            .ignoringRequestMatchers("/admin/updateEnabled")
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
+	            .ignoringRequestMatchers("/user/sendVerificationEmail")
+	            .ignoringRequestMatchers("/user/auth")
+	            .ignoringRequestMatchers("/user/clearSessionMessage") 
+	            .ignoringRequestMatchers("/product/addBrand")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
 	    		.successHandler(googleLoginSuccessHandler)

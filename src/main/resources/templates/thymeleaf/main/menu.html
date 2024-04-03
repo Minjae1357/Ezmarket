@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Main Page</title>
+<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+	<!-- 페이지 헤더 영역 -->
+<header>
+    <div class="logo">엄신사</div>
+    <!-- 네비게이션 바 -->
+    <div>
+
+    </div>
+    <nav>
+		 <div class="shopping-cart">
+			<a href="/cart/list">
+			  <img src="/cart.jpg" alt="Shopping Cart">  <!-- alt는 사진오류나면 나오는글 -->
+			  <span id="cart-count"th:text="${count}">0</span> <!-- 초기 상품 개수는 0으로 설정 mainpageController에서 설정-->
+			</a>
+		</div>
+        <a href="/mypage"><img src="/mypage.jpg" alt="mypage 사진"></a> <!-- 홈 링크 -->
+        <a href="/logout"><img src="/logout.jpg" alt="logout 사진"></a> <!-- 로그아웃 링크 -->
+    </nav>
+</header>
+	<!-- 사이드바를 포함하지 않는 단순한 레이아웃으로 변경 -->
+<div class="container">
+	  <aside class="sidebar">
+            <a href="javascript:void(0);" onclick="updateContent('')" class="active">개요</a>
+            <a href="javascript:void(0);" onclick="updateContent('')">상의</a>
+            <a href="javascript:void(0);" onclick="updateContent('')">하의</a>
+            <a href="javascript:void(0);" onclick="updateContent('')">한벌</a>
+        </aside>
+    <main class="main-content" id="main-content">
+	<div class="slider-container">
+  <div class="slides">
+    <div class="slide"><img src="/path_to_image1.jpg" alt="Image 1" /></div>
+    <div class="slide"><img src="/path_to_image2.jpg" alt="Image 2" /></div>
+    <div class="slide"><img src="/path_to_image3.jpg" alt="Image 3" /></div>
+  </div>
+  <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+  <button class="next" onclick="moveSlide(1)">&#10095;</button>
+</div>
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" /><img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+<img src="/path_to_image1.jpg" alt="Image 1" />
+    </main>
+</div>
+<!-- jQuery 추가 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+		// 클릭된 탭에 'active' 클래스를 추가합니다.
+	$('.sidebar a').click(function () {
+	    $('.sidebar a').removeClass('active');
+	    $(this).addClass('active');
+	    var section = $(this).text().toLowerCase();
+	    updateContent(section);
+	});
+
+	function updateContent(section) {
+	    console.log(section + ' 콘텐츠로 업데이트');
+	    var url = "/mypage/" + section;
+	    console.log(url + ' 콘텐츠로 업데이트');
+	    // AJAX 요청
+	    $.ajax({
+	        url: url,
+	        type: 'get',
+	        success: function(response) {
+	            // 성공 시 메인 콘텐츠 영역에 응답 내용을 로드
+	            $("#main-content").html(response);
+	        }
+	    });
+	}
+
+	// 이미지 슬라이더 스크립트
+	let slideIndex = 0;
+	showSlides();
+	
+	function moveSlide(n) {
+	    showSlides(slideIndex += n);
+	}
+	
+	function showSlides() {
+	    let i;
+	    let slides = document.getElementsByClassName("slide");
+	    if (slideIndex >= slides.length) {slideIndex = 0}
+	    if (slideIndex < 0) {slideIndex = slides.length - 1}
+	    for (i = 0; i < slides.length; i++) {
+	        slides[i].style.display = "none";  
+	    }
+	    slides[slideIndex].style.display = "block";  
+	}
+	
+	// 4초마다 자동으로 이미지 전환
+	setInterval(function() {
+	    slideIndex++;
+	    showSlides();
+	}, 1000);
+	
+	// 스크롤 이벤트 리스너
+	window.addEventListener('scroll', function() {
+	  var header = document.querySelector('header');
+	  // 스크롤 위치가 100px 이상일 때 'scrolled' 클래스를 추가하고, 그렇지 않으면 제거
+	  header.classList.toggle('scrolled', window.scrollY > 100);
+	});
+
+</script>
+</body>
+</html>
+

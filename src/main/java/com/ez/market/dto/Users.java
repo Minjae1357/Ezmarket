@@ -2,14 +2,11 @@ package com.ez.market.dto;
 
 import java.sql.Date;
 
+
 import org.springframework.lang.NonNull;
-
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -27,7 +24,7 @@ public class Users
 	@Id
 	@NonNull
 	private String userid;
-	@Column(nullable = false)
+	@Column(nullable = false) 
 	private String userpwd;
 	@Column(nullable = false)
 	private String username;
