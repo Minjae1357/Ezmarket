@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>장바구니</title>
+<title>주문내역</title>
 <style>
 	
 .image1 {
@@ -34,8 +34,7 @@ td {
 </head>
 <body>
 <div class="all">
-	<h2>내 장바구니</h2>
-	<form id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
+	<h2>주문내역</h2>
     <table>
         <tr>
 			<th></th>
@@ -46,6 +45,7 @@ td {
             <th>가격</th>
             <th>날짜</th>
             <th>물품수령</th>
+            <th>배송정보 보기</th>
         </tr>
         <tr th:each="uo,i : ${uoList}">
 			<td th:text="${i.index+1}"></td>
@@ -53,14 +53,14 @@ td {
 			<td><img class="image1" th:src="${uo.imgSrc}"></td>
 			<td th:text="${uo.productName}"></td>
 			<td th:text="${uo.size}"></td>
-			<td th:text="${uo.productPrice}+'×'+${uo.orderQty}+'='+${uo.totalPrice}"></td>
+			<td th:text="${uo.productPrice} +' × '+${uo.orderQty}+' = '+${uo.totalPrice}+' 원'"></td>
 			<td th:text="${uo.pdate}"></td>
 			<td th:text="${uo.orderResult}"></td>
+			
         </tr>
     </table>
-    </form>
-    <button type="button" onclick="buypage();">구매페이지로 이동</button>
-    <button type="button" onclick="delcheck();">선택항목 삭제</button>
+<!--    <button type="button" onclick="buypage();">구매페이지로 이동</button>
+    <button type="button" onclick="delcheck();">선택항목 삭제</button>-->
 </div>
 </body>
 </html>

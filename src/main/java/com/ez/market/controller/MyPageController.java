@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ez.market.dto.UsersOrder;
+import com.ez.market.service.CartService;
 import com.ez.market.service.OrderService;
 
 @Controller
@@ -23,6 +24,8 @@ public class MyPageController
 {
 	@Autowired
 	OrderService ordersvc;
+	@Autowired
+	CartService cartsvc;
 	
 	
 	@GetMapping("")
@@ -30,13 +33,16 @@ public class MyPageController
 		return "main/mypage";
 	}
 	@GetMapping("orders")
-	public String orderList(Model m)
+	public String orderList(Model model)
 	{
-		Authentication id = SecurityContextHolder.getContext().getAuthentication();
-		String userid = id.getName();
-		List<UsersOrder> list = ordersvc.userOrderList(userid); 
-		m.addAttribute("list",list);		
-		return "main/userorder";
+//		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+//		String userid = id.getName();
+//		List<UsersOrder> list = ordersvc.userOrderList(userid); 
+//		m.addAttribute("list",list);		
+		
+		List<Map<String, Object>> uoList = cartsvc.getUoList();
+		model.addAttribute("uoList", uoList);
+		return "cart/usersOrderPage";
 	}
 }
  
