@@ -1,0 +1,93 @@
+@charset "UTF-8";
+/* 전체 페이지 스타일링 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 사이드바 스타일링 */
+.sidebar {
+    width: 240px;
+    background: #333;
+    color: #fff;
+    padding: 15px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+}
+
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+    background: #444;
+}
+
+/* 메인 컨텐츠 스타일링 */
+.main-content {
+    flex-grow: 1;
+    background: #fff;
+    padding: 20px;
+}
+
+/* 탭 및 탭 컨텐츠 스타일링 */
+.tabs {
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.tab-link:hover,
+.tab-link.active {
+    background: #0056b3;
+    color: #fff;
+}
+
+.tab-content {
+    display: none; /* 기본적으로 탭 내용을 숨깁니다. */
+    /* 탭 컨텐츠 스타일링 */
+}
+
+/* 탭 컨텐츠가 활성화되었을 때 스타일 */
+.tab-content.active {
+    display: block;
+}
+
+/* 추가 커스텀 스타일링 */
+/* 여기에 테이블 스타일링, 버튼 스타일링 등 페이지에 필요한 추가 스타일을 정의하세요. */
+
+/* 반응형 디자인을 위한 스타일 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .main-content {
+        flex-grow: 0;
+    }
+}
+

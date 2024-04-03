@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dddddd;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header .logo {
+            font-size: 1.5em;
+            color: #333333;
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 42px); /* Adjust height considering header */
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #333333;
+            padding: 20px 0;
+        }
+        .sidebar a {
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #555555;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .main-content h1 {
+            margin-top: 0;
+        }
+            header nav a {
+        text-decoration: none; /* 네비게이션 링크의 밑줄 제거 */
+        color: #333333; /* 네비게이션 링크의 텍스트 색상 설정 */
+        padding: 0 10px; /* 네비게이션 링크의 좌우 패딩 설정 */
+    }
+    
+    header nav a:hover {
+        text-decoration: underline; /* 링크에 마우스를 올리면 밑줄이 나타나도록 설정 */
+    }
+    </style>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">My Page</div>
+        <nav>
+            <a href="/main/menu">Home</a>
+            <a href="/logout">로그아웃</a>
+        </nav>
+    </header>
+    <div class="container">
+        <aside class="sidebar">
+            <a href="javascript:void(0);" onclick="updateContent('overview')" class="active">개요</a>
+            <a href="javascript:void(0);" onclick="updateContent('orders')">주문 내역</a>
+            <a href="javascript:void(0);" onclick="updateContent('wishlist')">위시리스트</a>
+            <a href="javascript:void(0);" onclick="updateContent('settings')">계정 설정</a>
+        </aside>
+        <main class="main-content" id="main-content">
+            <h1>환영합니다, 사용자님!</h1>
+            <p>여기서 마이 페이지의 다양한 기능을 관리할 수 있습니다.</p>
+        </main>
+    </div>
+    <script>
+        function updateContent(section) {
+			console.log(section + ' 콘텐츠로 업데이트');
+			var url = "/mypage/"+section;
+			console.log(url + ' 콘텐츠로 업데이트');
+			$.ajax({
+				url:url,
+				type:'get',
+				success: function(response){
+					$("#main-content").html(response);
+				}
+			});
+            
+        }
+        
+        function updateContent(section) {
+    console.log(section + ' 콘텐츠로 업데이트');
+    var url = "/mypage/" + section;
+    console.log(url + ' 콘텐츠로 업데이트');
+    
+    // 모든 탭의 'active' 클래스를 제거합니다.
+    $('.sidebar a').removeClass('active');
+    // 클릭된 탭에 'active' 클래스를 추가합니다.
+    $('.sidebar a').each(function () {
+        if ($(this).text().toLowerCase() === section) {
+            $(this).addClass('active');
+        }
+    });
+
+    $.ajax({
+        url: url,
+        type: 'get',
+        success: function(response){
+            // 내용 업데이트
+            $("#main-content").html(response);
+        },
+        error: function(error) {
+            // 오류 처리
+            console.error('Error loading content:', error);
+        }
+    });
+}
+
+// 페이지 로딩 시 기본적으로 첫 번째 탭의 내용을 로드합니다.
+$(document).ready(function() {
+    updateContent('overview');
+});
+
+    </script>
+</body>
+</html>
+

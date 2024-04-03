@@ -1,0 +1,221 @@
+  /* 기본 바디 스타일링: 여백 제거, 폰트 설정, 배경색 설정 */
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+  }
+  /* 헤더 스타일링: 배경색 흰색, 하단 테두리, 패딩, flexbox를 이용한 가운데 정렬 */
+header {
+  position: fixed; /* 헤더를 상단에 고정 */
+  top: 0; /* 상단부터의 거리 */
+  left: -15px; /* 좌측부터의 거리 */
+  width: 100%; /* 너비를 화면 전체로 설정 */
+  background-color: #ffffff;
+  border-bottom: 1px solid #dddddd;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000; /* 다른 요소들 위에 헤더가 놓이도록 z-index 설정 */
+}
+
+/* 고정 헤더 아래의 콘텐츠가 가려지지 않도록 적절한 상단 여백을 추가 */
+.container {
+  padding-top: 50px; /* 헤더의 높이에 맞게 조정 */
+}
+
+  /* 로고 스타일링: 폰트 크기 조정, 색상 설정 */
+  header .logo {
+    font-size: 1.5em;
+    color: #333333;
+  }
+   .container { /*이게 main-content 랑 sidebar 구별시킴 */
+        display: flex;
+        height: calc(100vh - 42px); /* Adjust height considering header */
+    }
+  /* 네비게이션 바 스타일링: 리스트 스타일 제거, 여백 제거, 배경색 설정, 오버플로우 숨김 처리 */
+  .navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    overflow: hidden;
+  }
+  /* 네비게이션 항목 스타일링: 좌측으로 플로트 처리, 링크 블록 표시, 텍스트 중앙 정렬 */
+  .navbar li {
+    float: left;
+  }
+  /* 네비게이션 링크 스타일링: 색상 흰색, 텍스트 데코레이션 제거, 마우스 오버 시 배경색 변경 */
+  .navbar li a, .navbar li div a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  /* 네비게이션 링크 호버 스타일: 배경색 변경 */
+  .navbar li a:hover, .navbar li div a:hover {
+    background-color: #555;
+  }
+  /* 사용자 ID 표시 스타일: 오른쪽 정렬, 색상 흰색, 패딩 적용 */
+  .navbar .userid p {
+    text-align: right;
+    color: white;
+    margin: 14px 16px;
+  }
+  /* 메인 콘텐츠 영역 스타일: 패딩 적용, 배경색 흰색, 상단 여백 적용 */
+  .main {
+    padding: 20px;
+    background-color: #ffffff;
+    margin-top: 10px;
+  }
+    .sidebar {
+            width: 200px;
+            background-color: #333333;
+            padding: 20px 0;
+        }
+        .sidebar a {
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #555555;
+        }
+         .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        .main-content h1 {
+            margin-top: 0;
+        }
+            header nav a {
+        text-decoration: none; /* 네비게이션 링크의 밑줄 제거 */
+        color: #333333; /* 네비게이션 링크의 텍스트 색상 설정 */
+        padding: 0 10px; /* 네비게이션 링크의 좌우 패딩 설정 */
+    }
+    
+    header nav a:hover {
+        text-decoration: underline; /* 링크에 마우스를 올리면 밑줄이 나타나도록 설정 */
+    }
+	.slider {
+	  position: relative;
+	}
+	
+	.slides .slide {
+	  display: none;
+	  position: absolute;
+	  width: 100%;
+	}
+	
+	.slides .slide img {
+	  width: 100%;
+	}
+	
+	button.prev,
+	button.next {
+	  cursor: pointer;
+	  position: absolute;
+	  top: 50%;
+	  transform: translateY(-50%);
+	  background-color: #fff;
+	  border: none;
+	  padding: 10px;
+	  z-index: 10;
+	}
+	
+	button.prev {
+	  left: 10px;
+	}
+	
+	button.next {
+	  right: 10px;
+	}
+	.slide {
+    /* 테이블 데이터 내 이미지 최대 너비 100px로 제한 */
+      max-width: 500px;
+      position: relative; /* 이 부분이 슬라이더 컨테이너를 상대 위치로 만듭니다. */
+	  max-width: 600px; /* 슬라이더의 최대 너비를 설정합니다 (필요에 따라 조정). */
+	  margin: auto; /* 슬라이더를 페이지 중앙에 배치합니다. */
+	}
+	.slides .slide {
+	  display: none;
+	  position: absolute;
+	  width: 100%;
+	  /* ... 기타 스타일 ... */
+	}
+		.slider-container {
+	  position: relative;
+	  width: 100%; /* 이 너비는 슬라이더가 차지할 전체 영역입니다 */
+	  max-width: 600px; /* 원하는 최대 너비를 설정할 수 있습니다 */
+	  margin: auto; /* 중앙 정렬 */
+	}
+	
+	.slides .slide img {
+	  width: 100%; /* 이미지가 컨테이너 너비에 맞춰 조정됩니다 */
+	}
+	
+	button.prev,
+	button.next {
+	  position: absolute;
+	  top: 50%; /* 상단에서 50% 위치, 즉 세로 중앙에 위치합니다 */
+	  transform: translateY(700%); /* 버튼을 수직 중앙에 위치하도록 조정 */
+	  /* 버튼의 크기와 스타일을 조정하세요 */
+	  background-color: #ffffff;
+	  border: 1px solid #ddd;
+	  padding: 10px;
+	  cursor: pointer;
+	  z-index: 10;
+	}
+	
+	button.prev {
+	  left: 0; /* 왼쪽 끝에 위치 */
+	}
+	
+	button.next {
+	  right: 0; /* 오른쪽 끝에 위치 */
+	}
+	/* 스크롤에 따라 변경될 네비게이션 바 스타일 */
+	header.scrolled {
+	  background-color: rgba(255, 255, 255, 0.9); /* 스크롤 시 반투명 배경 */
+	  padding: 20px 20px; /* 스크롤 시 패딩 조정 */
+	}
+	
+	header.scrolled .logo {
+	  font-size: 1em; /* 스크롤 시 로고 크기 조정 */
+	}
+	
+	header.scrolled nav a {
+	  font-size: 0.8em; /* 스크롤 시 네비게이션 링크 폰트 크기 조정 */
+	}
+	
+	/* 스크롤되지 않은 상태의 네비게이션 바 스타일 */
+	header {
+	  transition: all 0.5s ease; /* 부드러운 전환 효과 */
+	}
+	
+	/* 스크롤 시 적용될 스타일 */
+	.scrolled {
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+	  transition: all 0.5s ease; /* 부드러운 전환 효과 */
+	}
+	.shopping-cart {
+	  position: relative;
+	  display: inline-block;
+	}
+	
+	#cart-count {
+	  position: absolute;
+	  top: 4px;
+	  right: 13px;
+	  background-color: black;
+	  color: white;
+	  border-radius: 50%;
+	  padding: 2px 5px;
+	  font-size: 0.8em;
+	}

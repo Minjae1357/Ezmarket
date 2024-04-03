@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>장바구니</title>
+<style>
+	
+.image1 {
+width: auto;
+height: 150px;
+}
+	
+.all {
+margin: 0 auto;
+}
+
+h2 {
+	text-align:center;
+}
+
+table {
+font-family: Arial, sans-serif;
+margin: 0 auto;
+border: 5px solid black;
+border-collapse: collapse;
+}
+
+td {
+    border: 5px solid black;
+    padding: 8px;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+	// 개별삭제
+	function del(delnum){
+		$.ajax({
+			url:'/cart/deleteone',
+			method:'delete',
+			cache:false,
+			data:  {'delnum':delnum},
+			dataType:'json',
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+			},
+			success:function(res){
+				if(res.deleted) alert('삭제성공');
+				location.reload();
+			},
+			error:function(xhr,status,err){
+				alert(status+", "+ err);
+			}
+		});
+	};
+
+	// 체크삭제
+	function delcheck(){
+		var obj = {};
+		obj.checked = $('#cartForm').serialize();
+		if(obj.checked==""){
+			alert('체크된 항목이 없습니다');
+			return null;
+		}
+		$.ajax({
+			url:'/cart/delete',
+			method:'delete',
+			cache:false,
+			data: obj,
+			dataType:'json',
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+			},
+			success:function(res){
+				if(res.deleted) alert('삭제성공');
+				location.reload();
+			},
+			error:function(xhr,status,err){
+				alert(status+", "+ err);
+			}
+		});
+	};
+	
+	// 구매페이지로 이동 // 체크한 것들만 뜨게 한다
+	function buypage(){
+		var check = $('#cartForm').serialize();
+		//alert(check);
+		if(check==""){
+			alert('체크된 항목이 없습니다');
+			return null;
+		}
+		
+		document.getElementById('cartForm').submit();
+	}
+	
+	// 전체선택 기능
+	$(document).ready(function() {
+		$("#selectAll").click(function() {
+			// 모든 체크박스의 상태 확인(올체크 상태에서 누르면 모두 체크 해제하는 기능을 위한 코드)
+			var isAllChecked = $("input:checkbox[name=check]").length === $("input:checkbox[name=check]:checked").length;
+			// 모두 체크되어 있다면 모두 체크 해제, 아니면 모두 체크
+			$("input:checkbox[name=check]").prop('checked', !isAllChecked);
+		});
+	});
+	
+</script>
+
+</head>
+<body>
+<div class="all">
+	<h2>내 장바구니</h2>
+	<form id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
+    <table>
+        <tr>
+			<th></th>
+			<th><button type="button" id="selectAll">전체선택</button></th>
+            <th>상품이미지</th>
+            <th>상품이름</th>
+            <th>상품가격</th>
+            <th>상품사이즈</th>
+            <th>삭제</th>
+        </tr>
+        <tr th:each="c,i : ${cuoList}">
+			<td th:text="${i.index+1}"></td>
+			<td><input type="checkbox" name="check" th:value="${c.cnum}" checked></td>
+            <td><img class="image1" th:src="${c.imgSrc}"></td>
+            <td th:text="${c.productName}"></td>
+            <td th:text="${c.productPrice}"></td>
+            <td th:text="${c.size}"></td>
+            <td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
+        </tr>
+    </table>
+    </form>
+    <button type="button" onclick="buypage();">구매페이지로 이동</button>
+    <button type="button" onclick="delcheck();">선택항목 삭제</button>
+    <a href="/cart/uoList"><button type="button">주문내역</button></a>
+</div>
+</body>
+</html>

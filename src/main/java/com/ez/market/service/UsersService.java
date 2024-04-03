@@ -1,14 +1,19 @@
 package com.ez.market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.ez.market.dto.Authorities;
+import com.ez.market.dto.QAuthorities;
+import com.ez.market.dto.QUsers;
 import com.ez.market.dto.TempTable;
+import com.ez.market.dto.UserDetails;
 import com.ez.market.dto.Users;
 import com.ez.market.dto.UsersGenderAge;
 import com.ez.market.repository.AuthoritiesRepository;
@@ -16,6 +21,8 @@ import com.ez.market.repository.TempTableRepository;
 import com.ez.market.repository.UsersGenderAgeRepository;
 import com.ez.market.repository.UsersRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -35,6 +42,8 @@ public class UsersService
 	private UsersGenderAgeRepository usersgenderagereposiroty;
 	@Autowired
 	private AuthoritiesRepository authoritiesrepository;
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	
 	public boolean tempEmailSave(String userEmail) {
