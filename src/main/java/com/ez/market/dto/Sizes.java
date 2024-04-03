@@ -19,7 +19,7 @@ public class Sizes {
 	@Id
 	@NonNull
 	@Column(name="s_id")
-	private String sId;
+	private int sId;
 	
 	@Column(name="s_shoulder")
 	private int shoulder;

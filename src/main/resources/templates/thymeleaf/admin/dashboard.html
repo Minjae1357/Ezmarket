@@ -12,7 +12,7 @@
         <nav class="dashboard-nav">
             <a href="#" class="brand">Admin Dashboard</a>
             <div class="nav-items">
-                <a href="javascript:void(0);" onclick="updateContent('home')">Home</a>
+                <a href="javascript:void(0);" onclick="updateContent('mypage')">Home</a>
                 <a href="javascript:void(0);" onclick="updateContent('settings')">Settings</a>
                 <a th:href="@{/logout}">Logout</a>
             </div>
@@ -69,10 +69,21 @@
 
     // 예제로 추가된 updateProductContent 함수
     function updateProductContent(subPageName) {
-        // 서브 페이지 내용을 업데이트하는 로직을 여기에 구현
+		var url = "/product/"+subPageName;
+		
+		$.ajax({
+			url: url,
+			type:"get",
+			success: function(response){
+				$("#dashboard-content").html(response);
+			},
+			error:function(xhr, status, error){
+				console.error("실패이유", status,error);
+			}
+		});
         console.log("Updating product content for:", subPageName);
-        // 실제로는 여기에 AJAX 요청을 사용해 서브 페이지 내용을 업데이트할 수 있습니다.
-    }
+
+    };
 </script>
 
 </body>

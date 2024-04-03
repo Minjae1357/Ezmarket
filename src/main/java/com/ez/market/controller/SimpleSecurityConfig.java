@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -56,14 +58,14 @@ public class SimpleSecurityConfig {
 		System.out.println("jones->" + enc.encode("jones")); 
 
  
-		return enc;
+		return enc; 
 	}
 
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
 		return (webSecurity) -> webSecurity.ignoring().requestMatchers("/resources/**", "/ignore2");
 	}
-
+ 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		log.info("접근제한 설정");
@@ -72,7 +74,8 @@ public class SimpleSecurityConfig {
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
 	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled"
-	            		).permitAll()
+	            		).permitAll() 
+	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
 	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
 	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
@@ -101,7 +104,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/admin/users")
 	            .ignoringRequestMatchers("/user/auth")
 	            .ignoringRequestMatchers("/user/register")
-	            .ignoringRequestMatchers("/login")
+	            .ignoringRequestMatchers("/admin/updateEnabled")
 	            .ignoringRequestMatchers("/logout")
 	            .ignoringRequestMatchers("/user/check")
 	            .ignoringRequestMatchers("/user/sendVerificationEmail")

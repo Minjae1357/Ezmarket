@@ -17,6 +17,7 @@ import com.ez.market.dto.UserDetails;
 import com.ez.market.service.AdminService;
 import com.ez.market.service.UsersService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
@@ -47,11 +48,11 @@ public class AdminController
 	public Map<String,Object> upDateEnabled(@RequestParam("userid")String userid
 			,@RequestParam("enabled")String enabled)
 	{	
-		System.out.println("시작되긴함?");
 		boolean executed = adminsvc.updateEnabled(userid, enabled);
 		System.out.println("활성화 관련"+executed);
 		Map<String,Object> map = new HashMap<>();
 		map.put("ox", executed);
 		return map;
 	}
+	
 }

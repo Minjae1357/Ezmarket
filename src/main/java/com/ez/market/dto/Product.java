@@ -26,11 +26,11 @@ public class Product
 	@Column(name="product_name")
 	private String productName;
 	@Column(name="brand_id",nullable = false)
-	private String brandId;
+	private int brandId;
 	@Column(name="c_num",nullable = false)
 	private int cNum; //옷종류 참조하려고 받는 시퀀스
 	@Column(name="s_id",nullable = false)
-	private String sId;
+	private int sId;
 	@Column(nullable = false, name="pnum")
 	private int pnum;
 	

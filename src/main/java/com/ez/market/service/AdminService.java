@@ -2,6 +2,7 @@ package com.ez.market.service;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 
 import com.ez.market.dto.QAuthorities;
@@ -55,4 +56,10 @@ public class AdminService
 									.execute();
 		return executed>0;
 	}
+
+	
 }
+
+
+
+

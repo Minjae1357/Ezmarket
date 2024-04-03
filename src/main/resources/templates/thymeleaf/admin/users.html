@@ -55,6 +55,8 @@ $(document).ready(function() {
         console.log("New Enabled Status:", newEnabled);
 
         // 서버로 업데이트된 상태 전송
+        console.log("Sending Data to Server: ", {userid: userId, enabled: newEnabled, _csrf: $('input[name="_csrf"]').val()});
+
         $.ajax({
             url: '/admin/updateEnabled',
             type: 'post',
