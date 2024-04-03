@@ -246,19 +246,21 @@ public List<Map<String,Object>> getCheckList(String check){
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
 		var query = new JPAQueryFactory(entityManager);
-        QCart CART = QCart.cart;
+        QUsersOrder UO = QUsersOrder.usersOrder;
         QProduct PD = QProduct.product;
         QImgs IMG = QImgs.imgs;
         QSizes SIZE = QSizes.sizes;
-        List<Tuple> resultList = query.select(CART.cnum, PD.productName,PD.productPrice, SIZE.size, IMG.imgSrc)
-                                .from(CART)
-                                .join(PD).on(CART.productId.eq(PD.productId))
+        List<Tuple> resultList = query.select(UO.status, UO.totalPrice, UO.orderQty,
+								        		UO.pdate, UO.orderResult, PD.productName,
+								        		PD.productPrice, SIZE.size, IMG.imgSrc)
+                                .from(UO)
+                                .join(PD).on(UO.productId.eq(PD.productId))
                                 .join(IMG).on(PD.productId.eq(IMG.productId))
                                 .join(SIZE).on(PD.sId.eq(SIZE.sId))
-                                .where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
+                                .where(UO.userid.eq(userid))
                                 .fetch();
         
-        List<Map<String, Object>> cuoList = new ArrayList<>();
+        List<Map<String, Object>> uoList = new ArrayList<>();
         resultList.forEach(tuple -> {
         	
         	// 사이즈 변환 (숫자 -> 문자), (0:S, 1:M, 2:L, 3:XL, 4:XXL)
@@ -273,26 +275,21 @@ public List<Map<String,Object>> getCheckList(String check){
             }
             
             Map<String, Object> map = new HashMap<>();
-            map.put("cnum", tuple.get(CART.cnum));
+            map.put("status", tuple.get(UO.status));
+            map.put("totalPrice", tuple.get(UO.totalPrice));
+            map.put("orderQty", tuple.get(UO.orderQty));
+            map.put("pdate", tuple.get(UO.pdate));
+            map.put("orderResult", tuple.get(UO.orderResult));
             map.put("productName", tuple.get(PD.productName));
             map.put("productPrice", tuple.get(PD.productPrice));
             map.put("size", size);
             map.put("imgSrc", tuple.get(IMG.imgSrc));
             
-            // 테스트용 출력(삭제예정)
-            System.out.println("---test---");
-            System.out.println(
-            	tuple.get(CART.cnum)+"  "+
-            	tuple.get(PD.productName)+"  "+
-            	tuple.get(PD.productPrice)+"  "+
-            	tuple.get(SIZE.size)+"  "+
-            	tuple.get(IMG.imgSrc)
-            );
             
-            cuoList.add(map);
+            uoList.add(map);
         });
         
-		return cuoList;
+		return uoList;
 	}
 }
 
