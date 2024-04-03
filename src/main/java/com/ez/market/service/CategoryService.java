@@ -1,5 +1,7 @@
 package com.ez.market.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +26,8 @@ public class CategoryService {
 			return false;
 		}
 	}
+	
+	public List<Category> getAllCategory() {
+        return cateRepo.findAll();
+    }
 }

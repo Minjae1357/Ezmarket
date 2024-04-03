@@ -4,7 +4,10 @@ import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +22,9 @@ public class Sizes {
 	@Id
 	@NonNull
 	@Column(name="s_id")
-	private String sId;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sizes_seq")
+    @SequenceGenerator(name="sizes_seq", sequenceName="sizes_seq", allocationSize=1)
+	private int sId;
 	
 	@Column(name="s_shoulder")
 	private int shoulder;
@@ -39,8 +44,8 @@ public class Sizes {
 	private int size;
 	@Column(name="inventory", nullable=false)
 	private int inventory;
-	@Column(name="c_name", nullable=false)
-	private int cName;
+	@Column(name="product_id", nullable=false)
+	private int productId;
 	
 	
 }

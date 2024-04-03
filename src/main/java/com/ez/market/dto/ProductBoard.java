@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,8 @@ public class ProductBoard
 {
 	@Id
 	@NonNull
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "productboard_seq")
+    @SequenceGenerator(name="productboard_seq", sequenceName="productboard_seq", allocationSize=1)
 	private int pnum;
 	@Column(nullable = false)
 	private java.sql.Date pdate;
