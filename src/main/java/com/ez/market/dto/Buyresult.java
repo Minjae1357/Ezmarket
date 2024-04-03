@@ -26,7 +26,7 @@ public class Buyresult
 	private int buyNum;
 
 	@Column(name = "product_id", nullable = false)
-	private String productId;
+	private int productId;
 	@Column(nullable = false)
 	private String userid;
 }
