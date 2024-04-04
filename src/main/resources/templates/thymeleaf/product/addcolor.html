@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h3>컬러 추가하기 폼</h3>
+		<main>
+			<form id="addForm">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+				<label>색상 :</label>
+				<input type="text" id="cColor" name="cColor" placeholder="색상의이름(red,green)" required>
+				<button type="button" onclick="addcolor()">저장</button>
+			</form>
+		</main>
+</body>
+<script>
+	function addcolor(){
+		var color = $('#addForm').serialize();
+		$.ajax({
+			url: "/product/addcolor",
+			type: "post",
+			data: color, 
+			success: function(response){
+				alert(response.ox ? "저장 성공" : "저장 실패");
+			},
+			error: function(xhr, status, error) {
+				// 에러 핸들링 추가
+				console.error("Error: " + status + " - " + error);
+			}
+		});
+	};
+</script>
+</html>

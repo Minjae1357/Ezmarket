@@ -76,6 +76,7 @@ public class SimpleSecurityConfig {
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
 	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage"
 	            		).permitAll() 
+	            .requestMatchers("/product/addcolor").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
 	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
 	            .requestMatchers("/product/**").hasAnyRole("ADMIN","MASTER")

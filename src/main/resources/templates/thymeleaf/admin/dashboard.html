@@ -45,9 +45,9 @@
                     <ul id="productsSubMenu" class="sub-menu">
 						<li><a href="javascript:void(0);" onclick="updateProductContent('productList')">- ProductList</a></li>
 						<li><a href="javascript:void(0);" onclick="updateProductContent('uploadProduct')">- AddProductd</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('color')">- Color</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('brand')">- Brand</a></li>                  
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('category')">- Cartegory</a></li>             
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('addColorform')">- Color</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('uploadBrandForm')">- Brand</a></li>                  
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('uploadCategoryForm')">- Cartegory</a></li>             
                     </ul>
                 `;
                 $('li:contains("Products")').after(sidebarHTML);
@@ -83,6 +83,23 @@
         console.log("Updating product content for:", subPageName);
 
     };
+    
+function updateProductDetails(productName) {
+    var url = "/product/detail?productName="+encodeURIComponent(productName);
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        success: function(response) {
+            // 대시보드의 메인 콘텐츠 영역을 업데이트
+            $("#dashboard-content").html(response);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", status, error);
+        }
+    });
+}
+
 </script>
 
 </body>

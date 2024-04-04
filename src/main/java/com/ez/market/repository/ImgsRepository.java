@@ -10,5 +10,5 @@ public interface ImgsRepository extends JpaRepository<Imgs, Integer>,
                                         JpaSpecificationExecutor <Imgs>, 
                                         QuerydslPredicateExecutor<Imgs>
 {
-
+	Imgs findByProductId(int productid);
 }

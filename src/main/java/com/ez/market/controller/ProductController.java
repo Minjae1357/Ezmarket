@@ -3,6 +3,7 @@ package com.ez.market.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ez.market.dto.Brands;
+import com.ez.market.dto.Colors;
 import com.ez.market.dto.Product;
+import com.ez.market.dto.ProductList;
 import com.ez.market.dto.Sizes;
 import com.ez.market.service.BrandsService;
 import com.ez.market.service.CategoryService;
@@ -27,6 +31,7 @@ import com.ez.market.service.ImgsService;
 import com.ez.market.service.ProductBoardService;
 import com.ez.market.service.ProductService;
 import com.ez.market.service.SizeService;
+import com.nimbusds.openid.connect.sdk.claims.Gender;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,11 +58,21 @@ public class ProductController {
 	
 	
 	//브랜드 추가하기
-	@GetMapping("/uploadBrand")
+	@GetMapping("/uploadBrandForm")
 	public String getBrandForm()
 	{
-		return "product/uploadBrand";
+		return "product/addbrand";
 	}
+	
+	//카테고리 추가하기
+		@GetMapping("/uploadCategoryForm")
+		public String uploadCategory() {
+			return "product/uploadCategory";
+		}
+		@GetMapping("/addColorform")
+		public String addColorform() {
+			return "product/addcolor";
+		}
 	
 	@PostMapping("/addBrand")
 	@ResponseBody
@@ -101,17 +116,23 @@ public class ProductController {
             return map;
         }
 	}
-	
-	//카테고리 추가하기
-	@GetMapping("uploadCategory")
-	public String uploadCategory() {
-		return "product/uploadCategory";
+	@PostMapping("/addcolor")
+	@ResponseBody
+	public Map<String,Object> addcolor(@RequestParam("cColor")String color){
+		System.out.println(color);
+		boolean ox = colorSvc.saveColor(color);
+		System.out.println("ox실행됨?"+ox);
+		Map<String,Object> map = new HashMap<>();
+		map.put("ox", ox);
+		return map;
 	}
+
 	
 	@PostMapping("/addCategory")
 	@ResponseBody
 	public Map<String,Boolean> addCategory(@RequestParam("cKind")String cKind,@RequestParam("gender") int cGender)
 	{
+		log.info("카테고리" + cKind,"성별"+cGender);
 		Map<String,Boolean> map = new HashMap<>();
 		boolean addCate = cateSvc.saveCategory(cKind,cGender);
 		map.put("added",addCate);
@@ -146,8 +167,15 @@ public class ProductController {
 		return map;
 	}
 	@GetMapping("/productList")
-	public String productList() {
+	public String productList(Model m) {
+		List<ProductList> list = pSvc.getProductList();
+		m.addAttribute("products",list);
 		return"product/productlist";
+	}
+	@GetMapping("/detail")
+	public String ProductDetail(@RequestParam("productName") String productName,Model m) {
+		System.out.println("이거실행되는거맞지 ?"+productName);
+		return "product/detail";
 	}
 	
 }
