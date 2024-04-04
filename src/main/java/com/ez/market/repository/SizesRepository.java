@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ez.market.dto.Sizes;
 
-public interface SizesRepository extends JpaRepository<Sizes,String>{
+public interface SizesRepository extends JpaRepository<Sizes,Integer>{
 
 }

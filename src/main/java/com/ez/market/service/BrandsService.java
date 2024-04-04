@@ -1,5 +1,7 @@
 package com.ez.market.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +44,9 @@ public class BrandsService {
             }
         }
         return false; // 수정할 브랜드가 없을 경우
+    }
+	
+	public List<Brands> getAllBrands() {
+        return brandsRepo.findAll();
     }
 }

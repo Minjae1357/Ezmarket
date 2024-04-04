@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head><script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <script>
+        function addProduct() {
+        var formData = new FormData();
+        	formData.append('productPrice', $('#productPrice').val());
+		    formData.append('productName', $('#productName').val());
+		    formData.append('brandId', $('#brandId').val());
+		    formData.append('cNum', $('#cNum').val());
+		    formData.append('sId', $('#cName').val());
+		    formData.append('shoulder', $('#s_shoulder').val());
+		    formData.append('chest', $('#s_chest').val());
+		    formData.append('sleeve', $('#s_sleeve').val());
+		    formData.append('waist', $('#s_waist').val());
+		    formData.append('thigh', $('#s_thigh').val());
+		    formData.append('rise', $('#s_rise').val());
+		    formData.append('legopening', $('#s_legopening').val());
+		    formData.append('size', $('input[name=sSize]:checked').val());
+		    formData.append('inventory', $('#inventory').val());
+		    formData.append('files', $('#files')[0].files[0]);
+
+            $.ajax({
+                url: '/product/addProduct', 
+                type: 'post',
+                data: formData,
+                processData: false,
+       			contentType: false,
+                dataType: 'json',
+                success: function(res) {
+                    alert(res.added ? '저장 성공' : '저장 실패'); 
+                    location.href="http://localhost/"// 후에 관리페이지로 이동시킬것.
+                }
+            });
+
+            return false; // 폼 제출을 막기 위해 false를 반환
+        }
+    </script>
+<title>상품 추가하기</title>
+</head>
+
+<body>
+<h3>상품 추가하기 폼</h3>
+    <form id="addForm" method="post" enctype="multipart/form-data" onsubmit="return addProduct()">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label for="productPrice">Product Price:</label><br>
+        <input type="number" id="productPrice" name="productPrice"><br><br>
+        
+        <label for="productName">Product Name:</label><br>
+        <input type="text" id="productName" name="productName"><br><br>
+        
+        
+        <!--브랜드 가져오기-->
+        <label for="brandId">Brand:</label><br>
+        <select id="brandId" name="brandId">
+            <option th:each="brand : ${brands}" th:value="${brand.brandId}" th:text="${brand.brandName}"></option>
+        </select><br><br>
+        
+        <!--옷 종류 카테고리 가져오기-->
+        <label for="cNum">Category:</label><br>
+        <select id="cNum" name="cNum">
+            <option th:each="category : ${categories}" th:value="${category.cNum}" th:text="${category.cKind}"></option>
+        </select><br><br>
+        
+        <!-- 색상 가져오기 -->
+        <label for="cName">Color Name:</label><br>
+        <select id="cName" name="cName">
+            <option th:each="color : ${colors}" th:value="${color.cName}" th:text="${color.cColors}"></option>
+        </select><br><br>
+        
+        <!-- 사이즈 데이터 만들기-->
+        <label for="s_shoulder">Shoulder:</label><br>
+        <input type="number" id="s_shoulder" name="s_shoulder"><br><br>
+        
+        <label for="s_chest">Chest:</label><br>
+        <input type="number" id="s_chest" name="s_chest"><br><br>
+        
+        <label for="s_sleeve">Sleeve:</label><br>
+        <input type="number" id="s_sleeve" name="s_sleeve"><br><br>
+        
+        <label for="s_waist">Waist:</label><br>
+        <input type="number" id="s_waist" name="s_waist"><br><br>
+        
+        <label for="s_thigh">Thigh:</label><br>
+        <input type="number" id="s_thigh" name="s_thigh"><br><br>
+        
+        <label for="s_rise">Rise:</label><br>
+        <input type="number" id="s_rise" name="s_rise"><br><br>
+        
+        <label for="s_legopening">Leg Opening:</label><br>
+        <input type="number" id="s_legopening" name="s_legopening"><br><br>
+        
+        <label>Size:</label><br>
+        <input type="radio" id="size0" name="sSize" value="0">
+		<label for="size0">S</label><br>
+		<input type="radio" id="size1" name="sSize" value="1">
+		<label for="size1">M</label><br>
+        <input type="radio" id="size2" name="sSize" value="2">
+		<label for="size2">L</label><br>
+		<input type="radio" id="size3" name="sSize" value="3">
+		<label for="size3">XL</label><br>
+		<input type="radio" id="size4" name="sSize" value="4">
+		<label for="size4">XXL</label><br>
+        
+        <label for="inventory">Inventory:</label><br>
+        <input type="number" id="inventory" name="inventory"><br><br>
+        
+        
+        <!-- 이미지도 추가하기-->
+        File <input type="file"id="files" name="files" multiple="multiple"><br>
+        
+        <button type="submit">옷 등록</button>
+    </form>
+</body>
+</html>
