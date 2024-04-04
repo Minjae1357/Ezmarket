@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ez.market.dto.CartPage;
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.OrderPage;
+import com.ez.market.dto.BuyPage;
 import com.ez.market.dto.UsersOrder;
 import com.ez.market.service.CartService;
 import com.ez.market.service.UsersService;
@@ -54,7 +55,7 @@ public class CartController
 	public String list(Model model)
 	{
 		
-		List<CartPage> cartList = cartsvc.getList();
+		List<CartPage> cartList = cartsvc.getCartList();
 		model.addAttribute("cartList", cartList);
 		
 		return "cart/listPage";
@@ -63,8 +64,8 @@ public class CartController
 	// 구매페이지로 이동(장바구니 페이지에서 체크한 요소들만 구매페이지로 넘긴다)
 	@GetMapping("buypage")
 	public String gobuyPage(Model model, @RequestParam String check) {
-		List<OrderPage> orderList = cartsvc.getCheckList(check);
-		model.addAttribute("orderList", orderList);
+		List<BuyPage> buyList = cartsvc.getCheckList(check);
+		model.addAttribute("buyList", buyList);
 		return "cart/buyPage";
 	}
 	
@@ -102,15 +103,15 @@ public class CartController
 		return map;
 	}
 	
-	/*
+	
 	// 주문내역 보기
 	@GetMapping("uoList")
 	public String uoList(Model model) {
-		List<Map<String, Object>> uoList = cartsvc.getUoList();
-		model.addAttribute("uoList", uoList);
+		List<OrderPage> usersOrderList = cartsvc.getUsersOrderList();
+		model.addAttribute("usersOrderList", usersOrderList);
 		return "cart/usersOrderPage";
 	}
-	*/
+	
 }
 
 

@@ -17,16 +17,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class OrderPage
+public class BuyPage
 {
 	@Nonnull
-	private String status;
-	private int totalPrice;
-	private int orderQty;
-	private java.sql.Date pdate;
-	private int orderResult;
+	private int cnum;
 	private String productName;
 	private int productPrice;
+	private int productId;
 	private int size;
 	private String imgSrc;
 }

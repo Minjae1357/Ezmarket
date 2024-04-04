@@ -106,7 +106,7 @@ function buy() {
         success: function(res) {
             alert(res.added ? '추가 성공' : '추가 실패');
             if (res.added) {
-                //location.href = '/boardjpa/list';
+                location.href = '/cart/uoList';
             }
         },
         error: function(error) {
@@ -130,7 +130,7 @@ function buy() {
             <th>수량</th>
             <th>총가격</th>
         </tr>
-        <tr th:each="c,i : ${orderList}">
+        <tr th:each="c,i : ${buyList}">
 			<td style="display: none;" th:id="'productId'+${c.productId}" th:text="${c.productId}"></td>
 			<td style="display: none;" th:id="'delcnum'+${c.cnum}" th:text="${c.cnum}"></td>
 			<td th:text="${i.index+1}"></td>

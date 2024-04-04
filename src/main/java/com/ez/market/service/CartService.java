@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ez.market.dto.OrderInfo;
+import com.ez.market.dto.BuyPage;
 import com.ez.market.dto.OrderPage;
 import com.ez.market.dto.QCart;
 import com.ez.market.dto.QImgs;
@@ -48,7 +49,7 @@ public class CartService {
 	EntityManager entityManager;
 	
 	
-	public List<CartPage> getList(){
+	public List<CartPage> getCartList(){
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
 		
@@ -73,7 +74,7 @@ public class CartService {
 		return cartList;
 	}
 	
-	public List<OrderPage> getCheckList(String check){
+	public List<BuyPage> getCheckList(String check){
 		// 체크된 값들만 Integer형 리스트(delcnums)로 만들기
 		String[] _checkcnums = check.split(",");
 		List<Integer> checkcnums = new ArrayList<>();
@@ -86,8 +87,8 @@ public class CartService {
 		QProduct PD = QProduct.product;
 		QImgs IMG = QImgs.imgs;
 		QSizes SIZE = QSizes.sizes;
-		List<OrderPage> orderList = query
-				.select(Projections.constructor(OrderPage.class,
+		List<BuyPage> buyList = query
+				.select(Projections.constructor(BuyPage.class,
 						CART.cnum, 
 						PD.productName,
 						PD.productPrice,
@@ -100,7 +101,7 @@ public class CartService {
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(CART.cnum.in(checkcnums))	// 리스트(delcnums)를 조건으로
 				.fetch();
-		return orderList;
+		return buyList;
 	}
 	
 	// 장바구니에서 체크삭제
@@ -187,12 +188,29 @@ public class CartService {
 		return true;
 	}
 	
-	/*
 	// 주문내역 보기
-	public List<Map<String,Object>> getUoList(){
-
+	public List<OrderPage> getUsersOrderList(){
+		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+		String userid = id.getName();
+		
+		var query = new JPAQueryFactory(entityManager);
+        QUsersOrder UO = QUsersOrder.usersOrder;
+        QProduct PD = QProduct.product;
+        QImgs IMG = QImgs.imgs;
+        QSizes SIZE = QSizes.sizes;
+        List<OrderPage> orderList = query
+				.select(Projections.constructor(OrderPage.class,
+						UO.status, UO.totalPrice, UO.orderQty,
+						UO.pdate, UO.orderResult, PD.productName,
+						PD.productPrice, SIZE.size, IMG.imgSrc))
+				.from(UO)
+				.join(PD).on(UO.productId.eq(PD.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.where(UO.userid.eq(userid))
+				.fetch();
+		return orderList;
 	}
-	*/
 	
 	// 카트 갯수 가져오기
 	public int cartCount() {
