@@ -72,6 +72,7 @@ public class SimpleSecurityConfig {
 		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
+	            		"product/addProduct",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
 	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage"
 	            		).permitAll() 
