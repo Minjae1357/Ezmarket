@@ -13,16 +13,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ez.market.dto.OrderInfo;
+import com.ez.market.dto.BuyPage;
+import com.ez.market.dto.OrderPage;
 import com.ez.market.dto.QCart;
 import com.ez.market.dto.QImgs;
 import com.ez.market.dto.QProduct;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrder;
+import com.ez.market.dto.CartPage;
 import com.ez.market.repository.CartRepository;
 import com.ez.market.repository.OrderInfoRepository;
 import com.ez.market.repository.UsersOrderRepository;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -44,60 +48,33 @@ public class CartService {
 	@PersistenceContext
 	EntityManager entityManager;
 	
-	public List<Map<String,Object>> getList(){
+	
+	public List<CartPage> getCartList(){
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
+		
 		var query = new JPAQueryFactory(entityManager);
-        QCart CART = QCart.cart;
-        QProduct PD = QProduct.product;
-        QImgs IMG = QImgs.imgs;
-        QSizes SIZE = QSizes.sizes;
-        List<Tuple> resultList = query.select(CART.cnum, PD.productName,PD.productPrice, SIZE.size, IMG.imgSrc)
-                                .from(CART)
-                                .join(PD).on(CART.productId.eq(PD.productId))
-                                .join(IMG).on(PD.productId.eq(IMG.productId))
-                                .join(SIZE).on(PD.sId.eq(SIZE.sId))
-                                .where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
-                                .fetch();
-        
-        List<Map<String, Object>> cuoList = new ArrayList<>();
-        resultList.forEach(tuple -> {
-        	
-        	// 사이즈 변환 (숫자 -> 문자), (0:S, 1:M, 2:L, 3:XL, 4:XXL)
-            String size = "";
-            switch (tuple.get(SIZE.size)) {
-                case 0: size = "S"; break;
-                case 1: size = "M"; break;
-                case 2: size = "L"; break;
-                case 3: size = "XL"; break;
-                case 4: size = "XXL"; break;
-                default: size = "-"; break;
-            }
-            
-            Map<String, Object> map = new HashMap<>();
-            map.put("cnum", tuple.get(CART.cnum));
-            map.put("productName", tuple.get(PD.productName));
-            map.put("productPrice", tuple.get(PD.productPrice));
-            map.put("size", size);
-            map.put("imgSrc", tuple.get(IMG.imgSrc));
-            
-            // 테스트용 출력(삭제예정)
-            System.out.println("---test---");
-            System.out.println(
-            	tuple.get(CART.cnum)+"  "+
-            	tuple.get(PD.productName)+"  "+
-            	tuple.get(PD.productPrice)+"  "+
-            	tuple.get(SIZE.size)+"  "+
-            	tuple.get(IMG.imgSrc)
-            );
-            
-            cuoList.add(map);
-        });
-        
-		return cuoList;
+		QCart CART = QCart.cart;
+		QProduct PD = QProduct.product;
+		QImgs IMG = QImgs.imgs;
+		QSizes SIZE = QSizes.sizes;
+		List<CartPage> cartList = query
+				.select(Projections.constructor(CartPage.class,
+						CART.cnum, 
+						PD.productName,
+						PD.productPrice, 
+						SIZE.size, 
+						IMG.imgSrc))
+				.from(CART)
+				.join(PD).on(CART.productId.eq(PD.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
+				.fetch();
+		return cartList;
 	}
 	
-public List<Map<String,Object>> getCheckList(String check){
+	public List<BuyPage> getCheckList(String check){
 		// 체크된 값들만 Integer형 리스트(delcnums)로 만들기
 		String[] _checkcnums = check.split(",");
 		List<Integer> checkcnums = new ArrayList<>();
@@ -106,55 +83,25 @@ public List<Map<String,Object>> getCheckList(String check){
 		}
 		
 		var query = new JPAQueryFactory(entityManager);
-        QCart CART = QCart.cart;
-        QProduct PD = QProduct.product;
-        QImgs IMG = QImgs.imgs;
-        QSizes SIZE = QSizes.sizes;
-        List<Tuple> resultList = query.select(CART.cnum, PD.productName,PD.productPrice,PD.productId, SIZE.size, IMG.imgSrc)
-                                .from(CART)
-                                .join(PD).on(CART.productId.eq(PD.productId))
-                                .join(IMG).on(PD.productId.eq(IMG.productId))
-                                .join(SIZE).on(PD.sId.eq(SIZE.sId))
-                                .where(CART.cnum.in(checkcnums))	// 리스트(delcnums)를 조건으로
-                                .fetch();
-        
-        List<Map<String, Object>> cuoList = new ArrayList<>();
-
-        resultList.forEach(tuple -> {
-        	// 사이즈 변환 (숫자 -> 문자), (0:S, 1:M, 2:L, 3:XL, 4:XXL)
-            String size = "";
-            switch (tuple.get(SIZE.size)) {
-                case 0: size = "S"; break;
-                case 1: size = "M"; break;
-                case 2: size = "L"; break;
-                case 3: size = "XL"; break;
-                case 4: size = "XXL"; break;
-                default: size = "-"; break;
-            }
-            
-            Map<String, Object> map = new HashMap<>();
-            map.put("cnum", tuple.get(CART.cnum));
-            map.put("productName", tuple.get(PD.productName));
-            map.put("productPrice", tuple.get(PD.productPrice));
-            map.put("productId", tuple.get(PD.productId));
-            map.put("size", size);
-            map.put("imgSrc", tuple.get(IMG.imgSrc));
-            
-            // 테스트용 출력(삭제예정)
-            System.out.println("---test---");
-            System.out.println(
-            	tuple.get(CART.cnum)+"  "+
-            	tuple.get(PD.productName)+"  "+
-            	tuple.get(PD.productPrice)+"  "+
-            	tuple.get(PD.productId)+"  "+
-            	tuple.get(SIZE.size)+"  "+
-            	tuple.get(IMG.imgSrc)
-            );
-            
-            cuoList.add(map);
-        });
-        
-		return cuoList;
+		QCart CART = QCart.cart;
+		QProduct PD = QProduct.product;
+		QImgs IMG = QImgs.imgs;
+		QSizes SIZE = QSizes.sizes;
+		List<BuyPage> buyList = query
+				.select(Projections.constructor(BuyPage.class,
+						CART.cnum, 
+						PD.productName,
+						PD.productPrice,
+						PD.productId, 
+						SIZE.size, 
+						IMG.imgSrc))
+				.from(CART)
+				.join(PD).on(CART.productId.eq(PD.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.where(CART.cnum.in(checkcnums))	// 리스트(delcnums)를 조건으로
+				.fetch();
+		return buyList;
 	}
 	
 	// 장바구니에서 체크삭제
@@ -242,54 +189,36 @@ public List<Map<String,Object>> getCheckList(String check){
 	}
 	
 	// 주문내역 보기
-	public List<Map<String,Object>> getUoList(){
+	public List<OrderPage> getUsersOrderList(){
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
+		
 		var query = new JPAQueryFactory(entityManager);
         QUsersOrder UO = QUsersOrder.usersOrder;
         QProduct PD = QProduct.product;
         QImgs IMG = QImgs.imgs;
         QSizes SIZE = QSizes.sizes;
-        List<Tuple> resultList = query.select(UO.status, UO.totalPrice, UO.orderQty,
-								        		UO.pdate, UO.orderResult, PD.productName,
-								        		PD.productPrice, SIZE.size, IMG.imgSrc)
-                                .from(UO)
-                                .join(PD).on(UO.productId.eq(PD.productId))
-                                .join(IMG).on(PD.productId.eq(IMG.productId))
-                                .join(SIZE).on(PD.sId.eq(SIZE.sId))
-                                .where(UO.userid.eq(userid))
-                                .fetch();
-        
-        List<Map<String, Object>> uoList = new ArrayList<>();
-        resultList.forEach(tuple -> {
-        	
-        	// 사이즈 변환 (숫자 -> 문자), (0:S, 1:M, 2:L, 3:XL, 4:XXL)
-            String size = "";
-            switch (tuple.get(SIZE.size)) {
-                case 0: size = "S"; break;
-                case 1: size = "M"; break;
-                case 2: size = "L"; break;
-                case 3: size = "XL"; break;
-                case 4: size = "XXL"; break;
-                default: size = "-"; break;
-            }
-            
-            Map<String, Object> map = new HashMap<>();
-            map.put("status", tuple.get(UO.status));
-            map.put("totalPrice", tuple.get(UO.totalPrice));
-            map.put("orderQty", tuple.get(UO.orderQty));
-            map.put("pdate", tuple.get(UO.pdate));
-            map.put("orderResult", tuple.get(UO.orderResult));
-            map.put("productName", tuple.get(PD.productName));
-            map.put("productPrice", tuple.get(PD.productPrice));
-            map.put("size", size);
-            map.put("imgSrc", tuple.get(IMG.imgSrc));
-            
-            
-            uoList.add(map);
-        });
-        
-		return uoList;
+        List<OrderPage> orderList = query
+				.select(Projections.constructor(OrderPage.class,
+						UO.status, UO.totalPrice, UO.orderQty,
+						UO.pdate, UO.orderResult, PD.productName,
+						PD.productPrice, SIZE.size, IMG.imgSrc))
+				.from(UO)
+				.join(PD).on(UO.productId.eq(PD.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.where(UO.userid.eq(userid))
+				.fetch();
+		return orderList;
+	}
+	
+	// 카트 갯수 가져오기
+	public int cartCount() {
+		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+		String userid = id.getName();
+		int count = cartrepo.countByUserid(userid);
+		
+		return count;
 	}
 }
 

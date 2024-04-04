@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ez.market.dto.OrderPage;
 import com.ez.market.dto.UsersOrder;
 import com.ez.market.service.CartService;
 import com.ez.market.service.OrderService;
@@ -40,8 +41,8 @@ public class MyPageController
 //		List<UsersOrder> list = ordersvc.userOrderList(userid); 
 //		m.addAttribute("list",list);		
 		
-		List<Map<String, Object>> uoList = cartsvc.getUoList();
-		model.addAttribute("uoList", uoList);
+		List<OrderPage> usersOrderList = cartsvc.getUsersOrderList();
+		model.addAttribute("usersOrderList", usersOrderList);
 		return "cart/usersOrderPage";
 	}
 }
