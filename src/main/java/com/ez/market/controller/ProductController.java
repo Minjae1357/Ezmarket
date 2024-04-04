@@ -145,6 +145,10 @@ public class ProductController {
 		//이미지테이블에 데이터 추가하기
 		return map;
 	}
+	@GetMapping("/productList")
+	public String productList() {
+		return"product/productlist";
+	}
 	
 }
 	

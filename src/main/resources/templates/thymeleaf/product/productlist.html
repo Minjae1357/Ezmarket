@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- jQuery 라이브러리를 추가합니다 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 페이지에 대한 스타일을 정의합니다 -->
+    <style>
+        /* 제품 목록을 그리드 형식으로 표시하기 위한 스타일 */
+        #product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+        }
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+    <script>
+        // 문서가 준비되면 실행됩니다
+        $(document).ready(function() {
+            // 서버로부터 받았다고 가정한 제품 데이터입니다
+            const products = [
+                { name: "제품 1", price: "10000", image: "/path_to_image1.jpg" },
+                { name: "제품 2", price: "20000", image: "/path_to_image2.jpg" },
+                // 여기에 더 많은 제품들이 올 수 있습니다
+            ];
+
+            // 제품 데이터를 화면에 표시하는 함수입니다
+            function displayProducts(products) {
+                const productList = $('#product-list'); // 제품 목록을 담을 부모 요소를 선택합니다
+                
+                // 모든 제품 데이터를 순회하면서 HTML 마크업을 생성합니다
+                products.forEach(product => {
+                    const productHTML = `
+                        <div class="product">
+                            <img src="${product.image}" alt="${product.name}">
+                            <h3>${product.name}</h3>
+                            <p>${product.price}</p>
+                        </div>
+                    `;
+                    productList.append(productHTML); // 생성된 HTML 마크업을 페이지에 추가합니다
+                });
+            }
+
+            // 페이지가 로드되면 제품 목록을 화면에 표시합니다
+            displayProducts(products);
+        });
+    </script>
+</head>
+<body>
+    <!-- 제품 목록이 표시될 div 요소입니다 -->
+    <div id="product-list"></div>
+</body>
+</html>

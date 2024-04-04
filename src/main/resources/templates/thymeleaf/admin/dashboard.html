@@ -43,12 +43,11 @@
             } else {
                 var sidebarHTML = `
                     <ul id="productsSubMenu" class="sub-menu">
+						<li><a href="javascript:void(0);" onclick="updateProductContent('productList')">- ProductList</a></li>
+						<li><a href="javascript:void(0);" onclick="updateProductContent('uploadProduct')">- AddProductd</a></li>
                         <li><a href="javascript:void(0);" onclick="updateProductContent('color')">- Color</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('brand')">- Brand</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('addproduct')">- AddProductd</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('category')">- Cartegory</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('size')">- Size</a></li>
-                        <li><a href="javascript:void(0);" onclick="updateProductContent('img')">- Img</a></li>
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('brand')">- Brand</a></li>                  
+                        <li><a href="javascript:void(0);" onclick="updateProductContent('category')">- Cartegory</a></li>             
                     </ul>
                 `;
                 $('li:contains("Products")').after(sidebarHTML);
