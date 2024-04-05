@@ -1,19 +1,27 @@
 package com.ez.market.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.ProductBoard;
+import com.ez.market.dto.QProductBoard;
 import com.ez.market.repository.ProductBoardRepository;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service 
 public class ProductBoardService {
 	@Autowired
 	ProductBoardRepository pbRepo;
 	
+	@PersistenceContext
+	private EntityManager entityManager;
 	
 	@Transactional
 	public int savePB() {
@@ -32,5 +40,16 @@ public class ProductBoardService {
 			throw new RuntimeException("Failed to save ProductBoard"); // 저장 실패
 		}	
 	}
+	
+	public List<ProductBoard> findTop30ByOrderByPnumDesc() {
+        QProductBoard qProductBoard = new QProductBoard("pb");
+        return new JPAQueryFactory(entityManager)
+                .select(qProductBoard)
+                .from(qProductBoard)
+                .orderBy(qProductBoard.pnum.desc())
+                .limit(30)
+                .fetch();
+    }  
 
+	
 }

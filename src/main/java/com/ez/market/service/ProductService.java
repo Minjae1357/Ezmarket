@@ -1,19 +1,26 @@
 package com.ez.market.service;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
+
 import org.hibernate.query.criteria.JpaExpression;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.Imgs;
 import com.ez.market.dto.Product;
+import com.ez.market.dto.ProductBoard;
+import com.ez.market.dto.QProduct;
 import com.ez.market.dto.ProductList;
+
 import com.ez.market.dto.QImgs;
 import com.ez.market.dto.QOrderInfo;
-import com.ez.market.dto.QProduct;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrderList;
@@ -24,7 +31,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class ProductService {
@@ -34,9 +41,10 @@ public class ProductService {
 	ProductList productlist;
 	@Autowired
 	ImgsRepository imgsrepo;
-	@Autowired
+	@PersistenceContext
 	private EntityManager entityManager;
-	
+	@Autowired
+    private JPAQueryFactory queryFactory; 
 	@Transactional
 	public List<UsersOrderList> getusersorderlist(){
 		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
@@ -69,7 +77,7 @@ public class ProductService {
 		return list;
 	} 
 	
-	
+
 	public int savePrduct(Product p,int pnum){
 		try {
 			p.setPnum(pnum);
@@ -81,6 +89,15 @@ public class ProductService {
 		}
 		
 	}
+
+	public List<Product> findProductsByPnums(List<ProductBoard> pbList) {
+        List<Integer> pnumList = pbList.stream()
+                                       .map(ProductBoard::getPnum)
+                                       .collect(Collectors.toList());
+        return productRepo.findProductsByPnumIn(pnumList);
+    }
+	
+    
 	
 	public List<Product> getList(){
 		return productRepo.findAll();
@@ -109,4 +126,5 @@ public class ProductService {
 	    System.out.println(plist); // 생성된 상품 목록 출력
 	    return plist; // 최종 상품 목록 반환
 	}
+
 }

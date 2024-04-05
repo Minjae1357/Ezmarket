@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ez.market.dto.Imgs;
+import com.ez.market.dto.Product;
 import com.ez.market.repository.ImgsRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -38,7 +41,14 @@ public class ImgsService {
 	        e.printStackTrace();
 	        return false;
 	    }
-	    
+	}
+	
+	public List<Imgs> findImgsByPId(List<Product> plist){
+		List<Integer> pIdList = new ArrayList<>();
+		for(Product p :plist) {
+			pIdList.add(p.getProductId());
+		}
+		return imgRepo.findImgsByProductIdIn(pIdList);
 	}
 	
 }

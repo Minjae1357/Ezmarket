@@ -85,7 +85,7 @@ public class ProductController {
             boolean addBrand = brandSvc.saveBrand(files,brandName);
             map.put("added",addBrand);
             return map;
-        } catch (Exception e) {
+        } catch (Exception e) { 
             e.printStackTrace();
             map.put("added", false); // 실패 시 응답 설정
             map.put("error", "Database save failed: " + e.getMessage()); // 실패 이유 추가
