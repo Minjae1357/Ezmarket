@@ -47,7 +47,7 @@ public class CartController
 		System.out.println("bbb->" + enc.encode("bbb"));
 		System.out.println("ccc->" + enc.encode("ccc"));
 		System.out.println("ddd->" + enc.encode("ddd"));
-		return "hi pwd";
+		return "hi pwd"; 
 	}
 	
 	//리스트 띄우기

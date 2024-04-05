@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.Optional;
 
 
+import org.hibernate.query.criteria.JpaExpression;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +19,15 @@ import com.ez.market.dto.ProductBoard;
 import com.ez.market.dto.QProduct;
 import com.ez.market.dto.ProductList;
 
+import com.ez.market.dto.QImgs;
+import com.ez.market.dto.QOrderInfo;
+import com.ez.market.dto.QSizes;
+import com.ez.market.dto.QUsersOrder;
+import com.ez.market.dto.UsersOrderList;
 import com.ez.market.repository.ImgsRepository;
 import com.ez.market.repository.ProductRepository;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -32,13 +41,43 @@ public class ProductService {
 	ProductList productlist;
 	@Autowired
 	ImgsRepository imgsrepo;
-	
 	@PersistenceContext
 	private EntityManager entityManager;
-	
 	@Autowired
-    private JPAQueryFactory queryFactory;
+    private JPAQueryFactory queryFactory; 
+	@Transactional
+	public List<UsersOrderList> getusersorderlist(){
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		QUsersOrder userorder = QUsersOrder.usersOrder;
+		QProduct product = QProduct.product;
+		QImgs imgs = QImgs.imgs;
+		QSizes sizes = QSizes.sizes;		
+		List<UsersOrderList> list  = queryFactory
+				.select(Projections.constructor(UsersOrderList.class,
+						product.productName,
+						userorder.userid,
+						userorder.pdate,
+						userorder.oNum,
+						userorder.totalPrice,
+						sizes.size,
+						sizes.inventory,
+						userorder.status,
+						JPAExpressions
+						.select(imgs.imgSrc)
+						.from(imgs)
+						.where(imgs.productId.eq(product.productId))
+						.orderBy(imgs.imgnum.asc())
+						.limit(1)
+						))
+				.from(userorder)
+				.join(product).on(userorder.productId.eq(product.productId))
+				.join(sizes).on(product.productId.eq(sizes.productId))
+				.join(imgs).on(product.productId.eq(imgs.productId))
+				.fetch();
+		return list;
+	} 
 	
+
 	public int savePrduct(Product p,int pnum){
 		try {
 			p.setPnum(pnum);
@@ -65,17 +104,27 @@ public class ProductService {
 	}
 	
 	public List<ProductList> getProductList(){
-			List<Product> list = getList();
-			List<ProductList> plist = new ArrayList<>();
-			for(Product p : list ) {
-			Imgs imgs = imgsrepo.findByProductId(p.getProductId());		
-			productlist.setProductName(p.getProductName());
-			productlist.setImgName(imgs.getImgSrc());
-			productlist.setPrice(p.getProductPrice());
-			plist.add(productlist);
-		}
-			System.out.println(plist);
-			return plist;
+	    List<Product> list = getList(); // 상품 목록을 가져오는 메소드 호출
+	    List<ProductList> plist = new ArrayList<>(); // 최종 상품 목록을 담을 리스트 생성
+
+	    for(Product p : list) {
+	        // 각 상품에 대해 새로운 ProductList 객체를 생성
+	        ProductList productlist = new ProductList();
+	        
+	        // 상품에 해당하는 이미지 정보 가져오기
+	        Imgs imgs = imgsrepo.findByProductId(p.getProductId());
+	        
+	        // ProductList 객체에 상품 정보 설정
+	        productlist.setProductName(p.getProductName());
+	        productlist.setImgName(imgs.getImgSrc());
+	        productlist.setPrice(p.getProductPrice());
+	        
+	        // 설정된 ProductList 객체를 리스트에 추가
+	        plist.add(productlist);
+	    }
+
+	    System.out.println(plist); // 생성된 상품 목록 출력
+	    return plist; // 최종 상품 목록 반환
 	}
 
 }

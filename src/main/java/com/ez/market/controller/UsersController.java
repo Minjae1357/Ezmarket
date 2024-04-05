@@ -36,7 +36,7 @@ public class UsersController
    @GetMapping("/login")
    public String googleLogin()
    {
-      return "user/GoogleLogin";
+      return "user/GoogleLogin"; 
    }
 	
 
