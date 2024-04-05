@@ -1,5 +1,7 @@
 package com.ez.market.dto;
 
+import java.sql.Date;
+
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,15 +14,15 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor		
 public class UsersOrderList 
 {
-	@Nonnull
-	String productName;
+	@Nonnull	
 	String userId;
-	java.sql.Date orderDate;
+	String productName;
+	Date orderDate;
 	int orderNum;
 	int price;
 	int size;
 	int cnt;
 	String status;
-	String picName;
+	String picname;	
 	
 }

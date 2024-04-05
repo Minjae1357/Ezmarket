@@ -35,8 +35,8 @@ public class AdminController
 	
 	@GetMapping("orders")
 	public String userorder(Model m) {
-		log.info("유저 주문리스트" + productsvc.getusersorderlist());
-		m.addAttribute("list",productsvc.getusersorderlist());
+		log.info("유저 주문리스트" + productsvc.getUsersOrderList());
+		m.addAttribute("list",productsvc.getUsersOrderList());
 		return"main/userorder";
 	}
 	
