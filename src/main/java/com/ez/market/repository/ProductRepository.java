@@ -1,5 +1,7 @@
 package com.ez.market.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -10,5 +12,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer>,
                                            JpaSpecificationExecutor <Product>,
                                            QuerydslPredicateExecutor<Product>
 {
-
+	List<Product> findProductsByPnumIn(List<Integer> pnumList);
 }
