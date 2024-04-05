@@ -120,7 +120,7 @@ td {
             <th>상품사이즈</th>
             <th>삭제</th>
         </tr>
-        <tr th:each="c,i : ${cuoList}">
+        <tr th:each="c,i : ${cartList}">
 			<td th:text="${i.index+1}"></td>
 			<td><input type="checkbox" name="check" th:value="${c.cnum}" checked></td>
             <td><img class="image1" th:src="${c.imgSrc}"></td>

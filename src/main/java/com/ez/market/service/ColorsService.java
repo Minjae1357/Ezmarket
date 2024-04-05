@@ -12,9 +12,15 @@ import com.ez.market.repository.ColorsRepository;
 public class ColorsService {
 	@Autowired
 	ColorsRepository colorRepo;
-	
+	@Autowired
+	Colors color;
 	public List<Colors> getAllColors() {
         return colorRepo.findAll();
     }
+	
+	public boolean saveColor(String colorName) {
+		color.setCColors(colorName);
+		return colorRepo.save(color) != null;
+	}
 
 }

@@ -47,7 +47,7 @@ td {
             <th>물품수령</th>
             <th>배송정보 보기</th>
         </tr>
-        <tr th:each="uo,i : ${uoList}">
+        <tr th:each="uo,i : ${usersOrderList}">
 			<td th:text="${i.index+1}"></td>
 			<td th:text="${uo.status}"></td>
 			<td><img class="image1" th:src="${uo.imgSrc}"></td>

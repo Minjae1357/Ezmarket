@@ -1,9 +1,11 @@
 package com.ez.market.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ez.market.dto.Brands;
 import com.ez.market.repository.BrandsRepository;
@@ -12,19 +14,24 @@ import com.ez.market.repository.BrandsRepository;
 public class BrandsService {
 	@Autowired
 	BrandsRepository brandsRepo;
+	@Autowired
+	Brands brand;
 	
-	public boolean saveBrand(String brandName, String brandImg) {
+	
+	public boolean saveBrand(MultipartFile[] files,String brandName) {
+			String uploadPath = "D:/java_workspace/Ezmarket/src/main/resources/static/brands/";
         try {
-        	Brands brand = new Brands();
-        	brand.setBrandName(brandName);
-            brand.setBrandImg(brandImg);
-            System.out.println(brand);
-            brandsRepo.save(brand);
-            brandsRepo.flush();
+        	for (MultipartFile file : files) {
+        		String filename = file.getOriginalFilename();
+        		file.transferTo(new File(uploadPath +  File.separator + filename)); 
+        		brand.setBrandImg("/brands/" +brandName);
+        		brand.setBrandName(brandName);
+        		brandsRepo.save(brand);
+        	}
             return true; // 저장 성공
         } catch (Exception e) {
             return false; // 저장 실패
-        }
+        } 
     }
 	
 	
