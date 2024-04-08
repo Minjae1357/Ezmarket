@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Table(name="users_order")
+@Table(name="USERORDER")
 public class UsersOrder
 {
 	@Id

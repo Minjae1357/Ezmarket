@@ -72,11 +72,15 @@ public class SimpleSecurityConfig {
 		log.info("customSuccessHandler:" + googleLoginSuccessHandler);
 	    http.authorizeHttpRequests((authz) -> authz
 	            .requestMatchers("/user/clearSessionMessage","/user/sendVerificationEmail","/oauth2/**",
+	            		"/product/addProduct",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
-	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage"
+	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage",
+	            		"/productboard/list"
 	            		).permitAll() 
+	            .requestMatchers("/product/addcolor").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
 	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
+	            .requestMatchers("/product/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/user/list").hasAnyRole("USER", "ADMIN","MASTER")
 	            .requestMatchers("/user/detail").hasAnyRole("USER", "ADMIN", "MASTER")

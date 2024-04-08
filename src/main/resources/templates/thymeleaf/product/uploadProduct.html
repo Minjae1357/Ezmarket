@@ -1,48 +1,76 @@
 <!DOCTYPE html>
 <html>
-<head><script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <script>
-        function addProduct() {
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<script>
+    function addProduct() {
         var formData = new FormData();
-        	formData.append('productPrice', $('#productPrice').val());
-		    formData.append('productName', $('#productName').val());
-		    formData.append('brandId', $('#brandId').val());
-		    formData.append('cNum', $('#cNum').val());
-		    formData.append('sId', $('#cName').val());
-		    formData.append('shoulder', $('#s_shoulder').val());
-		    formData.append('chest', $('#s_chest').val());
-		    formData.append('sleeve', $('#s_sleeve').val());
-		    formData.append('waist', $('#s_waist').val());
-		    formData.append('thigh', $('#s_thigh').val());
-		    formData.append('rise', $('#s_rise').val());
-		    formData.append('legopening', $('#s_legopening').val());
-		    formData.append('size', $('input[name=sSize]:checked').val());
-		    formData.append('inventory', $('#inventory').val());
-		    formData.append('files', $('#files')[0].files[0]);
+        formData.append('productPrice', $('#productPrice').val());
+        formData.append('productName', $('#productName').val());
+        formData.append('brandId', $('#brandId').val());
+        formData.append('cNum', $('#cNum').val());
+        formData.append('sId', $('#cName').val());
+        formData.append('shoulder', $('#s_shoulder').val());
+        formData.append('chest', $('#s_chest').val());
+        formData.append('sleeve', $('#s_sleeve').val());
+        formData.append('waist', $('#s_waist').val());
+        formData.append('thigh', $('#s_thigh').val());
+        formData.append('rise', $('#s_rise').val());
+        formData.append('legopening', $('#s_legopening').val());
+        formData.append('size', $('input[name=sSize]:checked').val());
+        formData.append('inventory', $('#inventory').val());
 
-            $.ajax({
-                url: '/product/addProduct', 
-                type: 'post',
-                data: formData,
-                processData: false,
-       			contentType: false,
-                dataType: 'json',
-                success: function(res) {
-                    alert(res.added ? '저장 성공' : '저장 실패'); 
-                    location.href="http://localhost/"// 후에 관리페이지로 이동시킬것.
-                }
+        // 이미지 파일들을 formData에 추가
+        var files = $('#file-input')[0].files;
+        for (var i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
+        $.ajax({
+            url: '/product/addProduct',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(res) {
+                alert(res.added ? '저장 성공' : '저장 실패');
+            }
+        });
+
+        return false; // 폼 제출을 막기 위해 false를 반환
+    }
+
+    function previewImages() {
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+            
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+                return alert(file.name +" is not an image");
+            } // 이미지가 아니면 스킵
+
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", {src:this.result, height:100}));
             });
 
-            return false; // 폼 제출을 막기 위해 false를 반환
+            reader.readAsDataURL(file);
         }
-    </script>
+    }
+
+    $('#file-input').on("change", previewImages);
+
+</script>
 <title>상품 추가하기</title>
 </head>
-
 <body>
-<h3>상품 추가하기 폼</h3>
+    <h3>상품 추가하기 폼</h3>
     <form id="addForm" method="post" enctype="multipart/form-data" onsubmit="return addProduct()">
+      
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <label for="productPrice">Product Price:</label><br>
         <input type="number" id="productPrice" name="productPrice"><br><br>
@@ -107,8 +135,11 @@
         <input type="number" id="inventory" name="inventory"><br><br>
         
         
-        <!-- 이미지도 추가하기-->
-        File <input type="file"id="files" name="files" multiple="multiple"><br>
+        <!-- 이미지 미리보기 영역 -->
+        <div id="preview"></div>
+        
+        <!-- 파일 선택 인풋 -->
+        <input type="file" id="file-input" name="files" multiple>
         
         <button type="submit">옷 등록</button>
     </form>

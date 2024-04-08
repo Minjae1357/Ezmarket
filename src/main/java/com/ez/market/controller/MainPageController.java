@@ -13,7 +13,7 @@ import com.ez.market.service.CartService;
 //메인페이지관련된 요청은여기서
 @Controller
 @RequestMapping("/main")
-public class MainPagdController 
+public class MainPageController 
 {
 	@Autowired
 	CartService cartsvc;

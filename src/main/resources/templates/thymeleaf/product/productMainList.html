@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>상품 목록</title>
+<style>
+    body {
+        font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 20px;
+    }
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: 0 -10px;
+    }
+    .product-card {
+        width: calc(33.33% - 20px);
+        margin-bottom: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+    .product-image {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    .product-details {
+        margin-top: 15px;
+    }
+    .product-price {
+        font-size: 16px;
+        color: #000000;
+    }
+    .product-name {
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 8px;
+        color: #000000;
+    }
+    .product-review {
+        font-size: 14px;
+        color: #6c757d;
+        margin-top: 8px;
+    }
+    .product-card a {
+        text-decoration: none;
+    }
+    .product-card a:hover,
+    .product-card a:active,
+    .product-card a:focus {
+        color: #000000; /* 클릭 또는 호버시 색상 변경 */
+    }
+</style>
+</head>
+<body>
+<div class="product-container">
+    <!-- 상품 목록 반복 -->
+    <div class="product-card" th:each="product, i : ${product}">
+			<a th:href="@{/productboard/detail/{productId}(productId=${product.productId})}">
+            <!-- 이미지 경로 가져오기 -->
+            <img th:src="${img[i.index].imgSrc}" class="product-image">
+            
+            <div class="product-details">
+            <!-- 조회수 가져오기 -->
+            <div class="product-review" th:text="'view: ' + ${productBoard[i.index].pHit}"></div>
+            <!-- 가격 및 상품명 가져오기 -->
+            <div class="product-name" th:text="${product.productName}"></div>
+            <div class="product-price" th:text="'₩: ' + ${product.productPrice}"></div>
+          	</div>
+			</a>
+    </div>
+</div>
+
+</div>
+</body>
+</html>

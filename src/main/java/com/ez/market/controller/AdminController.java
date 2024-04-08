@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ez.market.dto.UserDetails;
 import com.ez.market.service.AdminService;
+import com.ez.market.service.ProductService;
 import com.ez.market.service.UsersService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,9 +29,14 @@ public class AdminController
 	private UsersService usersvc;
 	@Autowired
 	private AdminService adminsvc;
+	@Autowired
+	private ProductService productsvc;
+	
 	
 	@GetMapping("orders")
-	public String userorder() {
+	public String userorder(Model m) {
+		log.info("유저 주문리스트" + productsvc.getUsersOrderList());
+		m.addAttribute("list",productsvc.getUsersOrderList());
 		return"main/userorder";
 	}
 	
@@ -38,7 +44,7 @@ public class AdminController
 	@GetMapping("/dashboard")
 	public String dashBoard() {
 		return "admin/dashboard";
-	}
+	} 
 	
 	@GetMapping("/users")
 	public String userList(Model m) {
