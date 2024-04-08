@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ez.market.dto.Imgs;
@@ -38,4 +39,12 @@ public class ProductBoardController
 		m.addAttribute("img",ilist);
 		return "product/productMainList";
 	}
+	
+	@GetMapping("detail/{pId}")
+	public String productDetail(Model m,@PathVariable int pid) {
+		List<Product>
+		
+		return"product/productDetail";
+	}
+	
 }
