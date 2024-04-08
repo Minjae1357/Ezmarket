@@ -126,7 +126,7 @@ td {
             <td><img class="image1" th:src="${c.imgSrc}"></td>
             <td th:text="${c.productName}"></td>
             <td th:text="${c.productPrice}"></td>
-            <td th:text="${c.size}"></td>
+            <td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
             <td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
         </tr>
     </table>

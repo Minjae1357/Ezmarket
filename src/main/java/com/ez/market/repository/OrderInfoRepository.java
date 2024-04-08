@@ -6,5 +6,5 @@ import com.ez.market.dto.OrderInfo;
 
 public interface OrderInfoRepository extends JpaRepository<OrderInfo, Integer>
 {
-
+	OrderInfo findByoNum(int oNum); 
 }

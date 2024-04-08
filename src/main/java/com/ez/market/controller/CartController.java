@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -110,6 +111,27 @@ public class CartController
 		List<OrderPage> usersOrderList = cartsvc.getUsersOrderList();
 		model.addAttribute("usersOrderList", usersOrderList);
 		return "cart/usersOrderPage";
+	}
+	
+	//배송지 조회
+	@GetMapping("orderInfo/{oNum}")
+	public String orderInfo(@PathVariable int oNum, Model model) {
+		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
+		model.addAttribute("orderInfo", orderInfo);
+		return "cart/orderInfoPage";
+	}
+	
+	// 배송지 수정
+	@PostMapping("updateOrderInfo")
+	@ResponseBody
+	public Map<String,Object> orderInfo(@ModelAttribute OrderInfo oi) {
+		System.out.println(oi.getResName());
+		boolean updated = cartsvc.update(oi);
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("updated", updated);
+		
+		return map;
 	}
 	
 }

@@ -12,5 +12,5 @@ public interface CartRepository extends JpaRepository<Cart,Integer>,
                                         JpaSpecificationExecutor <Cart>, 
                                         QuerydslPredicateExecutor<Cart>
 {
-	int countByUserid(String userid);
+	int countByUserid(String userid); 
 }

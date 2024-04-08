@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,7 @@ import com.ez.market.repository.OrderInfoRepository;
 import com.ez.market.repository.UsersOrderRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -58,16 +60,18 @@ public class CartService {
 		QProduct PD = QProduct.product;
 		QImgs IMG = QImgs.imgs;
 		QSizes SIZE = QSizes.sizes;
+		
 		List<CartPage> cartList = query
 				.select(Projections.constructor(CartPage.class,
 						CART.cnum, 
 						PD.productName,
 						PD.productPrice, 
 						SIZE.size, 
-						IMG.imgSrc))
+						IMG.imgSrc
+				))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(CART.productId.eq(IMG.productId))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
 				.fetch();
@@ -200,7 +204,7 @@ public class CartService {
         QSizes SIZE = QSizes.sizes;
         List<OrderPage> orderList = query
 				.select(Projections.constructor(OrderPage.class,
-						UO.status, UO.totalPrice, UO.orderQty,
+						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
 						PD.productPrice, SIZE.size, IMG.imgSrc))
 				.from(UO)
@@ -219,6 +223,25 @@ public class CartService {
 		int count = cartrepo.countByUserid(userid);
 		
 		return count;
+	}
+	
+	// 
+	public OrderInfo getOrderInfo(int oNum) {
+		OrderInfo orderInfo = oirepo.findByoNum(oNum);
+		return orderInfo;
+	}
+	
+	//
+	public boolean update(OrderInfo _oi) {
+		OrderInfo oi = oirepo.findById(_oi.getOiNum()).get();	// DB에서 원본 데이터 가져와서
+		// 새 데이터로 교체 후
+		oi.setResName(_oi.getResName());
+		oi.setResAddress(_oi.getResAddress());
+		oi.setResPhone(_oi.getResPhone());
+		oi.setResRequirement(_oi.getResRequirement());
+		// DB에 저장
+		oirepo.save(oi);
+		return true;
 	}
 }
 
