@@ -21,7 +21,7 @@
 <body>
 <div th:each="e : ${list}" class="userDetailList">
     <!-- 각 유저의 정보를 나열 -->
-    <p>유저 아이디: <span class="userId" th:text="${e.userid}"></span></p>
+    <p>유저 아이디: <span class="userid" th:text="${e.userid}"></span></p>
     <p>유저 활성화: 
         <!-- 유저 활성화 상태를 나타내는 라디오 버튼과 값을 출력 -->
         <span class="userEnabled" th:text="${e.enabled}"></span>
@@ -47,21 +47,21 @@
 $(document).ready(function() {
     // 라디오 버튼 변경 이벤트 리스너 등록
     $('input[type="radio"]').on('change', function() {
-        var userId = $(this).closest('.userDetailList').find('.userId').text();
+        var userid = $(this).closest('.userDetailList').find('.userid').text();
         var newEnabled = $(this).val();
         var $userDetailList = $(this).closest('.userDetailList');
 
-        console.log("User ID:", userId);
+        console.log("User ID:", userid);
         console.log("New Enabled Status:", newEnabled);
 
         // 서버로 업데이트된 상태 전송
-        console.log("Sending Data to Server: ", {userid: userId, enabled: newEnabled, _csrf: $('input[name="_csrf"]').val()});
+        console.log("Sending Data to Server: ", {userid: userid, enabled: newEnabled, _csrf: $('input[name="_csrf"]').val()});
 
         $.ajax({
             url: '/admin/updateEnabled',
             type: 'post',
             data: {
-                userid: userId,
+                userid: userid,
                 enabled: newEnabled,
                 _csrf: $('input[name="_csrf"]').val()
             },

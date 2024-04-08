@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.BuyPage;
@@ -29,6 +30,7 @@ import com.ez.market.repository.UsersOrderRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -61,19 +63,24 @@ public class CartService {
 		QImgs IMG = QImgs.imgs;
 		QSizes SIZE = QSizes.sizes;
 		
+
 		List<CartPage> cartList = query
 				.select(Projections.constructor(CartPage.class,
-						CART.cnum, 
+						CART.cnum,
 						PD.productName,
-						PD.productPrice, 
-						SIZE.size, 
+						PD.productPrice,
+						SIZE.size,
 						IMG.imgSrc
 				))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(CART.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
-				.where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
+				.where(CART.userid.eq(userid))       // 변수로 받게 변경 필요
 				.fetch();
 		return cartList;
 	}
@@ -101,7 +108,11 @@ public class CartService {
 						IMG.imgSrc))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(CART.cnum.in(checkcnums))	// 리스트(delcnums)를 조건으로
 				.fetch();
@@ -134,6 +145,7 @@ public class CartService {
 	}
 	
 	// 구매버튼 누를시 UsersOrder 테이블에 추가
+	@Transactional
 	public boolean addUO(Map<String,Object> UsersOrderList) {
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
@@ -147,7 +159,7 @@ public class CartService {
 			int productId = Integer.parseInt((String)_uo.get("productId"));
 	        int orderQty = Integer.parseInt((String)_uo.get("orderQty"));
 	        int totalPrice = Integer.parseInt((String)_uo.get("totalPrice"));
-	        System.out.println(orderQty+totalPrice);
+	        //System.out.println(orderQty+totalPrice);
 			
 			uo.setStatus("주문완료");		// api로 받아오게 수정
 			uo.setPdate(Date.valueOf(LocalDate.now()));
@@ -163,8 +175,10 @@ public class CartService {
 			cartrepo.deleteById(delcnum);
 			
 		}
-		List<UsersOrder> savedUoList = uorepo.saveAll(uoList);
 		
+		
+		List<UsersOrder> savedUoList = uorepo.saveAll(uoList);
+
 		// order info 테이블에 추가
 		Map<String, Object> _oi = (Map<String, Object>) UsersOrderList.get("oi");
 		List<OrderInfo> oiList = new ArrayList<>();
@@ -188,7 +202,6 @@ public class CartService {
 			oiList.add(oi);
 		}
 		oirepo.saveAll(oiList);
-		
 		return true;
 	}
 	
@@ -209,7 +222,11 @@ public class CartService {
 						PD.productPrice, SIZE.size, IMG.imgSrc))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(UO.userid.eq(userid))
 				.fetch();

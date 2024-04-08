@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.query.criteria.JpaSubQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +26,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ez.market.dto.CartPage;
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.OrderPage;
+import com.ez.market.dto.QCart;
+import com.ez.market.dto.QImgs;
+import com.ez.market.dto.QProduct;
+import com.ez.market.dto.QSizes;
 import com.ez.market.dto.BuyPage;
 import com.ez.market.dto.UsersOrder;
+import com.ez.market.repository.ImgsRepository;
+import com.ez.market.repository.ProductRepository;
 import com.ez.market.service.CartService;
 import com.ez.market.service.UsersService;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
@@ -37,6 +53,14 @@ public class CartController
 {
 	@Autowired
 	CartService cartsvc;
+	
+	// 테스트용
+	@Autowired
+	ProductRepository pdrepo;
+	@Autowired
+	ImgsRepository imgrepo;
+	@PersistenceContext
+	EntityManager entityManager;
 	
 	// 테스트용 데이터 생성을 위한 코드(삭제할 것)
 	@GetMapping("pwd")
@@ -50,6 +74,7 @@ public class CartController
 		System.out.println("ddd->" + enc.encode("ddd"));
 		return "hi pwd"; 
 	}
+
 	
 	//리스트 띄우기
 	@GetMapping("list")
@@ -96,9 +121,8 @@ public class CartController
 	public Map<String,Object> addUO(@RequestBody Map<String,Object> UsersOrderList) {	
 		// 전달받은 UserOrderList에는 productId, orderQty, totalPrice 여러 행이 담겨있다 -> List로 변환  
 		// + 발주정보 포함
-		
 		boolean added = cartsvc.addUO(UsersOrderList);
-		
+		System.out.println("hi?");
 		Map<String,Object> map = new HashMap<>();
 		map.put("added", added);
 		return map;
@@ -114,6 +138,7 @@ public class CartController
 	}
 	
 	//배송지 조회
+	@Transactional
 	@GetMapping("orderInfo/{oNum}")
 	public String orderInfo(@PathVariable int oNum, Model model) {
 		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
