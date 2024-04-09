@@ -64,5 +64,15 @@ public class AdminController
 		map.put("ox", executed);
 		return map;
 	}
+	@ResponseBody
+	@PostMapping("/status")
+	public Map<String,Object>changeStatus(@RequestParam("status")String status,@RequestParam("orderId")int orderid) {
+		System.out.println("스테이터스"+status);
+		log.info("status" + status); 
+		boolean update = adminsvc.updateStatus(status, orderid);
+		Map<String,Object> map = new HashMap<>();
+		map.put("status",update );
+		return map;
+	}
 	
 }

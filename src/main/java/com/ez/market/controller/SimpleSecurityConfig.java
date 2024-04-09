@@ -75,7 +75,7 @@ public class SimpleSecurityConfig {
 	            		"/product/addProduct",
 	            		"/login/oauth2/code/google","/user/login","/user/check","/","/register","/auth/{code}",
 	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage",
-	            		"/productboard/list"
+	            		"/productboard/list","/admin/status"
 	            		).permitAll() 
 	            .requestMatchers("/product/addcolor").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
@@ -116,6 +116,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/user/clearSessionMessage") 
 	            .ignoringRequestMatchers("/product/addBrand")
 	            .ignoringRequestMatchers("/product/addProduct")
+	            .ignoringRequestMatchers("/admin/status")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
 	    		.successHandler(googleLoginSuccessHandler)

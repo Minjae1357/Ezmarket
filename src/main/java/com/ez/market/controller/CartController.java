@@ -1,14 +1,12 @@
 package com.ez.market.controller;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.query.criteria.JpaSubQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 
@@ -26,26 +24,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ez.market.dto.CartPage;
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.OrderPage;
-import com.ez.market.dto.QCart;
-import com.ez.market.dto.QImgs;
-import com.ez.market.dto.QProduct;
-import com.ez.market.dto.QSizes;
 import com.ez.market.dto.BuyPage;
-import com.ez.market.dto.UsersOrder;
+
 import com.ez.market.repository.ImgsRepository;
 import com.ez.market.repository.ProductRepository;
 import com.ez.market.service.CartService;
-import com.ez.market.service.UsersService;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @RequestMapping("/cart")

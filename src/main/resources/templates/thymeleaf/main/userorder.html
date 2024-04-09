@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <meta charset="UTF-8">
     <title>주문 내역 조회</title>
     <style>
@@ -66,6 +68,7 @@ td img {
     </style>
     <!--<link rel="stylesheet" href="/userorder.css">-->
 </head>
+
 <body>
     <div class="order-header">
         <h1>주문 내역 조회</h1>
@@ -85,23 +88,56 @@ td img {
                     <th>상태</th>
                 </tr>
             </thead>
-            <tbody>
-				<!--여기에 루프 시켜서 나오게만하면 됨 id기반으로 >-->
-                <tr>
-                    <td><img src="/path_to_image1.jpg" alt="상품 이미지" /></td>
-                    <td>패션 스타일 티셔츠</td>
-                    <th>smith</th>
-                    <td>2022-09-24</td>
-                    <td>202209241435370002</td>
-                    <td>27,550원</td>
-                    <td>M</td>
-                    <td>1개</td>
-                    <td>배송완료</td>
-                </tr>
- 
-            </tbody>
+         <tbody>
+		    <tr th:each="product : ${list}">
+		        <td><img th:src="@{${product.picname}}" alt="${product.productName}"/></td>
+		        <td th:text="${product.productName}"></td>
+		        <td th:text="${product.userId}"></td>
+		        <td th:text="${product.orderDate}"></td>
+		        <td th:text="${product.orderNum}"></td>
+		        <td th:text="${product.price}"></td>
+		        <td th:text="${product.size}"></td>
+		        <td th:text="${product.cnt}"></td>
+		        <td>
+		            <select class="order-status" th:attr="data-order-id=${product.orderNum}">
+		                <option value="배송 준비" th:selected="${product.status == '배송 준비'}">배송 준비</option>
+		                <option value="배송 중" th:selected="${product.status == '배송 중'}">배송 중</option>
+		                <option value="배송 완료" th:selected="${product.status == '배송 완료'}">배송 완료</option>
+		            </select>
+		        </td>
+		    </tr>
+		</tbody>
+
         </table>
     </div>
 </body>
+<script>
+document.querySelectorAll('.order-status').forEach(function(selectElement) {
+    selectElement.addEventListener('change', function() {
+        const orderId = this.getAttribute('data-order-id');
+        const newStatus = this.value;
+        console.log(`Order ID: ${orderId}, New Status: ${newStatus}`);
+        
+        // AJAX 요청을 서버에 전송
+       $.ajax({
+    url: '/admin/status', // 컨트롤러의 매핑과 일치하도록 수정하세요.
+    type: 'POST',
+    data: {
+        status: newStatus, 
+        orderId: orderId // 이 부분에서 변수의 값이 올바르게 설정되었는지 확인하세요.
+    },
+    success: function(response) {
+        console.log('상태 업데이트 성공:', response);
+    },
+    error: function(xhr, status, error) {
+        console.error('상태 업데이트 실패:', error);
+    }
+});
+
+    });
+});
+
+</script>
+
 </html>
 
