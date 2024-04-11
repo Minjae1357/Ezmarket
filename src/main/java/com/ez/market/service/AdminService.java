@@ -2,12 +2,14 @@ package com.ez.market.service;
 
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ez.market.dto.QAuthorities;
 import com.ez.market.dto.QUsers;
+import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UserDetails;
+import com.ez.market.repository.UsersOrderRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -16,12 +18,13 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 
-@Service
+@Service 
 public class AdminService 
 {
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+	@Autowired
+	private UsersOrderRepository userorderrepo;
 	public List<UserDetails> userList() {
 		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 		QUsers qUsers = QUsers.users;// 자동생성된 q클래스
@@ -56,7 +59,17 @@ public class AdminService
 									.execute();
 		return executed>0;
 	}
-
+	@Transactional
+	public boolean updateStatus(String status,int orderid) {
+		
+		QUsersOrder userorder = QUsersOrder.usersOrder;
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		long executed = queryFactory.update(userorder)
+									.set(userorder.status, status)
+									.where(userorder.oNum.eq(orderid))
+									.execute();
+				return executed>0;
+	}
 	
 }
 
