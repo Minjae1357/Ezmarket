@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ez.market.dto.CartPage;
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.OrderPage;
-import com.ez.market.dto.UsersOrderListReceive;
-import com.ez.market.dto.UsersOrderListReceive.OrderRecive;
 import com.ez.market.dto.BuyPage;
 
 import com.ez.market.repository.ImgsRepository;
@@ -36,9 +34,7 @@ import com.ez.market.service.CartService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @RequestMapping("/cart")
 public class CartController
@@ -107,35 +103,14 @@ public class CartController
 		return map;
 	}
 	
-//	// 주문정보, 발주정보 테이블에 저장,(usersOrder, orderInfo 에 저장하기)
-//	@PostMapping("addUO")
-//	@ResponseBody
-//	public Map<String,Object> addUO(@RequestBody Map<String,Object> UsersOrderList) {	
-//		// 전달받은 UserOrderList에는 productId, orderQty, totalPrice 여러 행이 담겨있다 -> List로 변환  
-//		// + 발주정보 포함
-//		boolean added = cartsvc.addUO(UsersOrderList);
-//		System.out.println("hi?");
-//		Map<String,Object> map = new HashMap<>();
-//		map.put("added", added);
-//		return map;
-//	}
-	
 	// 주문정보, 발주정보 테이블에 저장,(usersOrder, orderInfo 에 저장하기)
 	@PostMapping("addUO")
 	@ResponseBody
-	public Map<String,Object> addUO(@RequestBody UsersOrderListReceive uoRecive) {	
-		// UsersOrderListRecive dto 사용, 이 클래스는
-		// productId, orderQty, totalPrice, cnum 리스트와
-		// orderinfo 객체 하나를 담는 dto
-		/*
-		for (OrderRecive uo:uoRecive.getUoList()) {
-			log.info("카트에서 삭제될 cnum : "+uo.getDelcnum());
-			log.info("수량 : "+uo.getOrderQty());
-			log.info("상품ID : "+uo.getProductId());
-			log.info("총가격 : "+uo.getTotalPrice());
-		}
-		*/
-		boolean added = cartsvc.addUO(uoRecive);
+	public Map<String,Object> addUO(@RequestBody Map<String,Object> UsersOrderList) {	
+		// 전달받은 UserOrderList에는 productId, orderQty, totalPrice 여러 행이 담겨있다 -> List로 변환  
+		// + 발주정보 포함
+		boolean added = cartsvc.addUO(UsersOrderList);
+		System.out.println("hi?");
 		Map<String,Object> map = new HashMap<>();
 		map.put("added", added);
 		return map;

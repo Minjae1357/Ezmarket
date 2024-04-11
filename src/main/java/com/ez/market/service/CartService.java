@@ -23,8 +23,6 @@ import com.ez.market.dto.QProduct;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrder;
-import com.ez.market.dto.UsersOrderListReceive;
-import com.ez.market.dto.UsersOrderListReceive.OrderRecive;
 import com.ez.market.dto.CartPage;
 import com.ez.market.repository.CartRepository;
 import com.ez.market.repository.OrderInfoRepository;
@@ -65,6 +63,7 @@ public class CartService {
 		QImgs IMG = QImgs.imgs;
 		QSizes SIZE = QSizes.sizes;
 		
+
 		List<CartPage> cartList = query
 				.select(Projections.constructor(CartPage.class,
 						CART.cnum,
@@ -147,18 +146,20 @@ public class CartService {
 	
 	// 구매버튼 누를시 UsersOrder 테이블에 추가
 	@Transactional
-	public boolean addUO(UsersOrderListReceive uoRecive) {
+	public boolean addUO(Map<String,Object> UsersOrderList) {
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
 		// users order 테이블에 추가
 		List<UsersOrder> uoList = new ArrayList<>();
-		for (OrderRecive _uo : uoRecive.getUoList()) {
+		List<Map<String, Object>> _uoList = (List<Map<String, Object>>) UsersOrderList.get("uoList");	// UserOrderList를 Map 형태의 List로 담는다
+		for (Map<String, Object> _uo : _uoList) {
 			UsersOrder uo = new UsersOrder();
 			
 			// 값 가져오기
-			int productId = Integer.parseInt(_uo.getProductId());
-	        int orderQty = Integer.parseInt(_uo.getOrderQty());
-	        int totalPrice = Integer.parseInt(_uo.getTotalPrice());
+			int productId = Integer.parseInt((String)_uo.get("productId"));
+	        int orderQty = Integer.parseInt((String)_uo.get("orderQty"));
+	        int totalPrice = Integer.parseInt((String)_uo.get("totalPrice"));
+	        //System.out.println(orderQty+totalPrice);
 			
 			uo.setStatus("주문완료");		// api로 받아오게 수정
 			uo.setPdate(Date.valueOf(LocalDate.now()));
@@ -170,18 +171,22 @@ public class CartService {
 			uoList.add(uo);
 			
 			// 카트에서 삭제
-			int delcnum = Integer.parseInt((String)_uo.getDelcnum());
+			int delcnum = Integer.parseInt((String)_uo.get("delcnum"));
 			cartrepo.deleteById(delcnum);
+			
 		}
+		
+		
 		List<UsersOrder> savedUoList = uorepo.saveAll(uoList);
 
 		// order info 테이블에 추가
+		Map<String, Object> _oi = (Map<String, Object>) UsersOrderList.get("oi");
 		List<OrderInfo> oiList = new ArrayList<>();
 		
-		String resName = uoRecive.getOi().getResName();
-		String resAddress = uoRecive.getOi().getResAddress();
-		int resPhone = Integer.parseInt(uoRecive.getOi().getResPhone());
-		String resRequirement = uoRecive.getOi().getResRequirement();
+		String resName = (String)_oi.get("resName");
+		String resAddress = (String)_oi.get("resAddress");
+		int resPhone = Integer.parseInt((String)_oi.get("resPhone"));
+		String resRequirement = (String)_oi.get("resRequirement");
 		
 		for (UsersOrder uo : savedUoList) {
 			OrderInfo oi = new OrderInfo();
