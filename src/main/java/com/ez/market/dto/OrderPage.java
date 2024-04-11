@@ -20,6 +20,7 @@ import lombok.ToString;
 public class OrderPage
 {
 	@Nonnull
+	private int oNum;
 	private String status;
 	private int totalPrice;
 	private int orderQty;

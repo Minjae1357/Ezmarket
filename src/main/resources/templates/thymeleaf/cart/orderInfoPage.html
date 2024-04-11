@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>배송정보 확인/수정</title>
+<style>
+	
+.image1 {
+width: auto;
+height: 150px;
+}
+
+button {
+margin: 10px 10px;
+}
+	
+.all {
+margin: 0 auto;
+}
+
+h2 {
+	text-align:center;
+}
+
+table {
+font-family: Arial, sans-serif;
+margin: 0 auto;
+border: 5px solid black;
+border-collapse: collapse;
+}
+
+td {
+    border: 5px solid black;
+    padding: 8px;
+}
+</style>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+function update() {
+	if(!confirm('정말 수정하시겠어요?')) return;
+	$.ajax({
+		method: "POST",
+		url: '/cart/updateOrderInfo',
+		data: $('#updateForm').serialize(),
+		cache:false,
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+		},
+		success: function(res) {
+			alert(res.updated ? '변경되었습니다':'오류');
+			if(res.updated) {
+				location.reload();
+				//location.href='/boardjpa/list';
+			}
+		},
+		error: function(error) {
+			alert(error);
+		}
+	});
+};
+</script>
+
+<!---->
+<!--아래 /**/ 부분은 주석이 아니고 서버 사이드에서 JavaScript 코드를 처리하는 데 사용되는 특별한 문법
+	th:inline="javascript" 속성이 있는 <script> 태그 내에서 Thymeleaf는 이 주석을 인식하고, 
+	${orderInfo.resName}와 같은 Thymeleaf 표현식을 평가하여 그 결과를 JavaScript 코드에 삽입
+	요약 : /**/ 부분 주석 아니고 (thymeleaf) 변수값 들어감, 값 없으면 '-' 표시됨, th:inline="javascript" 써야 작동한다-->
+<script th:inline="javascript">
+var oiNum = /*[[${orderInfo.oiNum}]]*/ '-';
+var resName = /*[[${orderInfo.resName}]]*/ '-';
+var resAddress = /*[[${orderInfo.resAddress}]]*/ '-';
+var resPhone = /*[[${orderInfo.resPhone}]]*/ '-';
+var resRequirement = /*[[${orderInfo.resRequirement}]]*/ '-';
+var updateON = 0;
+
+function updateReady() {
+	if(updateON==0){
+		updateON = 1;
+		document.getElementById('displayArea').innerHTML = 
+		'<input type="hidden" name="oiNum" value="' + oiNum + '">' +
+		'<table>' + 
+		'<tr><td><label>받는사람 이름</label></td><td><input type="text" name="resName" value="' + resName + '"></td></tr>' +
+		'<tr><td><label>배송지 주소</label></td><td><input type="text" name="resAddress" value="' + resAddress + '"></td></tr>' +
+		'<tr><td><label>받는사람 전화번호</label></td><td><input type="text" name="resPhone" value="' + resPhone + '"></td></tr>' +
+		'<tr><td><label>요청사항</label></td><td><input type="text" name="resRequirement" value="' + resRequirement + '"></td></tr>' +
+		'</table>' +
+		'<div style="text-align: center;">' +
+		'<button type="button" onclick="updateReady()">취소</button>' +
+		'<button type="button" onclick="update()">확인</button>' +
+		'</div>';
+	}
+	else if(updateON==1){
+		updateON = 0;
+		document.getElementById('displayArea').innerHTML = 
+		'<table>' + 
+		'<tr><td><label>받는사람 이름</label></td><td>' + resName + '</td></tr>' +
+		'<tr><td><label>배송지 주소</label></td><td>' + resAddress + '</td></tr>' +
+		'<tr><td><label>받는사람 전화번호</label></td><td>' + resPhone + '</td></tr>' +
+		'<tr><td><label>요청사항</label></td><td>' + resRequirement + '</td></tr>' +
+		'</table>' +
+		'</table>' +
+		'<div style="text-align: center;">' +
+		'<button type="button" onclick="updateReady()">수정</button>' +
+		'</div>';
+	}
+}
+</script>
+
+
+</head>
+<body>
+<div class="all">
+	
+<h2>배송정보 확인/수정</h2>
+
+<form id="updateForm">
+    <div id="displayArea">	<!-- 수정버튼 누르면 displayArea 부분만 수정할 수 있게 바뀐다 -->
+    	<table>
+			<tr><td><label>받는사람 이름</label></td><td>[[${orderInfo.resName}]]</td></tr>
+			<tr><td><label>배송지 주소</label></td><td>[[${orderInfo.resAddress}]]</td></tr>
+			<tr><td><label>받는사람 전화번호</label></td><td>[[${orderInfo.resPhone}]]</td></tr>
+			<tr><td><label>요청사항</label></td><td>[[${orderInfo.resRequirement}]]</td></tr>
+		</table>
+		
+		<div style="text-align: center;">
+			<button type="button" onclick="updateReady()">수정</button>
+		</div>
+	</div>
+</form>
+
+    
+</div>
+</body>
+</html>

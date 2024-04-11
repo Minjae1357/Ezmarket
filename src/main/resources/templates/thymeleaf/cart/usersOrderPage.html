@@ -30,7 +30,59 @@ td {
     padding: 8px;
 }
 </style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript">
 
+// 체크삭제
+function delcheck(){
+	var obj = {};
+	obj.checked = $('#cartForm').serialize();
+	if(obj.checked==""){
+		alert('체크된 항목이 없습니다');
+		return null;
+	}
+	$.ajax({
+		url:'/cart/delete',
+		method:'delete',
+		cache:false,
+		data: obj,
+		dataType:'json',
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+		},
+		success:function(res){
+			if(res.deleted) alert('삭제성공');
+			location.reload();
+		},
+		error:function(xhr,status,err){
+			alert(status+", "+ err);
+		}
+	});
+};
+
+// 구매페이지로 이동 // 체크한 것들만 뜨게 한다
+function buypage(){
+	var check = $('#cartForm').serialize();
+	//alert(check);
+	if(check==""){
+		alert('체크된 항목이 없습니다');
+		return null;
+	}
+	
+	document.getElementById('cartForm').submit();
+}
+
+// 전체선택 기능
+$(document).ready(function() {
+	$("#selectAll").click(function() {
+		// 모든 체크박스의 상태 확인(올체크 상태에서 누르면 모두 체크 해제하는 기능을 위한 코드)
+		var isAllChecked = $("input:checkbox[name=check]").length === $("input:checkbox[name=check]:checked").length;
+		// 모두 체크되어 있다면 모두 체크 해제, 아니면 모두 체크
+		$("input:checkbox[name=check]").prop('checked', !isAllChecked);
+	});
+});
+	
+</script>
 </head>
 <body>
 <div class="all">
@@ -52,15 +104,14 @@ td {
 			<td th:text="${uo.status}"></td>
 			<td><img class="image1" th:src="${uo.imgSrc}"></td>
 			<td th:text="${uo.productName}"></td>
-			<td th:text="${uo.size}"></td>
+			<td th:text="${uo.size == 0 ? 'S' : uo.size == 1 ? 'M' : uo.size == 2 ? 'L' : uo.size == 3 ? 'XL' : uo.size == 4 ? 'XXL' : '-'}"></td>
 			<td th:text="${uo.productPrice} +' × '+${uo.orderQty}+' = '+${uo.totalPrice}+' 원'"></td>
 			<td th:text="${uo.pdate}"></td>
-			<td th:text="${uo.orderResult}"></td>
-			
+			<td th:text="${uo.orderResult == 0 ? 'X' : uo.orderResult == 1 ? 'O' : '-'}"></td>
+			<td><a th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a></td>
         </tr>
     </table>
-<!--    <button type="button" onclick="buypage();">구매페이지로 이동</button>
-    <button type="button" onclick="delcheck();">선택항목 삭제</button>-->
+    <a href="/cart/list"><button>장바구니로 이동</button></a>
 </div>
 </body>
 </html>

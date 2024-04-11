@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.BuyPage;
@@ -21,12 +23,16 @@ import com.ez.market.dto.QProduct;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrder;
+import com.ez.market.dto.UsersOrderListReceive;
+import com.ez.market.dto.UsersOrderListReceive.OrderRecive;
 import com.ez.market.dto.CartPage;
 import com.ez.market.repository.CartRepository;
 import com.ez.market.repository.OrderInfoRepository;
 import com.ez.market.repository.UsersOrderRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -58,18 +64,24 @@ public class CartService {
 		QProduct PD = QProduct.product;
 		QImgs IMG = QImgs.imgs;
 		QSizes SIZE = QSizes.sizes;
+		
 		List<CartPage> cartList = query
 				.select(Projections.constructor(CartPage.class,
-						CART.cnum, 
+						CART.cnum,
 						PD.productName,
-						PD.productPrice, 
-						SIZE.size, 
-						IMG.imgSrc))
+						PD.productPrice,
+						SIZE.size,
+						IMG.imgSrc
+				))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
-				.where(CART.userid.eq(userid))    // 변수로 받게 변경 필요
+				.where(CART.userid.eq(userid))       // 변수로 받게 변경 필요
 				.fetch();
 		return cartList;
 	}
@@ -97,7 +109,11 @@ public class CartService {
 						IMG.imgSrc))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(CART.cnum.in(checkcnums))	// 리스트(delcnums)를 조건으로
 				.fetch();
@@ -130,20 +146,19 @@ public class CartService {
 	}
 	
 	// 구매버튼 누를시 UsersOrder 테이블에 추가
-	public boolean addUO(Map<String,Object> UsersOrderList) {
+	@Transactional
+	public boolean addUO(UsersOrderListReceive uoRecive) {
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
 		// users order 테이블에 추가
 		List<UsersOrder> uoList = new ArrayList<>();
-		List<Map<String, Object>> _uoList = (List<Map<String, Object>>) UsersOrderList.get("uoList");	// UserOrderList를 Map 형태의 List로 담는다
-		for (Map<String, Object> _uo : _uoList) {
+		for (OrderRecive _uo : uoRecive.getUoList()) {
 			UsersOrder uo = new UsersOrder();
 			
 			// 값 가져오기
-			int productId = Integer.parseInt((String)_uo.get("productId"));
-	        int orderQty = Integer.parseInt((String)_uo.get("orderQty"));
-	        int totalPrice = Integer.parseInt((String)_uo.get("totalPrice"));
-	        System.out.println(orderQty+totalPrice);
+			int productId = Integer.parseInt(_uo.getProductId());
+	        int orderQty = Integer.parseInt(_uo.getOrderQty());
+	        int totalPrice = Integer.parseInt(_uo.getTotalPrice());
 			
 			uo.setStatus("주문완료");		// api로 받아오게 수정
 			uo.setPdate(Date.valueOf(LocalDate.now()));
@@ -155,20 +170,18 @@ public class CartService {
 			uoList.add(uo);
 			
 			// 카트에서 삭제
-			int delcnum = Integer.parseInt((String)_uo.get("delcnum"));
+			int delcnum = Integer.parseInt((String)_uo.getDelcnum());
 			cartrepo.deleteById(delcnum);
-			
 		}
 		List<UsersOrder> savedUoList = uorepo.saveAll(uoList);
-		
+
 		// order info 테이블에 추가
-		Map<String, Object> _oi = (Map<String, Object>) UsersOrderList.get("oi");
 		List<OrderInfo> oiList = new ArrayList<>();
 		
-		String resName = (String)_oi.get("resName");
-		String resAddress = (String)_oi.get("resAddress");
-		int resPhone = Integer.parseInt((String)_oi.get("resPhone"));
-		String resRequirement = (String)_oi.get("resRequirement");
+		String resName = uoRecive.getOi().getResName();
+		String resAddress = uoRecive.getOi().getResAddress();
+		int resPhone = Integer.parseInt(uoRecive.getOi().getResPhone());
+		String resRequirement = uoRecive.getOi().getResRequirement();
 		
 		for (UsersOrder uo : savedUoList) {
 			OrderInfo oi = new OrderInfo();
@@ -184,7 +197,6 @@ public class CartService {
 			oiList.add(oi);
 		}
 		oirepo.saveAll(oiList);
-		
 		return true;
 	}
 	
@@ -200,12 +212,16 @@ public class CartService {
         QSizes SIZE = QSizes.sizes;
         List<OrderPage> orderList = query
 				.select(Projections.constructor(OrderPage.class,
-						UO.status, UO.totalPrice, UO.orderQty,
+						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
 						PD.productPrice, SIZE.size, IMG.imgSrc))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(UO.userid.eq(userid))
 				.fetch();
@@ -219,6 +235,25 @@ public class CartService {
 		int count = cartrepo.countByUserid(userid);
 		
 		return count;
+	}
+	
+	// 
+	public OrderInfo getOrderInfo(int oNum) {
+		OrderInfo orderInfo = oirepo.findByoNum(oNum);
+		return orderInfo;
+	}
+	
+	//
+	public boolean update(OrderInfo _oi) {
+		OrderInfo oi = oirepo.findById(_oi.getOiNum()).get();	// DB에서 원본 데이터 가져와서
+		// 새 데이터로 교체 후
+		oi.setResName(_oi.getResName());
+		oi.setResAddress(_oi.getResAddress());
+		oi.setResPhone(_oi.getResPhone());
+		oi.setResRequirement(_oi.getResRequirement());
+		// DB에 저장
+		oirepo.save(oi);
+		return true;
 	}
 }
 

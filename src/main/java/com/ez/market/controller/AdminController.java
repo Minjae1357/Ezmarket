@@ -35,8 +35,8 @@ public class AdminController
 	
 	@GetMapping("orders")
 	public String userorder(Model m) {
-		log.info("유저 주문리스트" + productsvc.getusersorderlist());
-		m.addAttribute("list",productsvc.getusersorderlist());
+		log.info("유저 주문리스트" + productsvc.getUsersOrderList());
+		m.addAttribute("list",productsvc.getUsersOrderList());
 		return"main/userorder";
 	}
 	
@@ -62,6 +62,16 @@ public class AdminController
 		System.out.println("활성화 관련"+executed);
 		Map<String,Object> map = new HashMap<>();
 		map.put("ox", executed);
+		return map;
+	}
+	@ResponseBody
+	@PostMapping("/status")
+	public Map<String,Object>changeStatus(@RequestParam("status")String status,@RequestParam("orderId")int orderid) {
+		System.out.println("스테이터스"+status);
+		log.info("status" + status); 
+		boolean update = adminsvc.updateStatus(status, orderid);
+		Map<String,Object> map = new HashMap<>();
+		map.put("status",update );
 		return map;
 	}
 	

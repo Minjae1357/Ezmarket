@@ -74,7 +74,7 @@ function buy() {
         var qty = $(this).find("input[type='number']").val(); // 수량 담기
         var totalPrice = $(this).find("td:last-child").text().replace(" 원", "");
         var delcnum = $(this).find("td:nth-child(2)").text();	// 구매시 카트에서 삭제할 cnum
-        if (productId && qty && totalPrice) {	// 위 코드에서 값이 정상적으로 추출되었는지 확인
+        if (productId && qty && totalPrice && delcnum) {	// 위 코드에서 값이 정상적으로 추출되었는지 확인
             uoList.push({productId: productId, orderQty: qty, totalPrice: totalPrice, delcnum: delcnum});
         }
     });
@@ -89,7 +89,7 @@ function buy() {
     alert(JSON.stringify(oi));
 
     // 데이터 객체 생성
-    var UsersOrderList = {
+    var UOLT = {
         uoList: uoList,
         oi: oi
     };
@@ -97,7 +97,7 @@ function buy() {
     $.ajax({
         method: "POST",
         url: '/cart/addUO',
-        data: JSON.stringify(UsersOrderList),
+        data: JSON.stringify(UOLT),
         contentType: "application/json",	// JSON 데이터를 서버로 전송함을 알려준다
         cache: false,
         beforeSend : function(xhr) {

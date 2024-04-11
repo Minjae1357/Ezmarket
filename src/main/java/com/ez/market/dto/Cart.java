@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
+@RequiredArgsConstructor 
 public class Cart 
 {
 	@Id

@@ -44,38 +44,38 @@ public class ProductService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	@Autowired
-    private JPAQueryFactory queryFactory; 
+    private JPAQueryFactory queryFactory;
+	
 	@Transactional
-	public List<UsersOrderList> getusersorderlist(){
-		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-		QUsersOrder userorder = QUsersOrder.usersOrder;
-		QProduct product = QProduct.product;
-		QImgs imgs = QImgs.imgs;
-		QSizes sizes = QSizes.sizes;		
-		List<UsersOrderList> list  = queryFactory
-				.select(Projections.constructor(UsersOrderList.class,
-						product.productName,
-						userorder.userid,
-						userorder.pdate,
-						userorder.oNum,
-						userorder.totalPrice,
-						sizes.size,
-						sizes.inventory,
-						userorder.status,
-						JPAExpressions
-						.select(imgs.imgSrc)
-						.from(imgs)
-						.where(imgs.productId.eq(product.productId))
-						.orderBy(imgs.imgnum.asc())
-						.limit(1)
-						))
-				.from(userorder)
-				.join(product).on(userorder.productId.eq(product.productId))
-				.join(sizes).on(product.productId.eq(sizes.productId))
-				.join(imgs).on(product.productId.eq(imgs.productId))
-				.fetch();
-		return list;
-	} 
+	public List<UsersOrderList> getUsersOrderList() {
+	    JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+	    QUsersOrder userorder = QUsersOrder.usersOrder;
+	    QProduct product = QProduct.product;
+	    QImgs imgs = QImgs.imgs;
+	    QSizes sizes = QSizes.sizes;
+	    QOrderInfo orderinfo = QOrderInfo.orderInfo;
+
+	    List<UsersOrderList> list = queryFactory
+	            .select(Projections.constructor(UsersOrderList.class,	                 
+	                    product.productName,
+	                    userorder.userid,
+	                    userorder.pdate,
+	                    userorder.oNum,
+	                    userorder.totalPrice,
+	                    sizes.size,
+	                    sizes.inventory,
+	                    userorder.status,
+	                    imgs.imgSrc))
+	            .from(userorder)
+	            .join(product).on(userorder.productId.eq(product.productId))
+	            .join(imgs).on(product.productId.eq(imgs.productId))
+	            .join(sizes).on(product.productId.eq(sizes.productId))
+	            .where(userorder.userid.ne("master")) // 예시 조건
+	            .fetch();
+
+	    return list;
+	}
+
 	
 
 	public int savePrduct(Product p,int pnum){
