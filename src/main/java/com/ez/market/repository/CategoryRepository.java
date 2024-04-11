@@ -6,5 +6,5 @@ import com.ez.market.dto.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer>
 {
-
+	Category findBycNum(int cnum);
 }

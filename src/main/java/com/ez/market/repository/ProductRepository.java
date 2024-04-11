@@ -13,4 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer>,
                                            QuerydslPredicateExecutor<Product>
 {
 	List<Product> findProductsByPnumIn(List<Integer> pnumList);
+	Product findByProductId(int productId);
 }

@@ -5,6 +5,28 @@
 <title>Insert title here</title>
 </head>
 <body>
+<!-- Product Information -->
+    <h2 th:text="${product.productName}"></h2>
+    <p th:text="'Price: ' + ${product.productPrice}"></p>
+    <p th:text="'Category: ' + ${category.cKind}"></p>
+    <p th:text="'Gender: ' + (${category.cGender} == 0 ? '남여공용' : (${category.cGender} == 1 ? '남자' : '여자'))"></p>
+    <p th:text="'Brand: ' + ${brand.brandName}"></p>
+
+    <!-- Product Images -->
+    <div th:each="img : ${img}">
+        <img th:src="${img.imgSrc}" alt="Product Image">
+    </div>
+
+    <!-- Product Sizes -->
+    <ul>
+        <li th:each="size : ${Size}">
+            <span th:text="'size: ' + (${size.size} == 1 ? 'S' : (${size.size} == 2 ? 'M' : (${size.size} == 3 ? 'L' : 'XL')))"></span>
+            <span th:text="'Shoulder: ' + ${size.shoulder}"></span>
+            <span th:text="'Chest: ' + ${size.chest}"></span>
+            <span th:text="'Sleeve: ' + ${size.sleeve}"></span>
+        </li>
+    </ul>
+
 
 </body>
 </html>

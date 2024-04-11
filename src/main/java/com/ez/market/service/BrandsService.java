@@ -56,4 +56,10 @@ public class BrandsService {
 	public List<Brands> getAllBrands() {
         return brandsRepo.findAll();
     }
+
+
+	public Brands findByBrandId(int brandId) {
+		
+		return brandsRepo.findByBrandId(brandId);
+	}
 }

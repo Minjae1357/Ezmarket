@@ -32,4 +32,8 @@ public class SizeService {
             return false;
 		}
 	}
+
+	public List<Sizes> findByProductId(int pid) {
+		return sizeRepo.findByProductId(pid);
+	}
 }
