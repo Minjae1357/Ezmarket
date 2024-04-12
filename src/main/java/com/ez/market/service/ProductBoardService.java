@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.ProductBoard;
+import com.ez.market.dto.QCategory;
 import com.ez.market.dto.QProductBoard;
 import com.ez.market.repository.ProductBoardRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,5 +46,15 @@ public class ProductBoardService {
         return pbRepo.findTop30ByOrderByPnumDesc();
     }  
 
+	public List<ProductBoard> getTop() {
+        QProductBoard qProductBoard = new QProductBoard("pb");
+        return new JPAQueryFactory(entityManager)
+                .select(qProductBoard)
+                .from(qProductBoard)
+                .orderBy(qProductBoard.pnum.desc())
+                .where()
+                .limit(30)
+                .fetch(); 
+    }  
 	
 }

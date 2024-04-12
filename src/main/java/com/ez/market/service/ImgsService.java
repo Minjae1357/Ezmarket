@@ -52,6 +52,7 @@ public class ImgsService {
 	}
 	
 	public List<Imgs> findAllByProductId(int pid) {
+		
 		return imgRepo.findAllByProductId(pid);
 	}
 }

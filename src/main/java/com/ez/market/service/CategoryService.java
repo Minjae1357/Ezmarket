@@ -34,4 +34,7 @@ public class CategoryService {
 	public Category findBycNum(int cnum) {
 		return cateRepo.findBycNum(cnum);
 	}
+
+
+	
 }
