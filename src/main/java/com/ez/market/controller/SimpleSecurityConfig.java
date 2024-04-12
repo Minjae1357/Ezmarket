@@ -118,7 +118,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/product/addProduct")
 	            .ignoringRequestMatchers("/admin/status")
 	    )
-	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/login")
+	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/loginForm")
 	    		.successHandler(googleLoginSuccessHandler)
 	    		.failureUrl("/login?error=T")
 	    )

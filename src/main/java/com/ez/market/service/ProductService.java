@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ez.market.dto.Category;
 import com.ez.market.dto.Imgs;
 import com.ez.market.dto.Product;
 import com.ez.market.dto.ProductBoard;
@@ -24,10 +25,12 @@ import com.ez.market.dto.QOrderInfo;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrderList;
+
+import com.ez.market.repository.CategoryRepository;
 import com.ez.market.repository.ImgsRepository;
 import com.ez.market.repository.ProductRepository;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -45,6 +48,8 @@ public class ProductService {
 	private EntityManager entityManager;
 	@Autowired
     private JPAQueryFactory queryFactory;
+	@Autowired
+	private CategoryRepository cateRepo;
 	
 	@Transactional
 	public List<UsersOrderList> getUsersOrderList() {
@@ -130,4 +135,18 @@ public class ProductService {
 	public Product findByProductId(int pid){
 		return productRepo.findByProductId(pid);
 	}
+	public List<Category> getTop(String kind){
+		return cateRepo.findBycKind(kind);
+	}
+	public List<Product> findTopList(){
+		List<Product> plist = new ArrayList<>();
+		List<Category> clist = getTop("상의");
+		for(Category c : clist) {			
+			plist = productRepo.findBycNum(c.getCNum());			
+		}
+		System.out.println("plist" + plist);
+		return plist; 
+	}
+
+	
 }
