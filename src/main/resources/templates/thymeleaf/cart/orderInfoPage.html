@@ -64,10 +64,13 @@ function update() {
 </script>
 
 <!---->
-<!--아래 /**/ 부분은 주석이 아니고 서버 사이드에서 JavaScript 코드를 처리하는 데 사용되는 특별한 문법
-	th:inline="javascript" 속성이 있는 <script> 태그 내에서 Thymeleaf는 이 주석을 인식하고, 
-	${orderInfo.resName}와 같은 Thymeleaf 표현식을 평가하여 그 결과를 JavaScript 코드에 삽입
-	요약 : /**/ 부분 주석 아니고 (thymeleaf) 변수값 들어감, 값 없으면 '-' 표시됨, th:inline="javascript" 써야 작동한다-->
+<!--
+아래 /**/ 부분은 주석이 아니고 서버 사이드에서 JavaScript 코드를 처리하는 데 사용되는 특별한 문법
+th:inline="javascript" 속성이 있는 <script> 태그 내에서 Thymeleaf는 이 주석을 인식하고, 
+${orderInfo.resName}와 같은 Thymeleaf 표현식을 평가하여 그 결과를 JavaScript 코드에 삽입
+요약 : /**/ 부분 주석 아니고 (thymeleaf) 변수값 들어감, 값 없으면 '-' 표시됨, th:inline="javascript" 써야 작동한다
+-->
+	
 <script th:inline="javascript">
 var oiNum = /*[[${orderInfo.oiNum}]]*/ '-';
 var resName = /*[[${orderInfo.resName}]]*/ '-';
@@ -126,7 +129,9 @@ function updateReady() {
 		</table>
 		
 		<div style="text-align: center;">
-			<button type="button" onclick="updateReady()">수정</button>
+			<a th:if="${orderResult==1}">
+				<button type="button" onclick="updateReady()">수정</button>
+			</a>
 		</div>
 	</div>
 </form>
