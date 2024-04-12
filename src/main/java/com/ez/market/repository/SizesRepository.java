@@ -9,15 +9,9 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import com.ez.market.dto.Cart;
 import com.ez.market.dto.Sizes;
 
-<<<<<<< HEAD
+
 public interface SizesRepository extends JpaRepository<Sizes,Integer>,
                                          JpaSpecificationExecutor <Sizes>, 
                                          QuerydslPredicateExecutor<Sizes>{
-	
-=======
-public interface SizesRepository extends JpaRepository<Sizes,Integer>{
-
 	List<Sizes> findByProductId(int pid);
-
->>>>>>> origin/main
 }
