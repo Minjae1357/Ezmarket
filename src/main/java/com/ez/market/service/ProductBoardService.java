@@ -42,13 +42,7 @@ public class ProductBoardService {
 	}
 	
 	public List<ProductBoard> findTop30ByOrderByPnumDesc() {
-        QProductBoard qProductBoard = new QProductBoard("pb");
-        return new JPAQueryFactory(entityManager)
-                .select(qProductBoard)
-                .from(qProductBoard)
-                .orderBy(qProductBoard.pnum.desc())
-                .limit(30)
-                .fetch(); 
+        return pbRepo.findTop30ByOrderByPnumDesc();
     }  
 
 	
