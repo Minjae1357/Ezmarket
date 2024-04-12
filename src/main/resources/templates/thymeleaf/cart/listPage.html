@@ -37,6 +37,31 @@ td {
     margin: 10px 0; /* 상하 마진 추가로 조정 */
 }
 
+
+.image-container {
+position: relative;
+display: inline-block;
+}
+
+.image-container img {
+width: auto;
+height: 150px;
+
+}
+.overlay-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
+    background: rgba(0, 0, 0, 0.7); /* 반투명 검정 배경 */
+    display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    font-size: 24px; /* 글자 크기 */
+}
+
 </style>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
@@ -117,10 +142,10 @@ td {
 <body>
 <div class="all">
 	<h2>내 장바구니</h2>
-	<div class="searchdiv">
+	<!--<div class="searchdiv">
 		<input type="text" name="searchcart">
 		<button type="button" onclick="search();">검색</button>
-	</div>
+	</div>-->
 	<form id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
     <table>
         <tr>
@@ -134,18 +159,31 @@ td {
         </tr>
         <tr th:each="c,i : ${cartList}">
 			<td th:text="${i.index+1}"></td>
-			<td><input type="checkbox" name="check" th:value="${c.cnum}" checked></td>
-            <td><img class="image1" th:src="${c.imgSrc}"></td>
-            <td th:text="${c.productName}"></td>
-            <td th:text="${c.productPrice}"></td>
-            <td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
-            <td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
-        </tr>
-    </table>
-    </form>
-    <button type="button" onclick="buypage();">구매페이지로 이동</button>
-    <button type="button" onclick="delcheck();">선택항목 삭제</button>
-    <a href="/cart/uoList"><button type="button">주문내역</button></a>
+			
+			<td>
+				<div th:if="${c.inventory>0}"><input type="checkbox" name="check" th:value="${c.cnum}" checked></div>
+				<div th:if="${c.inventory==0}">재고없음</div>
+			</td>
+			
+			<td>
+			<div th:if="${c.inventory>0}" class="image-container">
+					<img class="image1" th:src="${c.imgSrc}">
+				</div>
+				<div th:if="${c.inventory==0}" class="image-container">
+					<img class="image1" th:src="${c.imgSrc}" alt="대체 텍스트">
+					<div class="overlay-text">품절</div>
+				</div>
+			</td>
+			<td th:text="${c.productName}"></td>
+			<td th:text="${c.productPrice}"></td>
+			<td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
+			<td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
+		</tr>
+	</table>
+	</form>
+	<button type="button" onclick="buypage();">구매페이지로 이동</button>
+	<button type="button" onclick="delcheck();">선택항목 삭제</button>
+	<a href="/cart/uoList"><button type="button">주문내역</button></a>
 </div>
 </body>
 </html>

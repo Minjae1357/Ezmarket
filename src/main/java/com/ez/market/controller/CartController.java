@@ -4,6 +4,8 @@ package com.ez.market.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,16 +68,12 @@ public class CartController
 		System.out.println("ddd->" + enc.encode("ddd"));
 		return "hi pwd"; 
 	}
-
 	
-	//리스트 띄우기
+	// 장바구니 리스트 띄우기
 	@GetMapping("list")
-	public String list(Model model)
-	{
-		
+	public String list(Model model) {
 		List<CartPage> cartList = cartsvc.getCartList();
 		model.addAttribute("cartList", cartList);
-		
 		return "cart/listPage";
 	}
 	
@@ -100,47 +98,22 @@ public class CartController
 	@DeleteMapping("deleteone")
 	@ResponseBody
 	public Map<String,Object> deleteone(@RequestParam int delnum) {
-		
 		boolean deleted = cartsvc.deleteone(delnum);
 		Map<String,Object> map = new HashMap<>();
 		map.put("deleted", deleted);
 		return map;
 	}
 	
-//	// 주문정보, 발주정보 테이블에 저장,(usersOrder, orderInfo 에 저장하기)
-//	@PostMapping("addUO")
-//	@ResponseBody
-//	public Map<String,Object> addUO(@RequestBody Map<String,Object> UsersOrderList) {	
-//		// 전달받은 UserOrderList에는 productId, orderQty, totalPrice 여러 행이 담겨있다 -> List로 변환  
-//		// + 발주정보 포함
-//		boolean added = cartsvc.addUO(UsersOrderList);
-//		System.out.println("hi?");
-//		Map<String,Object> map = new HashMap<>();
-//		map.put("added", added);
-//		return map;
-//	}
-	
 	// 주문정보, 발주정보 테이블에 저장,(usersOrder, orderInfo 에 저장하기)
 	@PostMapping("addUO")
 	@ResponseBody
 	public Map<String,Object> addUO(@RequestBody UsersOrderListReceive uoRecive) {	
-		// UsersOrderListRecive dto 사용, 이 클래스는
-		// productId, orderQty, totalPrice, cnum 리스트와
-		// orderinfo 객체 하나를 담는 dto
-		/*
-		for (OrderRecive uo:uoRecive.getUoList()) {
-			log.info("카트에서 삭제될 cnum : "+uo.getDelcnum());
-			log.info("수량 : "+uo.getOrderQty());
-			log.info("상품ID : "+uo.getProductId());
-			log.info("총가격 : "+uo.getTotalPrice());
-		}
-		*/
+		// UsersOrderListRecive dto 사용, 이 클래스는 (productId, orderQty, totalPrice, cnum)리스트와 orderinfo 객체 하나를 담는 dto
 		boolean added = cartsvc.addUO(uoRecive);
 		Map<String,Object> map = new HashMap<>();
 		map.put("added", added);
 		return map;
 	}
-	
 	
 	// 주문내역 보기
 	@GetMapping("uoList")
@@ -150,12 +123,14 @@ public class CartController
 		return "cart/usersOrderPage";
 	}
 	
-	//배송지 조회
+	//배송지 조회/수정
 	@Transactional
 	@GetMapping("orderInfo/{oNum}")
 	public String orderInfo(@PathVariable int oNum, Model model) {
 		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
 		model.addAttribute("orderInfo", orderInfo);
+		int orderResult = cartsvc.getOrderRes(oNum);
+		model.addAttribute("orderResult", orderResult);	// 배송상태를 체크해서 배송정보를 수정가능/불가 기능 추가하기 위해 전송
 		return "cart/orderInfoPage";
 	}
 	
@@ -165,10 +140,19 @@ public class CartController
 	public Map<String,Object> orderInfo(@ModelAttribute OrderInfo oi) {
 		System.out.println(oi.getResName());
 		boolean updated = cartsvc.update(oi);
-		
 		Map<String,Object> map = new HashMap<>();
 		map.put("updated", updated);
-		
+		return map;
+	}
+	
+	// 물품 수령
+	@PostMapping("receipt")
+	@ResponseBody
+	public Map<String,Object> receipt(@RequestParam int oNum) {
+		System.out.println(oNum);
+		boolean receipted = cartsvc.receipt(oNum);
+		Map<String,Object> map = new HashMap<>();
+		map.put("receipted", receipted);
 		return map;
 	}
 	

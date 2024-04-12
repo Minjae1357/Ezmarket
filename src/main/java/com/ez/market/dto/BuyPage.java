@@ -25,5 +25,6 @@ public class BuyPage
 	private int productPrice;
 	private int productId;
 	private int size;
+	private int inventory;
 	private String imgSrc;
 }

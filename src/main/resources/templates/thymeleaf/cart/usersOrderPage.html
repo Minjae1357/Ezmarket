@@ -81,6 +81,27 @@ $(document).ready(function() {
 		$("input:checkbox[name=check]").prop('checked', !isAllChecked);
 	});
 });
+
+function receipt(oNum){
+	if(!confirm('물품을 수령하셨습니까?')) return;
+	$.ajax({
+		url:'/cart/receipt',
+		method:'POST',
+		cache:false,
+		data: {oNum:oNum},
+		dataType:'json',
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+		},
+		success:function(res){
+			if(res.receipted) alert('수령완료');
+			location.reload();
+		},
+		error:function(xhr,status,err){
+			alert(status+", "+ err);
+		}
+	});
+}
 	
 </script>
 </head>
@@ -107,8 +128,16 @@ $(document).ready(function() {
 			<td th:text="${uo.size == 0 ? 'S' : uo.size == 1 ? 'M' : uo.size == 2 ? 'L' : uo.size == 3 ? 'XL' : uo.size == 4 ? 'XXL' : '-'}"></td>
 			<td th:text="${uo.productPrice} +' × '+${uo.orderQty}+' = '+${uo.totalPrice}+' 원'"></td>
 			<td th:text="${uo.pdate}"></td>
-			<td th:text="${uo.orderResult == 0 ? 'X' : uo.orderResult == 1 ? 'O' : '-'}"></td>
-			<td><a th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a></td>
+			<td>
+				<span th:text="${uo.orderResult == 1 ? '배송준비중' : uo.orderResult == 2 ? '배송중' : uo.orderResult == 3 ? '배송완료' : '취소or결제 ???'}"></span>
+				<a th:if="${uo.orderResult != 3}">
+					<button type="button" th:attr="onclick=|receipt('${uo.oNum}');|">물품<br>수령 확인</button>
+				</a>
+			</td>
+			<td>
+				<a th:if="${uo.orderResult ==1}" th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
+				<a th:if="${uo.orderResult !=1}" th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
+			</td>
         </tr>
     </table>
     <a href="/cart/list"><button>장바구니로 이동</button></a>
