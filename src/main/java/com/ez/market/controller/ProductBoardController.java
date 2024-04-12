@@ -76,6 +76,8 @@ public class ProductBoardController
 		Category cate = cateSvc.findBycNum(plist.getCNum());
 		Brands brand = brandSvc.findByBrandId(plist.getBrandId());
 		m.addAttribute("product",plist);
+		String mainImageSrc = ilist.get(0).getImgSrc();
+	    m.addAttribute("mainImageSrc", mainImageSrc);
 		m.addAttribute("img",ilist);
 		m.addAttribute("Size",slist);
 		m.addAttribute("category",cate);
