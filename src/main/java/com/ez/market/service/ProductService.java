@@ -126,5 +126,8 @@ public class ProductService {
 	    System.out.println(plist); // 생성된 상품 목록 출력
 	    return plist; // 최종 상품 목록 반환
 	}
-
+	
+	public Product findByProductId(int pid){
+		return productRepo.findByProductId(pid);
+	}
 }

@@ -6,4 +6,6 @@ import com.ez.market.dto.Brands;
 
 public interface BrandsRepository extends JpaRepository<Brands,Integer>{
 
+	Brands findByBrandId(int brandId);
+
 }
