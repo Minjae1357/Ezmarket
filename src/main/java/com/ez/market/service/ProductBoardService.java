@@ -48,7 +48,7 @@ public class ProductBoardService {
                 .from(qProductBoard)
                 .orderBy(qProductBoard.pnum.desc())
                 .limit(30)
-                .fetch();
+                .fetch(); 
     }  
 
 	

@@ -11,7 +11,17 @@ import com.ez.market.dto.Sizes;
 
 
 public interface SizesRepository extends JpaRepository<Sizes,Integer>,
+<<<<<<< HEAD
                                          JpaSpecificationExecutor <Sizes>, 
                                          QuerydslPredicateExecutor<Sizes>{
 	List<Sizes> findByProductId(int pid);
+=======
+										 JpaSpecificationExecutor <Sizes>, 
+										 QuerydslPredicateExecutor<Sizes>
+{
+
+	List<Sizes> findByProductId(int pid);
+
+
+>>>>>>> origin/main
 }
