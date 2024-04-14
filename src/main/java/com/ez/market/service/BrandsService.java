@@ -24,7 +24,7 @@ public class BrandsService {
         	for (MultipartFile file : files) {
         		String filename = file.getOriginalFilename();
         		file.transferTo(new File(uploadPath +  File.separator + filename)); 
-        		brand.setBrandImg("/brands/" +brandName);
+        		brand.setBrandImg("/brands/" +filename);
         		brand.setBrandName(brandName);
         		brandsRepo.save(brand);
         	}
@@ -56,4 +56,10 @@ public class BrandsService {
 	public List<Brands> getAllBrands() {
         return brandsRepo.findAll();
     }
+
+
+	public Brands findByBrandId(int brandId) {
+		
+		return brandsRepo.findByBrandId(brandId);
+	}
 }

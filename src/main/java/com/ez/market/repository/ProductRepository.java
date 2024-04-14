@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
+import com.ez.market.dto.Category;
 import com.ez.market.dto.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Integer>,
@@ -13,4 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer>,
                                            QuerydslPredicateExecutor<Product>
 {
 	List<Product> findProductsByPnumIn(List<Integer> pnumList);
+	Product findByProductId(int productId);
+	List<Product> findBycNum(int cNum);
+	
 }

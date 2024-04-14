@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+    function changeMainImage(thumbnail) {
+        var mainImage = document.querySelector('.main-image img');
+        mainImage.src = thumbnail.src;
+        mainImage.style.width = '500px';
+    mainImage.style.height = '500px';
+    }
+</script>
+<meta charset="UTF-8">
+<title>Product Details</title>
+<style>
+    .product-info {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+	}
+    .product-info h2 {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    .product-info p {
+        margin: 5px 0;
+    }
+    .product-details {
+        flex: 1;
+    }
+    .product-images {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px; /* 사진 목록과 표 사이의 간격 조정 */
+    }
+    .product-images .main-image {
+        width: 500px;
+        height: 500px;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+    .product-images .thumbnail-list {
+        display: flex;
+    }
+    .product-images .thumbnail-list img {
+        width: 60px;
+        height: 60px;
+        margin-top: 10px;
+        margin-right: 5px;
+    }
+    .size-table {
+        width: 500px; /* 표의 가로 크기를 500px로 설정 */
+        border-collapse: collapse;
+    }
+    .size-table th, .size-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    .size-table th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+<!-- Product Information -->
+<div class="product-info">
+    <div class="product-details">
+        <h2 th:text="${product.productName}"></h2>
+        <p th:text="'Price: ' + ${product.productPrice}"></p>
+        <p th:text="'Category: ' + ${category.cKind}"></p>
+        <p th:text="'Gender: ' + (${category.cGender} == 0 ? '남여공용' : (${category.cGender} == 1 ? '남자' : '여자'))"></p>
+        <p th:text="'Brand: ' + ${brand.brandName}"></p>
+
+        <!-- Add to Cart Button -->
+        <button>Add to Cart</button>
+    </div>
+
+    <!-- Product Images -->
+    <div class="product-images">
+        <!-- Main Image -->
+        <div class="main-image">
+            <img th:src="${mainImageSrc}" alt="Product Image" style="width: 500px; height: 500px;">
+        </div>
+        <!-- Thumbnail List -->
+        <div class="thumbnail-list">
+            <div th:each="img : ${img}">
+                <img th:src="${img.imgSrc}" alt="Thumbnail Image" onmouseover="changeMainImage(this)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Sizes Table -->
+<table class="size-table">
+    <thead>
+        <tr>
+            <th>Size</th>
+            <th>Shoulder</th>
+            <th>Chest</th>
+            <th>Sleeve</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="size : ${Size}">
+            <td th:text="${size.size} == 1 ? 'S' : (${size.size} == 2 ? 'M' : (${size.size} == 3 ? 'L' : 'XL'))"></td>
+            <td th:text="${size.shoulder}"></td>
+            <td th:text="${size.chest}"></td>
+            <td th:text="${size.sleeve}"></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+

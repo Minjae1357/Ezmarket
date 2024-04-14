@@ -30,4 +30,11 @@ public class CategoryService {
 	public List<Category> getAllCategory() {
         return cateRepo.findAll();
     }
+	
+	public Category findBycNum(int cnum) {
+		return cateRepo.findBycNum(cnum);
+	}
+
+
+	
 }

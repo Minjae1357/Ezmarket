@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ez.market.dto.Category;
 import com.ez.market.dto.Imgs;
 import com.ez.market.dto.Product;
 import com.ez.market.dto.ProductBoard;
@@ -24,10 +25,12 @@ import com.ez.market.dto.QOrderInfo;
 import com.ez.market.dto.QSizes;
 import com.ez.market.dto.QUsersOrder;
 import com.ez.market.dto.UsersOrderList;
+
+import com.ez.market.repository.CategoryRepository;
 import com.ez.market.repository.ImgsRepository;
 import com.ez.market.repository.ProductRepository;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -45,13 +48,15 @@ public class ProductService {
 	private EntityManager entityManager;
 	@Autowired
     private JPAQueryFactory queryFactory;
+	@Autowired
+	private CategoryRepository cateRepo;
 	
 	@Transactional
 	public List<UsersOrderList> getUsersOrderList() {
 	    JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
 	    QUsersOrder userorder = QUsersOrder.usersOrder;
 	    QProduct product = QProduct.product;
-	    QImgs imgs = QImgs.imgs;
+	    QImgs imgs = QImgs.imgs; 
 	    QSizes sizes = QSizes.sizes;
 	    QOrderInfo orderinfo = QOrderInfo.orderInfo;
 
@@ -112,19 +117,36 @@ public class ProductService {
 	        ProductList productlist = new ProductList();
 	        
 	        // 상품에 해당하는 이미지 정보 가져오기
-	        Imgs imgs = imgsrepo.findByProductId(p.getProductId());
+	        List<Imgs> imgs = imgsrepo.findAllByProductId(p.getProductId());
 	        
-	        // ProductList 객체에 상품 정보 설정
+	        // ProductList 객체에 상품 정보 설정 
 	        productlist.setProductName(p.getProductName());
-	        productlist.setImgName(imgs.getImgSrc());
+	        productlist.setImgName(imgs.get(0).getImgSrc());
 	        productlist.setPrice(p.getProductPrice());
 	        
 	        // 설정된 ProductList 객체를 리스트에 추가
 	        plist.add(productlist);
 	    }
-
+	    System.out.println("리스트 불러오는거임" + plist);
 	    System.out.println(plist); // 생성된 상품 목록 출력
 	    return plist; // 최종 상품 목록 반환
 	}
+	
+	public Product findByProductId(int pid){
+		return productRepo.findByProductId(pid);
+	}
+	public List<Category> getTop(String kind){
+		return cateRepo.findBycKind(kind);
+	}
+	public List<Product> findTopList(){
+		List<Product> plist = new ArrayList<>();
+		List<Category> clist = getTop("상의");
+		for(Category c : clist) {			
+			plist = productRepo.findBycNum(c.getCNum());			
+		}
+		System.out.println("plist" + plist);
+		return plist; 
+	}
 
+	
 }

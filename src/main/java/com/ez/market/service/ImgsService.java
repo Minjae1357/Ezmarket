@@ -51,4 +51,8 @@ public class ImgsService {
 		return imgRepo.findImgsByProductIdIn(pIdList);
 	}
 	
+	public List<Imgs> findAllByProductId(int pid) {
+		
+		return imgRepo.findAllByProductId(pid);
+	}
 }

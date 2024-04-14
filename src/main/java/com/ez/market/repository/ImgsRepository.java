@@ -14,4 +14,5 @@ public interface ImgsRepository extends JpaRepository<Imgs, Integer>,
 {
 	List<Imgs> findImgsByProductIdIn(List<Integer> pIdList);
 	Imgs findByProductId(int productid);
+	List<Imgs> findAllByProductId(int productId);
 }

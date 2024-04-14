@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 public class UsersOrderList 
 {
 	@Nonnull	
-	String userId;
 	String productName;
+	String userId;
 	Date orderDate;
 	int orderNum;
 	int price;

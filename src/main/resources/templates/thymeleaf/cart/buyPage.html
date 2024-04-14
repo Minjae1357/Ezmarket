@@ -19,6 +19,9 @@ margin: 0 auto;
 h2 {
 	text-align:center;
 }
+h3 {
+	text-align: center;
+}
 
 table {
 font-family: Arial, sans-serif;
@@ -74,7 +77,7 @@ function buy() {
         var qty = $(this).find("input[type='number']").val(); // 수량 담기
         var totalPrice = $(this).find("td:last-child").text().replace(" 원", "");
         var delcnum = $(this).find("td:nth-child(2)").text();	// 구매시 카트에서 삭제할 cnum
-        if (productId && qty && totalPrice) {	// 위 코드에서 값이 정상적으로 추출되었는지 확인
+        if (productId && qty && totalPrice && delcnum) {	// 위 코드에서 값이 정상적으로 추출되었는지 확인
             uoList.push({productId: productId, orderQty: qty, totalPrice: totalPrice, delcnum: delcnum});
         }
     });
@@ -89,7 +92,7 @@ function buy() {
     alert(JSON.stringify(oi));
 
     // 데이터 객체 생성
-    var UsersOrderList = {
+    var UOLT = {
         uoList: uoList,
         oi: oi
     };
@@ -97,8 +100,8 @@ function buy() {
     $.ajax({
         method: "POST",
         url: '/cart/addUO',
-        data: JSON.stringify(UsersOrderList),
-        contentType: "application/json",	// JSON 데이터를 서버로 전송함을 알려준다
+        data: JSON.stringify(UOLT),
+        contentType: "application/json",
         cache: false,
         beforeSend : function(xhr) {
 			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
@@ -113,6 +116,19 @@ function buy() {
             alert('오류가 발생했습니다.');
         }
     });
+}
+
+// 수량 min, max 값 제한하기
+function qtyset(element) {
+    const min = parseInt(element.min, 10);
+    const max = parseInt(element.max, 10);
+    let value = parseInt(element.value, 10);
+    if (value < min) {
+        element.value = min;
+    }
+    else if (value > max) {
+        element.value = max;
+    }
 }
 </script>
 </head>
@@ -138,12 +154,11 @@ function buy() {
             <td th:text="${c.productName}"></td>
             <td th:id="'price'+${c.cnum}" th:data-price="${c.productPrice}" th:text="${c.productPrice} +' 원'"></td>
             <td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
-            <td><input type="number" class="qty" th:id="'qty'+${c.cnum}" min="1" value="1"> 개</td>
+            <td><a th:text="'재고 '+${c.inventory}+' 개'"></a><br><input type="number" class="qty" th:id="'qty'+${c.cnum}" th:min="1" th:max="${c.inventory}" value="1" oninput="qtyset(this)"> 개</td>
             <td th:id="'totalPrice'+${c.cnum}" th:text="${c.productPrice} +' 원'"></td>
         </tr>
         <tr>
 			<td></td><td></td><td></td><td></td><td></td><td></td><td th:id="grandTotal"></td>
-			
 		</tr>
     </table>
     <form id="oiForm">
