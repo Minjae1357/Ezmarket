@@ -53,9 +53,9 @@ public class SimpleSecurityConfig {
 		
 		BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
 		//이거는 암호화하는거
-		System.out.println("aaa->" + enc.encode("aaa"));
-		System.out.println("bbb->" + enc.encode("bbb"));
-		System.out.println("ccc->" + enc.encode("ccc")); 
+		System.out.println("master->" + enc.encode("master"));
+		System.out.println("blake->" + enc.encode("blake"));
+		System.out.println("jones->" + enc.encode("jones")); 
 
  
 		return enc; 

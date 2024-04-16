@@ -146,7 +146,7 @@ public class ProductController {
 	public String productList(Model m) {
 		List<ProductList> list = pSvc.getProductList();
 		m.addAttribute("products",list);
-		return "product/productlist";
+		return"product/productlist";
 	}
 	@GetMapping("/detail")
 	public String ProductDetail(@RequestParam("productName") String productName,Model m) {
