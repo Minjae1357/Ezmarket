@@ -1,9 +1,11 @@
 package com.ez.market.service;
 
 import java.io.File;
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +18,27 @@ public class BrandsService {
 	BrandsRepository brandsRepo;
 	@Autowired
 	Brands brand;
-	
+	@Autowired
+	private ResourceLoader resourceLoader;
 	
 	public boolean saveBrand(MultipartFile[] files,String brandName) {
-			String uploadPath = "D:/java_workspace/Ezmarket/src/main/resources/static/brands/";
-        try {
+		String projectPath = "";
+		// 현재 프로젝트 경로 찾기
+		try {
+			URI classpathRootUri = resourceLoader.getResource("classpath:").getURI();
+	        File classpathRoot = new File(classpathRootUri);
+	        
+	        // '/C:/eclipse/workspace/Ezmarket/target/classes/'가 리턴되는데
+	        // '/C:/eclipse/workspace/Ezmarket/' 까지만 나오게 두 번 상위 디렉터리로 이동
+	        File projectRoot = classpathRoot.getParentFile().getParentFile();
+	        projectPath = projectRoot.getAbsolutePath();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		
+		String uploadPath = projectPath + "/src/main/resources/static/images/";
+		// 이미지 파일을 업로드하고 저장된 경로를 받음
+	    try {
         	for (MultipartFile file : files) {
         		String filename = file.getOriginalFilename();
         		file.transferTo(new File(uploadPath +  File.separator + filename)); 
