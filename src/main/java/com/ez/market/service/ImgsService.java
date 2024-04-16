@@ -1,6 +1,7 @@
 package com.ez.market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -11,18 +12,35 @@ import com.ez.market.repository.ImgsRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.net.URI;
 
 @Service
 public class ImgsService {
 	@Autowired
 	ImgsRepository imgRepo;
+	@Autowired
+	private ResourceLoader resourceLoader;
 
 	public boolean saveImg(MultipartFile[] files, int pid) {
-		//상대 경로를 통해서 저장하지만 외부저장소를 사용하거나 절대경로를 사용하는게 좋음.
-		String uploadPath = "D:/java_workspace/Ezmarket/src/main/resources/static/images/";
+		
+		String projectPath = "";
+		// 현재 프로젝트 경로 찾기
+		try {
+			URI classpathRootUri = resourceLoader.getResource("classpath:").getURI();
+	        File classpathRoot = new File(classpathRootUri);
+	        
+	        // '/C:/eclipse/workspace/Ezmarket/target/classes/'가 리턴되는데
+	        // '/C:/eclipse/workspace/Ezmarket/' 까지만 나오게 두 번 상위 디렉터리로 이동
+	        File projectRoot = classpathRoot.getParentFile().getParentFile();
+	        projectPath = projectRoot.getAbsolutePath();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		
+		String uploadPath = projectPath + "/src/main/resources/static/images/";
 		// 이미지 파일을 업로드하고 저장된 경로를 받음
 	    try {
 	    	for (MultipartFile file : files) {

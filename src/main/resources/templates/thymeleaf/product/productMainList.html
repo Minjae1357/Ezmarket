@@ -65,17 +65,18 @@
 </style>
 </head>
 <body>
+	
 <div class="product-container">
-    <!-- 상품 목록 반복 -->
+     상품 목록 반복 
     <div class="product-card" th:each="product, i : ${product}">
 			<a th:href="@{/productboard/detail/{productId}(productId=${product.productId})}">
-            <!-- 이미지 경로 가져오기 -->
+             <!--이미지 경로 가져오기--> 
             <img th:src="${img[i.index].imgSrc}" class="product-image">
             
             <div class="product-details">
-            <!-- 조회수 가져오기 -->
+             <!--조회수 가져오기--> 
             <div class="product-review" th:text="'view: ' + ${productBoard[i.index].pHit}"></div>
-            <!-- 가격 및 상품명 가져오기 -->
+             <!--가격 및 상품명 가져오기--> 
             <div class="product-name" th:text="${product.productName}"></div>
             <div class="product-price" th:text="'₩: ' + ${product.productPrice}"></div>
           	</div>
