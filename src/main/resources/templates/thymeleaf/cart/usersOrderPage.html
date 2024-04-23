@@ -9,7 +9,7 @@
 width: auto;
 height: 150px;
 }
-	
+	 
 .all {
 margin: 0 auto;
 }
@@ -135,8 +135,8 @@ function receipt(oNum){
 				</a>
 			</td>
 			<td>
-				<a th:if="${uo.orderResult ==1}" th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
-				<a th:if="${uo.orderResult !=1}" th:href="'/cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
+				<a th:if="${uo.orderResult ==1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
+				<a th:if="${uo.orderResult !=1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
 			</td>
         </tr>
     </table>

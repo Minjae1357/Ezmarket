@@ -29,7 +29,7 @@ public class UsersOrder
 	@Column(nullable = false)
 	private String status;
 	@Column(nullable = false)
-	private java.sql.Date pdate;
+	private java.sql.Date pdate;  
 	@Column(nullable = false)
 	private String userid;
 	@Column(name="totalprice",nullable = false)

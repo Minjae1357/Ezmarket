@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ez.market.dto.OrderInfo;
 import com.ez.market.dto.BuyPage;
+import com.ez.market.dto.Cart;
 import com.ez.market.dto.OrderPage;
 import com.ez.market.dto.QCart;
 import com.ez.market.dto.QImgs;
@@ -44,6 +45,8 @@ import jakarta.persistence.criteria.CriteriaBuilder.In;
 @Service
 public class CartService {
 
+	@Autowired
+	Cart cart;
 	@Autowired
 	CartRepository cartrepo;
 	@Autowired
@@ -96,7 +99,7 @@ public class CartService {
 		for (String del : _checkcnums) {
 			checkcnums.add(Integer.parseInt(del));
 		}
-		
+		 
 		var query = new JPAQueryFactory(entityManager);
 		QCart CART = QCart.cart;
 		QProduct PD = QProduct.product;
@@ -122,7 +125,7 @@ public class CartService {
 				.where(CART.cnum.in(checkcnums))
 				.fetch();
 		return buyList;
-	}
+	} 
 	
 	// 장바구니에서 체크 다중삭제
 	@Transactional
@@ -230,14 +233,14 @@ public class CartService {
 		
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
-		
+		System.out.println(userid);
 		var query = new JPAQueryFactory(entityManager);
         QUsersOrder UO = QUsersOrder.usersOrder;
         QProduct PD = QProduct.product;
         QImgs IMG = QImgs.imgs;
         QSizes SIZE = QSizes.sizes;
         List<OrderPage> orderList = query
-				.select(Projections.constructor(OrderPage.class,
+				.select(Projections.constructor(OrderPage.class, 
 						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
 						PD.productPrice, SIZE.size, IMG.imgSrc))
@@ -249,7 +252,7 @@ public class CartService {
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.sId.eq(SIZE.sId))
-				.where(UO.userid.eq(userid))
+				.where(UO.userid.eq(userid)) 
 				.fetch();
 		return orderList;
 	}
@@ -265,6 +268,7 @@ public class CartService {
 	// 배송정보(받는자,주소,전화번호,요청사항) 가져오기
 	public OrderInfo getOrderInfo(int oNum) {
 		OrderInfo orderInfo = oirepo.findByoNum(oNum);
+		System.out.println(orderInfo);
 		return orderInfo;
 	}
 	
@@ -298,6 +302,14 @@ public class CartService {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean addCart(int productid) 
+	{
+		Authentication id = SecurityContextHolder.getContext().getAuthentication(); 
+		cart.setProductId(productid);
+		cart.setUserid(id.getName());
+		return cartrepo.save(cart) != null;
 	}
 }
 

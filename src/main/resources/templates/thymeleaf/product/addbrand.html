@@ -8,7 +8,7 @@
         var formData = new FormData();
         formData.append('brand', $('#brand').val());
         formData.append('files', $('#files')[0].files[0]);
-
+ 
             $.ajax({
                 url: '/product/addBrand', 
                 type: 'post',

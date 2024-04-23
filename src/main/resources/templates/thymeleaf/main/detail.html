@@ -9,7 +9,7 @@
           $.ajax({
         url: '/sec/delete?bnum=' + bnum, 
         type: 'post',
-        dataType: 'json',
+        dataType: 'json', 
         beforeSend: function(xhr) {
         xhr.setRequestHeader("[[${_csrf.headerName}]]","[[${_csrf.token}]]");
         },

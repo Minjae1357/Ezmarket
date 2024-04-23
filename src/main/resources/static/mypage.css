@@ -10,7 +10,7 @@ body {
 .container {
     display: flex;
     min-height: 100vh;
-}
+} 
 
 /* 사이드바 스타일링 */
 .sidebar {

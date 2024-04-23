@@ -12,9 +12,9 @@
         header {
             background-color: #ffffff;
             border-bottom: 1px solid #dddddd;
-            padding: 10px 20px;
+            padding: 10px 20px; 
             display: flex;
-            align-items: center;
+            align-items: center; 
             justify-content: space-between;
         }
         header .logo {
@@ -64,16 +64,18 @@
 <body>
     <header>
         <div class="logo">My Page</div>
-        <nav>
-            <a href="/main/menu">Home</a>
-            <a href="/logout">로그아웃</a>
-        </nav>
+	<nav th:if="${user == 'anonymousUser'}">
+	    <a href="/main/menu">Home</a>
+	    <a href="user/loginForm">로그인하기</a>
+	</nav>
+	<nav th:unless="${user == 'anonymousUser'}">
+	    <a href="/main/menu">Home</a>
+	    <a href="/logout">로그아웃</a>
+	</nav>
     </header>
     <div class="container">
         <aside class="sidebar">
-            <a href="javascript:void(0);" onclick="updateContent('overview')" class="active">개요</a>
             <a href="javascript:void(0);" onclick="updateContent('orders')">주문 내역</a>
-            <a href="javascript:void(0);" onclick="updateContent('wishlist')">위시리스트</a>
             <a href="javascript:void(0);" onclick="updateContent('settings')">계정 설정</a>
         </aside>
         <main class="main-content" id="main-content">

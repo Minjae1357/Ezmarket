@@ -33,7 +33,7 @@ public class UsersController
 	@Autowired
 	private EmailService emailsvc;
 	
-   @GetMapping("/login")
+   @GetMapping("/login") 
    public String googleLogin()
    {
       return "user/GoogleLogin"; 
@@ -50,18 +50,16 @@ public class UsersController
 		Map<String,Object> map = new HashMap<>();
 		map.put("check", idcheck);
 		return map;
-	}
+	} 
 	 
 	@GetMapping("/loginForm")
 	public String loginForm(Model m,HttpSession session)
 	{
-		System.out.println("엄준식"+session.getAttribute("message"));
 		
 		return "user/loginForm";
-	}
-	
+	} 
 	@GetMapping("/register")
-	public String register() 
+	public String register()  
 	{
 		return "user/register";
 	}

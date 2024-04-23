@@ -21,6 +21,7 @@ import com.ez.market.dto.Product;
 import com.ez.market.dto.ProductBoard;
 import com.ez.market.dto.Sizes;
 import com.ez.market.service.BrandsService;
+import com.ez.market.service.CartService;
 import com.ez.market.service.CategoryService;
 import com.ez.market.service.ImgsService;
 import com.ez.market.service.ProductBoardService;
@@ -43,6 +44,8 @@ public class ProductBoardController
 	CategoryService cateSvc;
 	@Autowired
 	BrandsService brandSvc;
+	@Autowired
+	CartService cartSvc; 
 	
 	@GetMapping("list")
 	public String productBoard(Model m) 
@@ -87,9 +90,11 @@ public class ProductBoardController
 	
 	@PostMapping("addCart")
 	@ResponseBody
-	public Map<String,Boolean> addCart(@RequestParam("pid")int pid,@RequestParam("id")String userid){
-		Map<String,Boolean> map = new HashMap<>();
+	public Map<String,Boolean> addCart(@RequestParam("productid")int productid){
 		
+		boolean ox = cartSvc.addCart(productid);
+		Map<String,Boolean> map = new HashMap<>();
+		map.put("result", ox);
 		return map;
 	}
 	

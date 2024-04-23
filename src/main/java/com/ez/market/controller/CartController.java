@@ -72,12 +72,13 @@ public class CartController
 	// 장바구니 리스트 띄우기
 	@GetMapping("list")
 	public String list(Model model) {
+		System.out.println("엄준식");
 		List<CartPage> cartList = cartsvc.getCartList();
-		model.addAttribute("cartList", cartList);
+		model.addAttribute("cartList", cartList); 
 		return "cart/listPage";
 	}
 	
-	// 구매페이지로 이동(장바구니 페이지에서 체크한 요소들만 구매페이지로 넘긴다)
+	// 구매페이지로 이동(장바구니 페이지에서 체크한 요소들만 구매페이지로 넘긴다) 
 	@GetMapping("buypage")
 	public String gobuyPage(Model model, @RequestParam String check) {
 		List<BuyPage> buyList = cartsvc.getCheckList(check);
@@ -127,7 +128,9 @@ public class CartController
 	@Transactional
 	@GetMapping("orderInfo/{oNum}")
 	public String orderInfo(@PathVariable int oNum, Model model) {
+		System.out.println(oNum);
 		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
+		System.out.println("엄준식 오더인포"+orderInfo);
 		model.addAttribute("orderInfo", orderInfo);
 		int orderResult = cartsvc.getOrderRes(oNum);
 		model.addAttribute("orderResult", orderResult);	// 배송상태를 체크해서 배송정보를 수정가능/불가 기능 추가하기 위해 전송

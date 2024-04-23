@@ -33,6 +33,10 @@ public class MyPageController
 	public String mypage() {
 		return "main/mypage";
 	}
+	@GetMapping("/settings")
+	public String updateUser() {
+		return "user/updateuser";
+	}
 	@GetMapping("orders")
 	public String orderList(Model model)
 	{

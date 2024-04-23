@@ -44,6 +44,7 @@ public class BrandsService {
         		file.transferTo(new File(uploadPath +  File.separator + filename)); 
         		brand.setBrandImg("/brands/" +filename);
         		brand.setBrandName(brandName);
+        		System.out.println(brand);
         		brandsRepo.save(brand);
         	}
             return true; // 저장 성공
