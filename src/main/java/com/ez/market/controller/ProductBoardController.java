@@ -59,7 +59,18 @@ public class ProductBoardController
 		m.addAttribute("img",ilist);
 		return "product/productMainList";
 	}
-	
+
+	@GetMapping("list/{cKind}")
+	public String getSelectList(Model m)
+	{
+		List<ProductBoard> pblist = PBSvc.findTop30ByOrderByPnumDesc();
+		List<Product> plist = pSvc.findTopList();
+		List<Imgs> ilist = imgSvc.findImgsByPId(plist);
+		m.addAttribute("productBoard",pblist);
+		m.addAttribute("product",plist);
+		m.addAttribute("img",ilist);
+		return "product/productMainList";
+	}
 	@GetMapping("listTop")
 	public String getTop(Model m) {
 		List<ProductBoard> pblist = PBSvc.findTop30ByOrderByPnumDesc();

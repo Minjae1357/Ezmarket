@@ -55,9 +55,9 @@ public class SimpleSecurityConfig {
 		//이거는 암호화하는거
 		System.out.println("master->" + enc.encode("master"));
 		System.out.println("blake->" + enc.encode("blake"));
-		System.out.println("jones->" + enc.encode("jones")); 
+		System.out.println("jones->" + enc.encode("jones"));
+		System.out.println("userpwd->" + enc.encode("userpwd"));
 
- 
 		return enc; 
 	}
 

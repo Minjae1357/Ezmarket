@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Main Page</title>
 <link rel="stylesheet" href="/menu.css">
-	</head>
+    </head>
 	<body> 
 	<!-- 페이지 헤더 영역 -->
 <header>
@@ -28,11 +28,28 @@
 	<!-- 사이드바를 포함하지 않는 단순한 레이아웃으로 변경 -->
 <div class="container">
 	  <aside class="sidebar">
-            <a href="javascript:void(0);" onclick="updateContent('')" class="active">개요</a>
-            <a href="javascript:void(0);" onclick="updateContent('')">상의</a>
-            <a href="javascript:void(0);" onclick="updateContent('')">하의</a>
-            <a href="javascript:void(0);" onclick="updateContent('')">한벌</a>
+              <ul>
+                  <li><a href="javascript:void(0);" onclick="toggleContent('tops')">Tops</a></li>
+                  <li id="tops" class="hidden">
+                      <ul>
+                          <li><a href="/productboard/list">전체</a></li>
+                          <li><a href="/productboard/list/">맨투맨</a></li>
+                          <li><a href="#">후드티셔츠</a></li>
+                          <li><a href="#">니트스웨터</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="javascript:void(0);" onclick="toggleContent('bottoms')">Bottoms</a></li>
+                  <li id="bottoms" class="hidden">
+                      <ul>
+                          <li><a href="/productboard/list">전체</a></li>
+                          <li><a href="#">데님 팬츠</a></li>
+                          <li><a href="#">코튼 팬츠</a></li>
+                          <li><a href="#">기타 바지</a></li>
+                      </ul>
+                  </li>
+              </ul>
         </aside>
+    <main>
     <main class="main-content" id="main-content">
 	<div class="slider-container"> 
   <div class="slides">
@@ -40,17 +57,52 @@
     <div class="slide"><img src="/path_to_image2.jpg" alt="Image 2" /></div>
     <div class="slide"><img src="/path_to_image3.jpg" alt="Image 3" /></div>
   </div>
-  <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
-  <button class="next" onclick="moveSlide(1)">&#10095;</button>
-</div>
-<img src="/path_to_image1.jpg" alt="Image 1" />
-<img src="/path_to_image1.jpg" alt="Image 1" />
-<img src="/path_to_image1.jpg" alt="Image 1" />
+    </div>
+        <h2>베스트 상품</h2>
+        <div class="product-container">
+            <!-- 상품 목록 반복 -->
+            <div class="product-card" th:each="product, i : ${product}">
+                <a th:href="@{/productboard/detail/{productId}(productId=${product.productId})}">
+                    <!-- 이미지 경로 가져오기 -->
+                    <img th:src="${img[i.index].imgSrc}" class="product-image">
+
+                    <div class="product-details">
+                        <!-- 조회수 가져오기 -->
+                        <div class="product-review" th:text="'view: ' + ${productBoard[i.index].pHit}"></div>
+                        <!-- 가격 및 상품명 가져오기 -->
+                        <div class="product-name" th:text="${product.productName}"></div>
+                        <div class="product-price" th:text="'₩: ' + ${product.productPrice}"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </main>
-</div>
+    <div class ="footer-info">
+        COMPANY.
+        <span class="">(주)더블노컴퍼니</span>
+        <br>
+        OWNER.
+        <span>노무현,김대중</span><br>
+        <span>국력은 방어에 있는 것이 아니라 침략에 있다</span><br>
+        <span>국력은 방어에 있는 것이 아니라 침략에 있다</span><br>
+        <span>국력은 방어에 있는 것이 아니라 침략에 있다</span><br>
+        <span>국력은 방어에 있는 것이 아니라 침략에 있다</span>
+        <br>
+    </div>
+    </main>
+ </div>
 <!-- jQuery 추가 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+
+    function toggleContent(id) {
+        var element = document.getElementById(id);
+        if (element.classList.contains("hidden")) {
+            element.classList.remove("hidden");
+        } else {
+            element.classList.add("hidden");
+        }
+    }
 		// 클릭된 탭에 'active' 클래스를 추가합니다.
 	$('.sidebar a').click(function () {
 	    $('.sidebar a').removeClass('active');
@@ -58,21 +110,6 @@
 	    var section = $(this).text().toLowerCase();
 	    updateContent(section);
 	});
-
-	function updateContent(section) {
-	    console.log(section + ' 콘텐츠로 업데이트');
-	    var url = "/mypage/" + section;
-	    console.log(url + ' 콘텐츠로 업데이트');
-	    // AJAX 요청
-	    $.ajax({
-	        url: url,
-	        type: 'get',
-	        success: function(response) {
-	            // 성공 시 메인 콘텐츠 영역에 응답 내용을 로드
-	            $("#main-content").html(response);
-	        }
-	    });
-	}
 
 	// 이미지 슬라이더 스크립트
 	let slideIndex = 0;
@@ -97,7 +134,7 @@
 	setInterval(function() {
 	    slideIndex++;
 	    showSlides();
-	}, 1000);
+	}, 4000);
 	
 	// 스크롤 이벤트 리스너
 	window.addEventListener('scroll', function() {
@@ -105,7 +142,8 @@
 	  // 스크롤 위치가 100px 이상일 때 'scrolled' 클래스를 추가하고, 그렇지 않으면 제거
 	  header.classList.toggle('scrolled', window.scrollY > 100);
 	});
-
+    function updateContent(pageName) {
+    }
 </script>
 </body>
 </html>
