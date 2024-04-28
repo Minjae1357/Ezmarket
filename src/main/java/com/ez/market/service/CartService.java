@@ -149,7 +149,7 @@ public class CartService {
 	
 	// 장바구니에서 삭제버튼으로 하나씩 삭제
 	@Transactional
-	public boolean deleteone(int delnum) {
+	public boolean deleteone(int  delnum) {
 		cartrepo.deleteById(delnum);
 		return true;
 	}
