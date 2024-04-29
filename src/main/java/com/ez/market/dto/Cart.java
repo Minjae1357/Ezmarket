@@ -1,13 +1,9 @@
 package com.ez.market.dto;
 
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 public class Cart 
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(sequenceName="cart_seq", allocationSize=1, name="cart_seq_gen")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_seq_gen")
 	@NonNull
 	private int cnum;
 	@Column(name="product_id",nullable = false)

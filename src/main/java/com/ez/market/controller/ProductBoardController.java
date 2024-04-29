@@ -65,6 +65,7 @@ public class ProductBoardController
 	@GetMapping("list/{cKind}")
 	public String getSelectList(Model m,@PathVariable("cKind")String ckind)
 	{
+		int count = cartSvc.cartCount();
 		List<Integer> clist = categorySvc.findcNumBycKind(ckind);
 		List<Product> plist = pSvc.findBycNum(clist);
 		List<ProductBoard>  pblist = PBSvc.findByPnum(plist);
@@ -72,6 +73,7 @@ public class ProductBoardController
 		m.addAttribute("productBoard",pblist);
 		m.addAttribute("product",plist);
 		m.addAttribute("img",ilist);
+		m.addAttribute("count" ,count);
 		return "product/productSearchList";
 	}
 	@GetMapping("listTop")
@@ -104,10 +106,11 @@ public class ProductBoardController
 	
 	@PostMapping("addCart")
 	@ResponseBody
-	public Map<String,Boolean> addCart(@RequestParam("productid")int productid){
+	public Map<String,Boolean> addCart(@RequestParam("productId")int productid){
 		
 		boolean ox = cartSvc.addCart(productid);
 		Map<String,Boolean> map = new HashMap<>();
+		System.out.println(ox);
 		map.put("result", ox);
 		return map;
 	}

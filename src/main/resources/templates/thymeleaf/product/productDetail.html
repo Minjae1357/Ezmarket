@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous">	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
     function changeMainImage(thumbnail) {
         var mainImage = document.querySelector('.main-image img');
         mainImage.src = thumbnail.src;
         mainImage.style.width = '500px';
     mainImage.style.height = '500px';
     }
+    function addCart() {
+        console.log(0);
+        var data = $('#addForm').serialize();
+        console.log(1);
+        $.ajax({
+            url: '/productboard/addCart',
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            success: function(res) {
+                console.log(2);
+                alert(res.result ? '장바구니에 담기 성공' : '장바구니에 저장 실패');
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert('오류가 발생했습니다. 관리자에게 문의하세요.');
+            }
+        });
+    }
+
 </script>
 <meta charset="UTF-8">
 <title>Product Details</title>
@@ -75,7 +96,14 @@
         <p th:text="'Brand: ' + ${brand.brandName}"></p>
 
         <!-- Add to Cart Button -->
-        <button>Add to Cart</button>
+        <form id ="addForm" onsubmit="return addCart()">
+            <input type="hidden" name="productId" id="productId" th:value="${product.productId}"/>
+            <button type="submit">Add to Cart</button>
+        </form>
+
+
+
+
     </div>
 
     <!-- Product Images -->
