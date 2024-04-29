@@ -19,20 +19,99 @@
             max-width: 100%;
             height: auto;
         }
+        #product-details {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+            height: 300px; /* 높이 설정 */
+            overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+        }
     </style>
-</head><!--javascropt:void(0)이거하면 페이지가 이동안함 --> 
+</head>
 <body>
-  <!-- Thymeleaf와 JavaScript 통합 예시 -->
-<div id="product-list">
-    <div th:each="product : ${products}" class="product">
-        <img th:src="@{${product.imgName}}" th:alt="${product.productName}" />
-        <!-- data-product-name 속성을 사용하여 상품명을 전달 -->
-        <a href="javascript:void(0);"  
-           th:data-product-name="${product.productName}" 
-           onclick="updateProductDetails(this.getAttribute('data-product-name'))"
-           th:text="${product.productName}">상품명</a>
-        <p th:text="${product.price}">가격</p>
+    <div id="product-list">
+        <div th:each="product : ${products}" class="product">
+            <img th:src="@{${product.imgName}}" th:alt="${product.productName}" />
+            <a href="javascript:void(0);"  
+               th:data-product-name="${product.productName}"
+               onclick="updateProductDetails(this.getAttribute('data-product-name'))"
+               th:text="${product.productName}">상품명</a>
+            <p th:text="${product.price}">가격</p>
+        </div>
+    </div>
+    <!-- 상세 정보를 표시할 영역 -->
+  <div id="product-details">
+    <h2>상품 상세 정보</h2>
+    <p id="details">상품을 선택하세요.</p>
+    <!-- 사이즈별 수량을 조절할 수 있는 영역 -->
+    <div id="size-quantity-controls" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>사이즈</th>
+                    <th>현재 수량</th>
+                    <th>수량 조정</th>
+                </tr>
+            </thead>
+            <tbody id="size-quantity-list"></tbody>
+        </table>      
     </div>
 </div>
+
+   <script>
+function updateProductDetails(productName) {
+    // 사이즈 숫자와 해당 사이즈 이름을 매핑
+    const sizeMapping = {
+        0: 'S',
+        1: 'M',
+        2: 'L',
+        3: 'XL',
+        4: 'XXL'
+    };
+
+    $.ajax({
+        url: '/product/getsize',
+        type: 'POST',
+        data: { productName: productName },
+        success: function(response) {
+            $('#details').html('선택한 상품: ' + productName);
+            var sizeHtml = response.size.map(function(size) {
+                // 숫자로된 사이즈를 사이즈 이름으로 변환
+                var sizeName = sizeMapping[size.size] || size.size;
+                return `<tr>
+                            <td>${sizeName}</td>
+                            <td><input type='number' value='${size.inventory}' min='0' id='quantity-${sizeName}' /></td>
+                            <td><button onclick="updateQuantity('${productName}', '${sizeName}', $('#quantity-${sizeName}').val())">업데이트</button></td>
+                        </tr>`;
+            }).join('');
+            $('#size-quantity-list').html(sizeHtml);
+            $('#size-quantity-controls').show();
+        },
+        error: function(xhr, status, error) {
+            console.error("상품 사이즈 및 수량 정보 요청 실패:", status, error);
+        }
+    });
+}
+
+
+function updateQuantity(productName, size, inventory) {
+    $.ajax({
+        url: '/product/updateqty', // 수량 업데이트
+        type: 'POST',
+        data: {
+            productName: productName,
+            size: size,
+            inventory: inventory
+        },
+        success: function(response) {
+            alert('수량이 성공적으로 업데이트 되었습니다.');
+        },
+        error: function(xhr, status, error) {
+            console.error("수량 업데이트 실패:", status, error);
+        }
+    });
+}
+</script>
+
 </body>
 </html>

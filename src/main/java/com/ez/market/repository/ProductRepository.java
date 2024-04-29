@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>,
 	List<Product> findProductsByPnumIn(List<Integer> pnumList);
 	Product findByProductId(int productId);
 	List<Product> findBycNum(int cNum);
+	Product findByProductName(String productName);
+
 }
