@@ -74,8 +74,6 @@ public class CartService {
 						CART.cnum,
 						PD.productName,
 						PD.productPrice,
-						SIZE.size,
-						SIZE.inventory,
 						IMG.imgSrc))
 				.from(CART)
 				.join(PD).on(CART.productId.eq(PD.productId))
@@ -84,48 +82,64 @@ public class CartService {
 								.select(IMG.imgnum.min())
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
-				.join(SIZE).on(PD.sId.eq(SIZE.sId))
 				.where(CART.userid.eq(userid))
 				.fetch();
 		return cartList;
 	}
 	
 	// 구매 페이지로 넘어갈 때 체크한 항목들의 리스트만 가져오기
-	public List<BuyPage> getCheckList(String check){
-		// 체크된 값들만 Integer형 리스트(delcnums)로 만들기
-		// 데이터가 , 로 구분되어서 전달됨 (프론트 -> 서버 리펙토링 필요)
-		String[] _checkcnums = check.split(",");
-		List<Integer> checkcnums = new ArrayList<>();
-		for (String del : _checkcnums) {
-			checkcnums.add(Integer.parseInt(del));
-		}
-		 
-		var query = new JPAQueryFactory(entityManager);
-		QCart CART = QCart.cart;
-		QProduct PD = QProduct.product;
-		QImgs IMG = QImgs.imgs;
-		QSizes SIZE = QSizes.sizes;
-		List<BuyPage> buyList = query
-				.select(Projections.constructor(BuyPage.class,
-						CART.cnum, 
-						PD.productName,
-						PD.productPrice,
-						PD.productId, 
-						SIZE.size, 
-						SIZE.inventory,
-						IMG.imgSrc))
-				.from(CART)
-				.join(PD).on(CART.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId)
-						.and(IMG.imgnum.eq(JPAExpressions
-								.select(IMG.imgnum.min())
-								.from(IMG)
-								.where(IMG.productId.eq(PD.productId)))))
-				.join(SIZE).on(PD.sId.eq(SIZE.sId))
-				.where(CART.cnum.in(checkcnums))
-				.fetch();
-		return buyList;
-	} 
+									//카트번호 = check
+	public List<BuyPage> getCheckList(String check, String size) {
+	    String[] cartNumbers = check.split(",");
+	    String[] sizes = size.split(",");
+	    List<Integer> selectedCartNumbers = new ArrayList<>();
+	    List<Integer> selectedSizes = new ArrayList<>();
+
+	    for (String number : cartNumbers) {
+	        try {
+	            selectedCartNumbers.add(Integer.parseInt(number));
+	        } catch (NumberFormatException e) {
+	            // 로깅 처리 또는 사용자에게 알림
+	        }
+	    }
+
+	    for (String s : sizes) {
+	        try {
+	            selectedSizes.add(Integer.parseInt(s));
+	        } catch (NumberFormatException e) {
+	            // 로깅 처리 또는 사용자에게 알림
+	        }
+	    }
+
+	    var query = new JPAQueryFactory(entityManager);
+	    QCart CART = QCart.cart;
+	    QProduct PD = QProduct.product;
+	    QImgs IMG = QImgs.imgs;
+	    QSizes SIZE = QSizes.sizes;
+
+	    List<BuyPage> buyList = query
+	        .select(Projections.constructor(BuyPage.class,
+	                CART.cnum,
+	                PD.productName,
+	                PD.productPrice,
+	                PD.productId,
+	                SIZE.size,
+	                SIZE.inventory,
+	                IMG.imgSrc))
+	        .from(CART)
+	        .join(PD).on(CART.productId.eq(PD.productId))
+	        .join(IMG).on(PD.productId.eq(IMG.productId)
+	                .and(IMG.imgnum.eq(JPAExpressions
+	                        .select(IMG.imgnum.min())
+	                        .from(IMG)
+	                        .where(IMG.productId.eq(PD.productId)))))
+	        .join(SIZE).on(PD.productId.eq(SIZE.productId))
+	        .where(CART.cnum.in(selectedCartNumbers), SIZE.size.in(selectedSizes))
+	        .fetch();
+
+	    return buyList;
+	}
+
 	
 	// 장바구니에서 체크 다중삭제
 	@Transactional
@@ -222,7 +236,7 @@ public class CartService {
 		List<Integer> qtyList = query
 				.select(SIZE.inventory)
 				.from(PD)
-				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.join(SIZE).on(PD.productId.eq(SIZE.productId))
 				.where(PD.productId.eq(productId))	// 리스트(delcnums)를 조건으로
 				.fetch();
 		return qtyList.get(0);
@@ -251,7 +265,7 @@ public class CartService {
 								.select(IMG.imgnum.min())
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
-				.join(SIZE).on(PD.sId.eq(SIZE.sId))
+				.join(SIZE).on(PD.productId.eq(SIZE.productId))
 				.where(UO.userid.eq(userid)) 
 				.fetch();
 		return orderList;

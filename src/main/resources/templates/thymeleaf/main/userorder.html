@@ -96,7 +96,15 @@ td img {
 		        <td th:text="${product.orderDate}"></td>
 		        <td th:text="${product.orderNum}"></td>
 		        <td th:text="${product.price}"></td>
-		        <td th:text="${product.size}"></td>
+		        <td>
+			    <span th:switch="${product.size}">
+			        <span th:case="0">S</span>
+			        <span th:case="1">M</span>
+			        <span th:case="2">L</span>
+			        <span th:case="3">XL</span>
+			        <span th:case="4">XXL</span>
+			    </span>
+				</td>
 		        <td th:text="${product.cnt}"></td>
 		        <td>
 		            <select class="order-status" th:attr="data-order-id=${product.orderNum}">

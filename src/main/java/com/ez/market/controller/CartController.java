@@ -74,14 +74,18 @@ public class CartController
 	public String list(Model model) {
 		System.out.println("엄준식");
 		List<CartPage> cartList = cartsvc.getCartList();
+		System.out.println("엄준식" + cartList);
 		model.addAttribute("cartList", cartList); 
 		return "cart/listPage";
 	}
 	
 	// 구매페이지로 이동(장바구니 페이지에서 체크한 요소들만 구매페이지로 넘긴다) 
 	@GetMapping("buypage")
-	public String gobuyPage(Model model, @RequestParam String check) {
-		List<BuyPage> buyList = cartsvc.getCheckList(check);
+	public String gobuyPage(Model model, @RequestParam String check,@RequestParam String size)
+	{ 
+		System.out.println("엄" +check);
+		System.out.println("엄" +size);
+		List<BuyPage> buyList = cartsvc.getCheckList(check,size);
 		model.addAttribute("buyList", buyList);
 		return "cart/buyPage";
 	}
