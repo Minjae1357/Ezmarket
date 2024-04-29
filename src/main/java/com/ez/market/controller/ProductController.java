@@ -152,29 +152,7 @@ public class ProductController {
 	public String ProductDetail(@RequestParam("productName") String productName,Model m) {
 		System.out.println("이거실행되는거맞지 ?"+productName);
 		return "product/detail";
-	} 
-	@PostMapping("getsize")
-	@ResponseBody 
-	public Map<String, Object> getQty(@RequestParam("productName") String productname) {
-	    int productid = pSvc.findProductId(productname);
-	    List<Sizes> sizes = sizeSvc.findByProductId(productid);
-	    Map<String, Object> map = new HashMap<>();
-	    map.put("size", sizes);
-	    return map; 
 	}
-	@PostMapping("/updateqty")
-	@ResponseBody
-	//Map<String,Object>
-	public void updateQty(@RequestParam("productName")String productName,
-										@RequestParam("size")String size,
-										@RequestParam("inventory")int qty)
-	{
-		int productid = pSvc.findProductId(productName);
-		sizeSvc.updateQty(productid, size, qty);
-		System.out.println("이것저것"+size); //영어로넘어오고 
-		System.out.println("이것저것"+qty);
-		System.out.println("이것저것"+productName);
-	}
-
+	
 }
 	

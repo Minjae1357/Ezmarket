@@ -77,9 +77,8 @@ public class SimpleSecurityConfig {
 	            		"/user/loginForm","/logout","/main/menu","/admin/updateEnabled", "/cart/delete", "/cart/list", "/cart/buyPage",
 	            		"/productboard/list","/admin/status"
 	            		).permitAll() 
-	            .requestMatchers("/product/getsize").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/product/addcolor").hasAnyRole("ADMIN","MASTER")
-	            .requestMatchers("/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
+	            .requestMatchers("http://localhost/admin/mypage").hasAnyAuthority("USER","ADMIN","MASTER")
 	            .requestMatchers("/admin/updateEnabled").hasAnyAuthority("ADMIN","MASTER")
 	            .requestMatchers("/product/**").hasAnyRole("ADMIN","MASTER")
 	            .requestMatchers("/admin/**").hasAnyRole("ADMIN","MASTER")
@@ -105,8 +104,6 @@ public class SimpleSecurityConfig {
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 	            //.ignoringRequestMatchers("/admin/updateEnabled")
-	            .ignoringRequestMatchers("/product/updateqty")
-	            .ignoringRequestMatchers("/product/getsize")
 	            .ignoringRequestMatchers("/main/menu")
 	            .ignoringRequestMatchers("/admin/users")
 	            .ignoringRequestMatchers("/user/auth")

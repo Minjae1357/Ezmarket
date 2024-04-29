@@ -101,7 +101,7 @@ public class ProductBoardController
 		m.addAttribute("brand",brand);
 		return"product/productDetail";
 	}
-	 
+	
 	@PostMapping("addCart")
 	@ResponseBody
 	public Map<String,Boolean> addCart(@RequestParam("productid")int productid){
