@@ -114,27 +114,42 @@ height: 150px;
 		});
 	};
 	
-	// 구매페이지로 이동 // 체크한 것들만 뜨게 한다
-	function buypage(){
-		var check = $('#cartForm').serialize();
-		//alert(check);
-		if(check==""){
-			alert('체크된 항목이 없습니다');
-			return null;
-		}
-		
-		document.getElementById('cartForm').submit();
-	}
-	
-	// 전체선택 기능
-	$(document).ready(function() {
-		$("#selectAll").click(function() {
-			// 모든 체크박스의 상태 확인(올체크 상태에서 누르면 모두 체크 해제하는 기능을 위한 코드)
-			var isAllChecked = $("input:checkbox[name=check]").length === $("input:checkbox[name=check]:checked").length;
-			// 모두 체크되어 있다면 모두 체크 해제, 아니면 모두 체크
-			$("input:checkbox[name=check]").prop('checked', !isAllChecked);
-		});
-	});
+// 구매페이지로 이동 // 체크한 것들만 뜨게 한다
+function buypage() {
+    var form = document.getElementById('cartForm');
+    var isChecked = false;  // 체크된 항목이 있는지 추적
+
+    // 모든 체크박스 검사
+    $(form).find('input[name="check"]').each(function() {
+        var checkbox = $(this);
+        var selectElement = $(this).closest('tr').find('select.size')[0];
+
+        if (checkbox.is(':checked')) {
+            isChecked = true;  // 하나라도 체크되었으면 true
+            selectElement.disabled = false;  // 활성화 상태 유지
+        } else {
+            selectElement.disabled = true;  // 체크되지 않은 항목의 select를 비활성화
+        }
+    });
+
+    if (!isChecked) {
+        alert('체크된 항목이 없습니다');
+        return false;  // 폼 제출 취소
+    }
+
+    form.submit();  // 폼 제출
+}
+
+// 전체선택 기능
+$(document).ready(function() {
+    $("#selectAll").click(function() {
+        // 모든 체크박스의 상태 확인(올체크 상태에서 누르면 모두 체크 해제하는 기능을 위한 코드)
+        var isAllChecked = $("input:checkbox[name=check]").length === $("input:checkbox[name=check]:checked").length;
+        // 모두 체크되어 있다면 모두 체크 해제, 아니면 모두 체크
+        $("input:checkbox[name=check]").prop('checked', !isAllChecked);
+    });
+});
+
 	
 </script>
 
@@ -158,25 +173,30 @@ height: 150px;
             <th>삭제</th>
         </tr>
         <tr th:each="c,i : ${cartList}">
-			<td th:text="${i.index+1}"></td>
-			
+			<td th:text="${i.index+1}"></td>			
 			<td>
-				<div th:if="${c.inventory>0}"><input type="checkbox" name="check" th:value="${c.cnum}" checked></div>
-				<div th:if="${c.inventory==0}">재고없음</div>
+				<div>
+					<input type="checkbox" name="check" th:value="${c.cnum}" checked>
+				</div>
+
 			</td>
 			
-			<td>
-			<div th:if="${c.inventory>0}" class="image-container">
+			<td> 
+			<div class="image-container">
 					<img class="image1" th:src="${c.imgSrc}">
-				</div>
-				<div th:if="${c.inventory==0}" class="image-container">
-					<img class="image1" th:src="${c.imgSrc}" alt="대체 텍스트">
-					<div class="overlay-text">품절</div>
 				</div>
 			</td>
 			<td th:text="${c.productName}"></td>
 			<td th:text="${c.productPrice}"></td>
-			<td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
+				<td>
+				<select id="size" class="size" name="size">
+				  <option th:value="0">S</option>
+				  <option th:value="1">M</option>
+				  <option th:value="2">L</option>
+				  <option th:value="3">XL</option>
+				  <option th:value="4">XXL</option>
+				</select>
+			</td>
 			<td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
 		</tr>
 	</table>

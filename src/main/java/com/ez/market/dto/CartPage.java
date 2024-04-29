@@ -18,12 +18,12 @@ import lombok.ToString;
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class CartPage
-{
+{ 
 	@Nonnull
-	private int cnum;
+	private int cnum; 
 	private String productName;
 	private int productPrice;
-	private int size;
-	private int inventory;
 	private String imgSrc;
+	
 }
+ 

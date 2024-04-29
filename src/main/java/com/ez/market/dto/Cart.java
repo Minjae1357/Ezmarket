@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 @Service
 public class Cart 
-{
+{ 
 	@Id
 	@SequenceGenerator(sequenceName="cart_seq", allocationSize=1, name="cart_seq_gen")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_seq_gen")

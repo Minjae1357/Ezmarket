@@ -67,14 +67,13 @@ public class ProductService {
 	                    userorder.pdate,
 	                    userorder.oNum,
 	                    userorder.totalPrice,
-	                    sizes.size,
-	                    sizes.inventory,
+	                    userorder.sizeNum,
+	                    userorder.orderQty,
 	                    userorder.status,
 	                    imgs.imgSrc))
 	            .from(userorder)
 	            .join(product).on(userorder.productId.eq(product.productId))
 	            .join(imgs).on(product.productId.eq(imgs.productId))
-	            .join(sizes).on(product.productId.eq(sizes.productId))
 	            .where(userorder.userid.ne("master")) // 예시 조건
 	            .fetch();
 
@@ -156,6 +155,8 @@ public class ProductService {
 		}
 		return plist;
 	}
-
+	public int findProductId(String productName) {
+		return productRepo.findByProductName(productName).getProductId();
+	}
 	
 }

@@ -104,6 +104,8 @@ public class SimpleSecurityConfig {
 	    .csrf(csrfConf -> csrfConf
 	            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 	            //.ignoringRequestMatchers("/admin/updateEnabled")
+	            .ignoringRequestMatchers("/product/updateqty")
+	            .ignoringRequestMatchers("/product/getsize")
 	            .ignoringRequestMatchers("/main/menu")
 	            .ignoringRequestMatchers("/admin/users")
 	            .ignoringRequestMatchers("/user/auth")
