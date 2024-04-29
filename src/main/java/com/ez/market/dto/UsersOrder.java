@@ -40,4 +40,7 @@ public class UsersOrder
 	private int orderQty;
 	@Column(name = "order_result",nullable = false)
 	private int orderResult;
+	@Column(name = "s_id", nullable = false)
+	private int sizeId;
+
 }

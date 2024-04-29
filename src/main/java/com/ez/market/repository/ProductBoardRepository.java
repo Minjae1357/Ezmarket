@@ -13,4 +13,5 @@ JpaSpecificationExecutor<ProductBoard>,
 QuerydslPredicateExecutor<ProductBoard>
 {
 	List<ProductBoard> findTop30ByOrderByPnumDesc();
+	List<ProductBoard> findByPnum(int pnum);
 }

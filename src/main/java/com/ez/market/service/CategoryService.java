@@ -1,5 +1,6 @@
 package com.ez.market.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,14 @@ public class CategoryService {
 		return cateRepo.findBycNum(cnum);
 	}
 
+	public List<Integer> findcNumBycKind(String ckind) {
+		List<Category> clist = cateRepo.findBycKind(ckind);
+		List<Integer> cNumList = new ArrayList<>();
+		for (Category category:clist){
+			cNumList.add(category.getCNum());
+		}
 
+		return cNumList;
+	}
 	
 }

@@ -45,7 +45,9 @@ public class ProductBoardController
 	@Autowired
 	BrandsService brandSvc;
 	@Autowired
-	CartService cartSvc; 
+	CartService cartSvc;
+	@Autowired
+	CategoryService categorySvc;
 	
 	@GetMapping("list")
 	public String productBoard(Model m) 
@@ -61,15 +63,16 @@ public class ProductBoardController
 	}
 
 	@GetMapping("list/{cKind}")
-	public String getSelectList(Model m)
+	public String getSelectList(Model m,@PathVariable("cKind")String ckind)
 	{
-		List<ProductBoard> pblist = PBSvc.findTop30ByOrderByPnumDesc();
-		List<Product> plist = pSvc.findTopList();
+		List<Integer> clist = categorySvc.findcNumBycKind(ckind);
+		List<Product> plist = pSvc.findBycNum(clist);
+		List<ProductBoard>  pblist = PBSvc.findByPnum(plist);
 		List<Imgs> ilist = imgSvc.findImgsByPId(plist);
 		m.addAttribute("productBoard",pblist);
 		m.addAttribute("product",plist);
 		m.addAttribute("img",ilist);
-		return "product/productMainList";
+		return "product/productSearchList";
 	}
 	@GetMapping("listTop")
 	public String getTop(Model m) {

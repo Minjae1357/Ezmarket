@@ -148,5 +148,14 @@ public class ProductService {
 		return plist; 
 	}
 
+	public List<Product> findBycNum(List<Integer> clist){
+		List<Product> plist = new ArrayList<>();
+		for(Integer cNum : clist){
+			List<Product> searchlist = productRepo.findBycNum(cNum);
+			plist.addAll(searchlist);
+		}
+		return plist;
+	}
+
 	
 }

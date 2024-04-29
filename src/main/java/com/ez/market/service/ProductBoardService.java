@@ -1,8 +1,10 @@
 package com.ez.market.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.ez.market.dto.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,17 @@ public class ProductBoardService {
                 .where()
                 .limit(30)
                 .fetch(); 
-    }  
+    }
+
+	public List<ProductBoard> findByPnum(List<Product> plist){
+		List<ProductBoard> pblist = new ArrayList<>();
+		for (Product product : plist){
+			int pnum = product.getPnum();
+
+			List<ProductBoard> productBoard = pbRepo.findByPnum(pnum);
+			pblist.addAll(productBoard);
+		}
+		return  pblist;
+	}
 	
 }

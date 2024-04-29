@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <link rel="stylesheet" href="/menu.css">
+</head>
+<body>
+<!-- 페이지 헤더 영역 -->
+<header>
+  <div class="logo">EzMarket</div>
+  <!-- 네비게이션 바 -->
+  <div>
+
+  </div>
+  <nav>
+    <div class="shopping-cart">
+      <a href="/cart/list">
+        <img src="/cart.jpg" alt="Shopping Cart">  <!-- alt는 사진오류나면 나오는글 -->
+        <span id="cart-count"th:text="${count}">0</span> <!-- 초기 상품 개수는 0으로 설정 mainpageController에서 설정-->
+      </a>
+    </div>
+    <a href="/mypage"><img src="/mypage.jpg" alt="mypage 사진"></a> <!-- 홈 링크 -->
+    <a href="/logout"><img src="/logout.jpg" alt="logout 사진"></a> <!-- 로그아웃 링크 -->
+  </nav>
+</header>
+<!-- 사이드바를 포함하지 않는 단순한 레이아웃으로 변경 -->
+<div class="container">
+  <aside class="sidebar">
+    <ul>
+      <li><a href="javascript:void(0);" onclick="toggleContent('tops')">Tops</a></li>
+      <li id="tops" class="hidden">
+        <ul>
+          <li><a href="/productboard/list">전체</a></li>
+          <li><a href="/productboard/list/맨투맨">맨투맨</a></li>
+          <li><a href="#">후드티셔츠</a></li>
+          <li><a href="#">니트스웨터</a></li>
+        </ul>
+      </li>
+      <li><a href="javascript:void(0);" onclick="toggleContent('bottoms')">Bottoms</a></li>
+      <li id="bottoms" class="hidden">
+        <ul>
+          <li><a href="/productboard/list">전체</a></li>
+          <li><a href="#">데님 팬츠</a></li>
+          <li><a href="#">코튼 팬츠</a></li>
+          <li><a href="#">기타 바지</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+    <main class="main-content" id="main-content">
+
+      <h2>상품 목록</h2>
+      <div class="product-container">
+        <!-- 상품 목록 반복 -->
+        <div class="product-card" th:each="product, i : ${product}">
+          <a th:href="@{/productboard/detail/{productId}(productId=${product.productId})}">
+            <!-- 이미지 경로 가져오기 -->
+            <img th:src="${img[i.index].imgSrc}" class="product-image">
+
+            <div class="product-details">
+              <!-- 조회수 가져오기 -->
+              <div class="product-review" th:text="'view: ' + ${productBoard[i.index].pHit}"></div>
+              <!-- 가격 및 상품명 가져오기 -->
+              <div class="product-name" th:text="${product.productName}"></div>
+              <div class="product-price" th:text="'₩: ' + ${product.productPrice}"></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </main>
+</div>
+    <div class ="footer-info">
+      COMPANY.
+      <span class="">(주)EzMarket</span>
+      <br>
+      OWNER.
+      <span>강주영,김민재/조민규</span><br>
+      <span>팀프로젝트</span><br>
+      <span>팀프로젝트</span><br>
+      <span>팀프로젝트</span><br>
+      <span>팀프로젝트</span>
+      <br>
+    </div>
+<!-- jQuery 추가 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+
+  function toggleContent(id) {
+    var element = document.getElementById(id);
+    if (element.classList.contains("hidden")) {
+      element.classList.remove("hidden");
+    } else {
+      element.classList.add("hidden");
+    }
+  }
+  // 클릭된 탭에 'active' 클래스를 추가합니다.
+  $('.sidebar a').click(function () {
+    $('.sidebar a').removeClass('active');
+    $(this).addClass('active');
+    var section = $(this).text().toLowerCase();
+    updateContent(section);
+  });
+
+  // 이미지 슬라이더 스크립트
+  let slideIndex = 0;
+  showSlides();
+
+  function moveSlide(n) {
+    showSlides(slideIndex += n);
+  }
+
+  function showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("slide");
+    if (slideIndex >= slides.length) {slideIndex = 0}
+    if (slideIndex < 0) {slideIndex = slides.length - 1}
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    slides[slideIndex].style.display = "block";
+  }
+
+  // 4초마다 자동으로 이미지 전환
+  setInterval(function() {
+    slideIndex++;
+    showSlides();
+  }, 4000);
+
+  // 스크롤 이벤트 리스너
+  window.addEventListener('scroll', function() {
+    var header = document.querySelector('header');
+    // 스크롤 위치가 100px 이상일 때 'scrolled' 클래스를 추가하고, 그렇지 않으면 제거
+    header.classList.toggle('scrolled', window.scrollY > 100);
+  });
+  function updateContent(pageName) {
+  }
+</script>
+</body>
+</html>
