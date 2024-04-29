@@ -82,13 +82,13 @@ $(document).ready(function() {
 	});
 });
 
-function receipt(oNum){
+function receipt(oNum,productName){
 	if(!confirm('물품을 수령하셨습니까?')) return;
 	$.ajax({
 		url:'/cart/receipt',
 		method:'POST',
 		cache:false,
-		data: {oNum:oNum},
+		data: {oNum: oNum, productName: productName},
 		dataType:'json',
 		beforeSend : function(xhr) {
 			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
@@ -131,7 +131,7 @@ function receipt(oNum){
 			<td>
 				<span th:text="${uo.orderResult == 1 ? '배송준비중' : uo.orderResult == 2 ? '배송중' : uo.orderResult == 3 ? '배송완료' : '취소or결제 ???'}"></span>
 				<a th:if="${uo.orderResult != 3}">
-					<button type="button" th:attr="onclick=|receipt('${uo.oNum}');|">물품<br>수령 확인</button>
+					<button type="button" th:attr="onclick=|receipt('${uo.oNum}', '${uo.productName}');|">물품<br>수령 확인</button>
 				</a>
 			</td>
 			<td>
