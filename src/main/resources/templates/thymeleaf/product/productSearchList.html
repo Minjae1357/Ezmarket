@@ -104,30 +104,6 @@
     updateContent(section);
   });
 
-  // 이미지 슬라이더 스크립트
-  let slideIndex = 0;
-  showSlides();
-
-  function moveSlide(n) {
-    showSlides(slideIndex += n);
-  }
-
-  function showSlides() {
-    let i;
-    let slides = document.getElementsByClassName("slide");
-    if (slideIndex >= slides.length) {slideIndex = 0}
-    if (slideIndex < 0) {slideIndex = slides.length - 1}
-    for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-    }
-    slides[slideIndex].style.display = "block";
-  }
-
-  // 4초마다 자동으로 이미지 전환
-  setInterval(function() {
-    slideIndex++;
-    showSlides();
-  }, 4000);
 
   // 스크롤 이벤트 리스너
   window.addEventListener('scroll', function() {
