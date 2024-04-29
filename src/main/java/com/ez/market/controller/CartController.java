@@ -32,8 +32,9 @@ import com.ez.market.dto.BuyPage;
 
 import com.ez.market.repository.ImgsRepository;
 import com.ez.market.repository.ProductRepository;
+import com.ez.market.service.BuyResultService;
 import com.ez.market.service.CartService;
-
+import com.ez.market.service.ProductService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -47,7 +48,10 @@ public class CartController
 {
 	@Autowired
 	CartService cartsvc;
-	
+	@Autowired
+	ProductService productsvc;
+	@Autowired
+	BuyResultService buyresultsvc;
 	// 테스트용
 	@Autowired
 	ProductRepository pdrepo;
@@ -132,7 +136,6 @@ public class CartController
 	@Transactional
 	@GetMapping("orderInfo/{oNum}")
 	public String orderInfo(@PathVariable int oNum, Model model) {
-		System.out.println(oNum);
 		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
 		System.out.println("엄준식 오더인포"+orderInfo);
 		model.addAttribute("orderInfo", orderInfo);
@@ -155,11 +158,14 @@ public class CartController
 	// 물품 수령
 	@PostMapping("receipt")
 	@ResponseBody
-	public Map<String,Object> receipt(@RequestParam int oNum) {
-		System.out.println(oNum);
+	@Transactional
+	public Map<String,Object> receipt(@RequestParam int oNum,@RequestParam("productName")String productName) {
+		System.out.println("프로덕트네임"+ productName);
+		int productid = productsvc.findProductId(productName);
+		buyresultsvc.saveBuyResult(productName, productid);
 		boolean receipted = cartsvc.receipt(oNum);
 		Map<String,Object> map = new HashMap<>();
-		map.put("receipted", receipted);
+		map.put("receipted", receipted); 
 		return map;
 	}
 	

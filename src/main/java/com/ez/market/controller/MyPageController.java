@@ -31,10 +31,10 @@ public class MyPageController
 	
 	@GetMapping("")
 	public String mypage() {
-		return "main/mypage";
+		return "main/mypage"; 
 	}
 	@GetMapping("/settings")
-	public String updateUser() {
+	public String updateUser() {  
 		return "user/updateuser";
 	}
 	@GetMapping("orders")

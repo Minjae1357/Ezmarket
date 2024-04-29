@@ -257,7 +257,7 @@ public class CartService {
 				.select(Projections.constructor(OrderPage.class, 
 						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
-						PD.productPrice, SIZE.size, IMG.imgSrc))
+						PD.productPrice,UO.sizeNum, IMG.imgSrc))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
@@ -265,9 +265,8 @@ public class CartService {
 								.select(IMG.imgnum.min())
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
-				.join(SIZE).on(PD.productId.eq(SIZE.productId))
 				.where(UO.userid.eq(userid)) 
-				.fetch();
+				.fetch(); 
 		return orderList;
 	}
 	

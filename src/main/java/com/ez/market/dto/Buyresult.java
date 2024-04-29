@@ -1,6 +1,7 @@
 package com.ez.market.dto;
 
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Service
 public class Buyresult
 {
 	@Id
