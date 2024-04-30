@@ -11,23 +11,46 @@
     mainImage.style.height = '500px';
     }
     function addCart() {
-        console.log(0);
+		console.log(0);
         var data = $('#addForm').serialize();
         console.log(1);
-        $.ajax({
-            url: '/productboard/addCart',
-            type: 'post',
+		$.ajax({
+            url: '/productboard/CartOverlapCheck',
+            type: 'get',
             data: data,
             dataType: 'json',
             success: function(res) {
-                console.log(2);
-                alert(res.result ? '장바구니에 담기 성공' : '장바구니에 저장 실패');
+                if(res.overlap){
+					alert('이미 장바구니에 담겨있습니다');
+				} else {
+					$.ajax({
+			            url: '/productboard/addCart',
+			            type: 'post',
+			            data: data,
+			            dataType: 'json',
+			            success: function(res) {
+			                console.log(2);
+			                alert(res.result ? '장바구니에 담기 성공' : '장바구니에 저장 실패');
+			            },
+			            error: function(xhr, status, error) {
+			                console.error(xhr.responseText);
+			                alert('오류가 발생했습니다. 관리자에게 문의하세요.');
+			            }
+			        });
+				}
             },
             error: function(xhr, status, error) {
                 console.error(xhr.responseText);
-                alert('오류가 발생했습니다. 관리자에게 문의하세요.');
+                alert('오류가 발생했습니다.관리자에게 문의하세요.');
+                return false;
             }
         });
+        
+        
+		
+		
+        
+        
     }
 
 </script>

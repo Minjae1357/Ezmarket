@@ -319,10 +319,76 @@ public class CartService {
 	
 	public boolean addCart(int productid) 
 	{
-		Authentication id = SecurityContextHolder.getContext().getAuthentication(); 
+		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+		String userid = id.getName();
+		
+		var query = new JPAQueryFactory(entityManager);
+		QCart CART = QCart.cart;
+		List<Integer> cartProductIdList = query
+				.select(CART.productId)
+				.from(CART)
+				.where(CART.userid.eq(userid))
+				.fetch();
+		for(int pid : cartProductIdList) {
+			if(pid==productid) {
+				return false;
+			}
+		}
+		
+		Cart cart = new Cart();
 		cart.setProductId(productid);
-		cart.setUserid(id.getName());
+		cart.setUserid(userid);
 		return cartrepo.save(cart) != null;
+	}
+	
+	// 장바구니 검색 리스트 가져오기
+	public List<CartPage> getCartSearchList(String searchtext){
+		
+		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+		String userid = id.getName();
+		
+		var query = new JPAQueryFactory(entityManager);
+		QCart CART = QCart.cart;
+		QProduct PD = QProduct.product;
+		QImgs IMG = QImgs.imgs;
+		QSizes SIZE = QSizes.sizes;
+		List<CartPage> cartSearchList = query
+				.select(Projections.constructor(CartPage.class,
+						CART.cnum,
+						PD.productName,
+						PD.productPrice,
+						IMG.imgSrc))
+				.from(CART)
+				.join(PD).on(CART.productId.eq(PD.productId))
+				.join(IMG).on(PD.productId.eq(IMG.productId)
+						.and(IMG.imgnum.eq(JPAExpressions			// 이미지 하나만 가져오기 위한 쿼리
+								.select(IMG.imgnum.min())
+								.from(IMG)
+								.where(IMG.productId.eq(PD.productId)))))
+				.where(CART.userid.eq(userid)
+					.and(PD.productName.contains(searchtext)))
+				.fetch();
+		return cartSearchList;
+	}
+	
+	// 장바구니 담을 때 중복인지 체크
+	public Boolean CartOverlapCheck(int productId) {
+		Authentication id = SecurityContextHolder.getContext().getAuthentication();
+		String userid = id.getName();
+		
+		var query = new JPAQueryFactory(entityManager);
+		QCart CART = QCart.cart;
+		List<Integer> cartProductIdList = query
+				.select(CART.productId)
+				.from(CART)
+				.where(CART.userid.eq(userid))
+				.fetch();
+		for(int pid : cartProductIdList) {
+			if(pid==productId) {
+				return true;	// 중복이면 바로 (중복 : true) 리턴
+			}
+		}
+		return false;
 	}
 }
 
