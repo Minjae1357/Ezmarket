@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <title>주문내역</title>
 <style>
+.searchdiv {
+    display: flex;
+    justify-content: center; /* 가로 방향에서 중앙 정렬 */
+    align-items: center; /* 세로 방향에서 중앙 정렬 */
+    margin: 10px 0; /* 상하 마진 추가로 조정 */
+}
 	
 .image1 {
 width: auto;
@@ -102,12 +108,35 @@ function receipt(oNum,productName){
 		}
 	});
 }
+
+// 검색란 비어있으면 알림
+$(document).ready(function() {
+    document.getElementById('searchForm').onsubmit = function(event) {
+        var searchdate1 = document.getElementById('searchdate1').value;
+        var searchdate2 = document.getElementById('searchdate2').value;
+        if (searchdate1.trim() === '' || searchdate2.trim() === '') {
+            alert('입력란이 비어있습니다');
+            event.preventDefault(); // 이벤트(서버로 전송) 취소
+        }
+    };
+});
 	
 </script>
 </head>
 <body>
 <div class="all">
+	
 	<h2>주문내역</h2>
+	
+	<!-- 날짜로 검색 -->
+	<form class="searchdiv" id="searchForm" action="/cart/searchdate" method="GET">
+	    <input type="date" id="searchdate1" name="searchdate1">&nbsp;부터&nbsp;
+	    <input type="date" id="searchdate2" name="searchdate2">&nbsp;까지&nbsp;
+	    <button type="submit">검색</button>
+	</form>
+	
+	<div class="searchdiv" th:if="${searchdate1 != '' || searchdate2 != ''}" th:text="'\''+${searchdate1}+'\''+' 부터 ' + '\'' + ${searchdate2} + '\'' + ' 까지 검색 결과'"></div>
+	
     <table>
         <tr>
 			<th></th>
@@ -135,8 +164,8 @@ function receipt(oNum,productName){
 				</a>
 			</td>
 			<td>
-				<a th:if="${uo.orderResult ==1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
-				<a th:if="${uo.orderResult !=1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
+				<a th:if="${uo.orderResult ==1}" th:href="'orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
+				<a th:if="${uo.orderResult !=1}" th:href="'orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
 			</td>
         </tr>
     </table>

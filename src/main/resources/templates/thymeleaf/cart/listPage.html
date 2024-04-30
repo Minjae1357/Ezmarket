@@ -119,24 +119,19 @@ function buypage() {
     var form = document.getElementById('cartForm');
     var isChecked = false;  // 체크된 항목이 있는지 추적
 
-    // 모든 체크박스 검사
-    $(form).find('input[name="check"]').each(function() {
-        var checkbox = $(this);
-        var selectElement = $(this).closest('tr').find('select.size')[0];
 
-        if (checkbox.is(':checked')) {
-            isChecked = true;  // 하나라도 체크되었으면 true
-            selectElement.disabled = false;  // 활성화 상태 유지
-        } else {
-            selectElement.disabled = true;  // 체크되지 않은 항목의 select를 비활성화
+    // 체크된 항목이 하나라도 있는지 검사
+    $(form).find('input[name="check"]').each(function() {
+        if ($(this).is(':checked')) {
+            isChecked = true;
+            return false; // 체크된 항목이 나오며 루프 종료
         }
     });
-
+    // 체크된 항목이 없을 경우
     if (!isChecked) {
         alert('체크된 항목이 없습니다');
         return false;  // 폼 제출 취소
     }
-
     form.submit();  // 폼 제출
 }
 
@@ -174,7 +169,7 @@ $(document).ready(function() {
 	    <button type="submit">검색</button>
 	</form>
 	
-	<div class="searchdiv" th:if="${searchtext != ''}" th:text="'\''+${searchtext}+'\''+' 으로 검색'"></div>
+	<div class="searchdiv" th:if="${searchtext != ''}" th:text="'\''+${searchtext}+'\''+' 으로 검색 결과'"></div>
 	<form  id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
     <table>
         <tr>
@@ -202,15 +197,7 @@ $(document).ready(function() {
 			</td>
 			<td th:text="${c.productName}"></td>
 			<td th:text="${c.productPrice}"></td>
-				<td>
-				<select id="size" class="size" name="size">
-				  <option th:value="0">S</option>
-				  <option th:value="1">M</option>
-				  <option th:value="2">L</option>
-				  <option th:value="3">XL</option>
-				  <option th:value="4">XXL</option>
-				</select>
-			</td>
+			<td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
 			<td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
 		</tr>
 	</table>
