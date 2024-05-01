@@ -121,6 +121,7 @@ public class SimpleSecurityConfig {
 	            .ignoringRequestMatchers("/admin/status")
 				.ignoringRequestMatchers("/productboard/detail/**")
 				.ignoringRequestMatchers("/productboard/addCart")
+				.ignoringRequestMatchers("/mypage/addReview")
 	    )
 	    .oauth2Login(oauth2Config -> oauth2Config.loginPage("/user/loginForm")
 	    		.successHandler(googleLoginSuccessHandler)

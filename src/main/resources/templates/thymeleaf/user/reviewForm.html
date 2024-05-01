@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Ezmarket</title>
+    <link rel="stylesheet" href="/menu.css">
+    <script>
+        function updateContent(section) {
+            console.log(section + ' 콘텐츠로 업데이트');
+            var url = "/mypage/"+section;
+            console.log(url + ' 콘텐츠로 업데이트');
+            $.ajax({
+                url:url,
+                type:'get',
+                success: function(response){
+                    $("#main-content").html(response);
+                }
+            });
+
+        }
+
+        function updateContent(section) {
+            console.log(section + ' 콘텐츠로 업데이트');
+            var url = "/mypage/" + section;
+            console.log(url + ' 콘텐츠로 업데이트');
+
+            // 모든 탭의 'active' 클래스를 제거합니다.
+            $('.sidebar a').removeClass('active');
+            // 클릭된 탭에 'active' 클래스를 추가합니다.
+            $('.sidebar a').each(function () {
+                if ($(this).text().toLowerCase() === section) {
+                    $(this).addClass('active');
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                success: function(response){
+                    // 내용 업데이트
+                    $("#main-content").html(response);
+                },
+                error: function(error) {
+                    // 오류 처리
+                    console.error('Error loading content:', error);
+                }
+            });
+        }
+
+        // 페이지 로딩 시 기본적으로 첫 번째 탭의 내용을 로드합니다.
+        $(document).ready(function() {
+            updateContent('overview');
+        });
+        function addReview() {
+            console.log(0);
+            var data = $('#addForm').serialize();
+            console.log(1);
+            $.ajax({
+                url: '/mypage/addReview',
+                type: 'post',
+                data: data,
+                dataType: 'json',
+                success: function(res) {
+                    console.log(2);
+                    alert(res.result ? '리뷰해주셔서 감사합니다' : '오류');
+                    location.href = '/mypage';
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('오류가 발생했습니다. 관리자에게 문의하세요.');
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<header>
+    <div class="logo">My Page</div>
+    <nav th:if="${user == 'anonymousUser'}">
+        <a href="/main/menu">Home</a>
+        <a href="user/loginForm">로그인하기</a>
+    </nav>
+    <nav th:unless="${user == 'anonymousUser'}">
+        <a href="/main/menu">Home</a>
+        <a href="/logout">로그아웃</a>
+    </nav>
+</header>
+<div class="container">
+    <aside class="sidebar">
+        <a href="javascript:void(0);" onclick="updateContent('orders')">주문 내역</a>
+        <a href="javascript:void(0);" onclick="updateContent('settings')">계정 설정</a>
+    </aside>
+    <main class="main-content" id="main-content">
+        <form id="addForm" onsubmit="return addReview()">
+            <input type="hidden" name="pnum" id="pnum" th:value="${pnum}">
+            <input type="hidden" name="userid" th:value="${userid}">
+            <label for="rating">평점:</label>
+            <span class="rating">
+            <input type="radio" id="star5" name="val" value="5"><label for="star5"></label>
+            <input type="radio" id="star4" name="val" value="4"><label for="star4"></label>
+            <input type="radio" id="star3" name="val" value="3"><label for="star3"></label>
+            <input type="radio" id="star2" name="val" value="2"><label for="star2"></label>
+            <input type="radio" id="star1" name="val" value="1"><label for="star1"></label>
+            </span>
+            <label for="review">후기:</label>
+            <textarea name="contents" id="review" rows="4" maxlength="1000" required></textarea>
+            <button class="button" type="submit">작성하기</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>
