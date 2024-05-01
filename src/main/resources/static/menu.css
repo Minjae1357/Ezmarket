@@ -23,6 +23,7 @@ header {
     .container {
         padding-top: 50px; /* 헤더의 높이에 맞게 조정 */
         width:100%;
+        min-height: 1000px;
         display: flex;
             }
 
@@ -192,6 +193,7 @@ header {
   }
   .product-card {
 	  width: 200px;
+      height: 390px;
 	  margin-bottom: 20px;
 	  padding: 20px;
 	  box-sizing: border-box;
@@ -247,4 +249,24 @@ header {
   }
   li{
       list-style:none;
+  }
+  .button{
+      font-family: inherit;
+      font-weight: 700;
+      color:white;
+      background-color: black;
+      font-size: 20px;
+      border: 0px;
+      cursor: pointer;
+      line-height: 1.5;
+      width: 270px;
+      height: 60px;
+  }
+  #review {
+      resize: none;
+      width: 400px;
+      height: 5em;
+  }
+  .rating{
+
   }

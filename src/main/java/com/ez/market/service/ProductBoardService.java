@@ -69,5 +69,18 @@ public class ProductBoardService {
 		}
 		return  pblist;
 	}
-	
+
+	public boolean increaseHit(int pnum){
+		try{
+		ProductBoard pb = pbRepo.findByPnum(pnum).get(0);
+		int currentHit = pb.getPHit();
+			pb.setPHit(currentHit + 1);
+			pbRepo.save(pb);
+		return true;
+		}catch(Exception e) {
+			return false;
+		}
+
+	}
+
 }

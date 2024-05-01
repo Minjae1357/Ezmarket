@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.ez.market.service.ProductBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,6 +61,8 @@ public class CartController
 	ImgsRepository imgrepo;
 	@PersistenceContext
 	EntityManager entityManager;
+
+
 	
 	// 테스트용 데이터 생성을 위한 코드(삭제할 것)
 	@GetMapping("pwd")

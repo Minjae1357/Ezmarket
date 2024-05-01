@@ -55,7 +55,7 @@
 
 </script>
 <meta charset="UTF-8">
-<title>Product Details</title>
+<title>Ezmarket</title>
 <style>
     .product-info { 
     border: 1px solid #ccc;
@@ -160,7 +160,7 @@
         <!-- Add to Cart Button -->
         <form id ="addForm" onsubmit="return addCart()">
             <input type="hidden" name="productId" id="productId" th:value="${product.productId}"/>
-            <button type="submit">Add to Cart</button>
+            <button class="button" type="submit">장바구니에 담기</button>
         </form>
         </div>
 

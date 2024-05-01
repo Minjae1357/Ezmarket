@@ -16,4 +16,11 @@ public class ComentsService {
     public List<Coments> findByPnum(int pnum){
         return comentRepo.findByPnum(pnum);
     }
+
+    public boolean saveComents(Coments coment){
+        java.util.Date currentDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
+        coment.setConDate(sqlDate);
+        return comentRepo.save(coment)!=null;
+    }
 }

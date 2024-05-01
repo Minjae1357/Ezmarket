@@ -158,5 +158,8 @@ public class ProductService {
 	public int findProductId(String productName) {
 		return productRepo.findByProductName(productName).getProductId();
 	}
-	
+
+    public Product findByProductName(String productName) {
+		return productRepo.findByProductName(productName);
+    }
 }
