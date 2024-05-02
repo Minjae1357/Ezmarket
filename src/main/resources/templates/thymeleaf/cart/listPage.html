@@ -66,77 +66,72 @@ height: 150px;
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
-	// 개별삭제
-	function del(delnum){
-		$.ajax({
-			url:'/cart/deleteone',
-			method:'delete',
-			cache:false,
-			data:  {'delnum':delnum},
-			dataType:'json',
-			beforeSend : function(xhr) {
-				xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
-			},
-			success:function(res){
-				if(res.deleted) alert('삭제성공');
-				location.reload();
-			},
-			error:function(xhr,status,err){
-				alert(status+", "+ err);
-			}
-		});
-	};
-
-	// 체크삭제
-	function delcheck(){
-		var obj = {};
-		obj.checked = $('#cartForm').serialize();
-		if(obj.checked==""){
-			alert('체크된 항목이 없습니다');
-			return null;
+// 개별삭제
+function del(delnum){
+	$.ajax({
+		url:'/cart/deleteone',
+		method:'delete',
+		cache:false,
+		data:  {'delnum':delnum},
+		dataType:'json',
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+		},
+		success:function(res){
+			if(res.deleted) alert('삭제성공');
+			location.reload();
+		},
+		error:function(xhr,status,err){
+			alert(status+", "+ err);
 		}
-		$.ajax({
-			url:'/cart/delete',
-			method:'delete',
-			cache:false,
-			data: obj,
-			dataType:'json',
-			beforeSend : function(xhr) {
-				xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
-			},
-			success:function(res){
-				if(res.deleted) alert('삭제성공');
-				location.reload();
-			},
-			error:function(xhr,status,err){
-				alert(status+", "+ err);
-			}
-		});
-	};
+	});
+};
+
+// 체크삭제
+function delcheck(){
+	var obj = {};
+	obj.checked = $('#cartForm').serialize();
+	if(obj.checked==""){
+		alert('체크된 항목이 없습니다');
+		return null;
+	}
+	$.ajax({
+		url:'/cart/delete',
+		method:'delete',
+		cache:false,
+		data: obj,
+		dataType:'json',
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+		},
+		success:function(res){
+			if(res.deleted) alert('삭제성공');
+			location.reload();
+		},
+		error:function(xhr,status,err){
+			alert(status+", "+ err);
+		}
+	});
+};
 	
 // 구매페이지로 이동 // 체크한 것들만 뜨게 한다
 function buypage() {
     var form = document.getElementById('cartForm');
     var isChecked = false;  // 체크된 항목이 있는지 추적
 
-    // 모든 체크박스 검사
-    $(form).find('input[name="check"]').each(function() {
-        var checkbox = $(this);
-        var selectElement = $(this).closest('tr').find('select.size')[0];
 
-        if (checkbox.is(':checked')) {
-            isChecked = true;  // 하나라도 체크되었으면 true
-            selectElement.disabled = false;  // 활성화 상태 유지
-        } else {
-            selectElement.disabled = true;  // 체크되지 않은 항목의 select를 비활성화
+    // 체크된 항목이 하나라도 있는지 검사
+    $(form).find('input[name="check"]').each(function() {
+        if ($(this).is(':checked')) {
+            isChecked = true;
+            return false; // 체크된 항목이 나오며 루프 종료
         }
     });
-
+    // 체크된 항목이 없을 경우
     if (!isChecked) {
         alert('체크된 항목이 없습니다');
         return false;  // 폼 제출 취소
     }
-
     form.submit();  // 폼 제출
 }
 
@@ -150,18 +145,32 @@ $(document).ready(function() {
     });
 });
 
-	
+// 검색란 비어있으면 알림
+$(document).ready(function() {
+    document.getElementById('searchForm').onsubmit = function(event) {
+        var searchtext = document.getElementById('searchtext').value;
+        if (searchtext.trim() === '') {
+            alert('입력란이 비어있습니다');
+            event.preventDefault(); // 이벤트(서버로 전송) 취소
+        }
+    };
+});
+
 </script>
 
 </head>
 <body>
 <div class="all">
 	<h2>내 장바구니</h2>
-	<!--<div class="searchdiv">
-		<input type="text" name="searchcart">
-		<button type="button" onclick="search();">검색</button>
-	</div>-->
-	<form id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
+	
+	<!-- 상품이름으로 검색 -->
+	<form class="searchdiv" id="searchForm" action="/cart/search" method="GET">
+	    <input type="text" id="searchtext" name="searchtext">
+	    <button type="submit">검색</button>
+	</form>
+	
+	<div class="searchdiv" th:if="${searchtext != ''}" th:text="'\''+${searchtext}+'\''+' 으로 검색 결과'"></div>
+	<form  id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
     <table>
         <tr>
 			<th></th>
@@ -188,15 +197,7 @@ $(document).ready(function() {
 			</td>
 			<td th:text="${c.productName}"></td>
 			<td th:text="${c.productPrice}"></td>
-				<td>
-				<select id="size" class="size" name="size">
-				  <option th:value="0">S</option>
-				  <option th:value="1">M</option>
-				  <option th:value="2">L</option>
-				  <option th:value="3">XL</option>
-				  <option th:value="4">XXL</option>
-				</select>
-			</td>
+			<td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
 			<td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
 		</tr>
 	</table>

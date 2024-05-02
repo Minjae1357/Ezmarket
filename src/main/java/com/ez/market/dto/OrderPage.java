@@ -28,6 +28,6 @@ public class OrderPage
 	private int orderResult;
 	private String productName;
 	private int productPrice;
-	private int size;
 	private String imgSrc;
+	private int size;
 }

@@ -1,13 +1,13 @@
 package com.ez.market.controller;
 
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.ez.market.service.ProductBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,8 +60,6 @@ public class CartController
 	ImgsRepository imgrepo;
 	@PersistenceContext
 	EntityManager entityManager;
-
-
 	
 	// 테스트용 데이터 생성을 위한 코드(삭제할 것)
 	@GetMapping("pwd")
@@ -81,18 +79,19 @@ public class CartController
 	public String list(Model model) {
 		System.out.println("엄준식");
 		List<CartPage> cartList = cartsvc.getCartList();
+		//System.out.println("#################"+cartList.get(1).getSize());
 		System.out.println("엄준식" + cartList);
 		model.addAttribute("cartList", cartList); 
+		model.addAttribute("searchtext", "");
 		return "cart/listPage";
 	}
 	
 	// 구매페이지로 이동(장바구니 페이지에서 체크한 요소들만 구매페이지로 넘긴다) 
 	@GetMapping("buypage")
-	public String gobuyPage(Model model, @RequestParam String check,@RequestParam String size)
+	public String gobuyPage(Model model, @RequestParam String check)
 	{ 
-		System.out.println("엄" +check);
-		System.out.println("엄" +size);
-		List<BuyPage> buyList = cartsvc.getCheckList(check,size);
+		List<BuyPage> buyList = cartsvc.getCheckList(check);
+		System.out.println(check);
 		model.addAttribute("buyList", buyList);
 		return "cart/buyPage";
 	}
@@ -132,6 +131,8 @@ public class CartController
 	public String uoList(Model model) {
 		List<OrderPage> usersOrderList = cartsvc.getUsersOrderList();
 		model.addAttribute("usersOrderList", usersOrderList);
+		model.addAttribute("searchdate1", "");
+		model.addAttribute("searchdate2", "");
 		return "cart/usersOrderPage";
 	}
 	
@@ -140,7 +141,6 @@ public class CartController
 	@GetMapping("orderInfo/{oNum}")
 	public String orderInfo(@PathVariable int oNum, Model model) {
 		OrderInfo orderInfo = cartsvc.getOrderInfo(oNum);
-		System.out.println("엄준식 오더인포"+orderInfo);
 		model.addAttribute("orderInfo", orderInfo);
 		int orderResult = cartsvc.getOrderRes(oNum);
 		model.addAttribute("orderResult", orderResult);	// 배송상태를 체크해서 배송정보를 수정가능/불가 기능 추가하기 위해 전송
@@ -170,6 +170,26 @@ public class CartController
 		Map<String,Object> map = new HashMap<>();
 		map.put("receipted", receipted); 
 		return map;
+	}
+	
+	// 장바구니 검색
+	@GetMapping("search")
+	public String search(@RequestParam String searchtext, Model model) {
+		List<CartPage> cartSearchList = cartsvc.getCartSearchList(searchtext);
+		model.addAttribute("cartList", cartSearchList); 
+		model.addAttribute("searchtext", searchtext);
+		return "cart/listPage";
+	}
+	
+	
+	// 주문내역 검색
+	@GetMapping("searchdate")
+	public String searchdate(@RequestParam Date searchdate1, @RequestParam Date searchdate2, Model model) {
+		List<OrderPage> usersOrderSearchList = cartsvc.getUsersOrderSearchDateList(searchdate1, searchdate2);
+		model.addAttribute("usersOrderList", usersOrderSearchList);
+		model.addAttribute("searchdate1", searchdate1);
+		model.addAttribute("searchdate2", searchdate2);
+		return "cart/usersOrderPage";
 	}
 	
 }
