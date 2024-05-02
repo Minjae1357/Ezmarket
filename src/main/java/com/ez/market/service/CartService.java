@@ -74,10 +74,8 @@ public class CartService {
 						CART.cnum,
 						PD.productName,
 						PD.productPrice,
-						IMG.imgSrc,
-						SIZE.size))
+						IMG.imgSrc))
 				.from(CART)
-				.join(SIZE).on(CART.productId.eq(SIZE.productId))
 				.join(PD).on(CART.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
 						.and(IMG.imgnum.eq(JPAExpressions			// 이미지 하나만 가져오기 위한 쿼리
@@ -91,8 +89,9 @@ public class CartService {
 	
 	// 구매 페이지로 넘어갈 때 체크한 항목들의 리스트만 가져오기
 									//카트번호 = check
-	public List<BuyPage> getCheckList(String check) {
+	public List<BuyPage> getCheckList(String check, String size) {
 	    String[] cartNumbers = check.split(",");
+	    String[] sizes = size.split(",");
 	    List<Integer> selectedCartNumbers = new ArrayList<>();
 	    List<Integer> selectedSizes = new ArrayList<>();
 
@@ -100,6 +99,15 @@ public class CartService {
 	        try {
 	            selectedCartNumbers.add(Integer.parseInt(number));
 	        } catch (NumberFormatException e) {
+	            // 로깅 처리 또는 사용자에게 알림
+	        }
+	    }
+
+	    for (String s : sizes) {
+	        try {
+	            selectedSizes.add(Integer.parseInt(s));
+	        } catch (NumberFormatException e) {
+	            // 로깅 처리 또는 사용자에게 알림
 	        }
 	    }
 
@@ -126,8 +134,9 @@ public class CartService {
 	                        .from(IMG)
 	                        .where(IMG.productId.eq(PD.productId)))))
 	        .join(SIZE).on(PD.productId.eq(SIZE.productId))
-	        .where(CART.cnum.in(selectedCartNumbers))
+	        .where(CART.cnum.in(selectedCartNumbers), SIZE.size.in(selectedSizes))
 	        .fetch();
+
 	    return buyList;
 	}
 
@@ -173,6 +182,7 @@ public class CartService {
 			int productId = Integer.parseInt(_uo.getProductId());
 	        int orderQty = Integer.parseInt(_uo.getOrderQty());
 	        int totalPrice = Integer.parseInt(_uo.getTotalPrice());
+
 	        // 재고보다 주문량이 더 많으면 실패처리
 	        int inventory = getinventory(productId);
 	        if(inventory<orderQty) {
@@ -247,7 +257,7 @@ public class CartService {
 				.select(Projections.constructor(OrderPage.class, 
 						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
-						PD.productPrice, IMG.imgSrc, SIZE.size))
+						PD.productPrice,UO.sizeNum, IMG.imgSrc))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
@@ -255,7 +265,6 @@ public class CartService {
 								.select(IMG.imgnum.min())
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
-				.join(SIZE).on(PD.productId.eq(SIZE.productId))
 				.where(UO.userid.eq(userid)) 
 				.fetch(); 
 		return orderList;
@@ -380,34 +389,6 @@ public class CartService {
 			}
 		}
 		return false;
-	}
-	
-	// 주문내역 날짜로 검색 리스트 가져오기
-	public List<OrderPage> getUsersOrderSearchDateList(Date searchdate1, Date searchdate2){
-		Authentication id = SecurityContextHolder.getContext().getAuthentication();
-		String userid = id.getName();
-		var query = new JPAQueryFactory(entityManager);
-        QUsersOrder UO = QUsersOrder.usersOrder;
-        QProduct PD = QProduct.product;
-        QImgs IMG = QImgs.imgs;
-        QSizes SIZE = QSizes.sizes;
-        List<OrderPage> orderList = query
-				.select(Projections.constructor(OrderPage.class, 
-						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
-						UO.pdate, UO.orderResult, PD.productName,
-						PD.productPrice,UO.sizeNum, IMG.imgSrc))
-				.from(UO)
-				.join(PD).on(UO.productId.eq(PD.productId))
-				.join(IMG).on(PD.productId.eq(IMG.productId)
-						.and(IMG.imgnum.eq(JPAExpressions
-								.select(IMG.imgnum.min())
-								.from(IMG)
-								.where(IMG.productId.eq(PD.productId)))))
-				.where(UO.userid.eq(userid)
-						.and(UO.pdate.goe(searchdate1))
-						.and(UO.pdate.loe(searchdate2)))
-				.fetch(); 
-		return orderList;
 	}
 }
 
