@@ -24,6 +24,6 @@ public class CartPage
 	private String productName;
 	private int productPrice;
 	private String imgSrc;
-	private int size;
+	private int size; 
 }
  

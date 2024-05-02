@@ -333,7 +333,7 @@ public class CartService {
 	}
 	
 	// 장바구니 검색 리스트 가져오기
-	public List<CartPage> getCartSearchList(String searchtext){
+	public List<CartPage> getCartSearchList(String searchtext){ 
 		
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
@@ -348,8 +348,10 @@ public class CartService {
 						CART.cnum,
 						PD.productName,
 						PD.productPrice,
-						IMG.imgSrc))
+						IMG.imgSrc,
+						SIZE.size))
 				.from(CART)
+				.join(SIZE).on(CART.productId.eq(SIZE.productId))
 				.join(PD).on(CART.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
 						.and(IMG.imgnum.eq(JPAExpressions			// 이미지 하나만 가져오기 위한 쿼리
@@ -395,7 +397,7 @@ public class CartService {
 				.select(Projections.constructor(OrderPage.class, 
 						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
-						PD.productPrice,UO.sizeNum, IMG.imgSrc))
+						PD.productPrice, IMG.imgSrc, SIZE.size))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
@@ -403,6 +405,7 @@ public class CartService {
 								.select(IMG.imgnum.min())
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
+				.join(SIZE).on(PD.productId.eq(SIZE.productId))
 				.where(UO.userid.eq(userid)
 						.and(UO.pdate.goe(searchdate1))
 						.and(UO.pdate.loe(searchdate2)))

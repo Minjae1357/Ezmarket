@@ -19,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class OrderPage
 {
-	@Nonnull
+	@Nonnull 
 	private int oNum;
 	private String status;
 	private int totalPrice;

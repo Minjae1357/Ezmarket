@@ -127,7 +127,7 @@ public class CartController
 	}
 	
 	// 주문내역 보기
-	@GetMapping("uoList")
+	@GetMapping("uoList") 
 	public String uoList(Model model) {
 		List<OrderPage> usersOrderList = cartsvc.getUsersOrderList();
 		model.addAttribute("usersOrderList", usersOrderList);
