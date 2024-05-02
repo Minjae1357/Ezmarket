@@ -98,16 +98,6 @@ public class ProductBoardController
 		return"product/productDetail";
 	}
 	
-	@GetMapping("CartOverlapCheck")
-	@ResponseBody
-	public Map<String,Boolean> cartOverlapCheck(@RequestParam("productId")int productid){
-		
-		boolean overlap = cartSvc.CartOverlapCheck(productid);
-		Map<String,Boolean> map = new HashMap<>();
-		map.put("overlap",overlap);
-		return map;
-	}
-	
 	@PostMapping("addCart")
 	@ResponseBody
 	public Map<String,Boolean> addCart(@RequestParam("productId")int productid){

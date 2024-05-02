@@ -80,7 +80,6 @@ public class CartController
 		List<CartPage> cartList = cartsvc.getCartList();
 		System.out.println("엄준식" + cartList);
 		model.addAttribute("cartList", cartList); 
-		model.addAttribute("searchtext", "");
 		return "cart/listPage";
 	}
 	
@@ -169,16 +168,6 @@ public class CartController
 		map.put("receipted", receipted); 
 		return map;
 	}
-	
-	// 장바구니 검색
-	@GetMapping("search")
-	public String search(@RequestParam String searchtext, Model model) {
-		List<CartPage> cartSearchList = cartsvc.getCartSearchList(searchtext);
-		model.addAttribute("cartList", cartSearchList); 
-		model.addAttribute("searchtext", searchtext);
-		return "cart/listPage";
-	}
-	
 	
 }
 
