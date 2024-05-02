@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <title>주문내역</title>
@@ -119,6 +119,7 @@ function receipt(oNum,productName){
             <th>날짜</th>
             <th>물품수령</th>
             <th>배송정보 보기</th>
+			<th>리뷰작성하기</th>
         </tr>
         <tr th:each="uo,i : ${usersOrderList}">
 			<td th:text="${i.index+1}"></td>
@@ -137,6 +138,11 @@ function receipt(oNum,productName){
 			<td>
 				<a th:if="${uo.orderResult ==1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
 				<a th:if="${uo.orderResult !=1}" th:href="'cart/orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
+			</td>
+			<td>
+				<a th:href="@{'/mypage/review?productName=' + ${uo.productName} + '&userid=' + ${username}}">
+					<button>리뷰<br>작성하기</button>
+				</a>
 			</td>
         </tr>
     </table>
