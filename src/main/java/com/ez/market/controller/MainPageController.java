@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ez.market.service.CartService;
 
+import java.util.Collections;
 import java.util.List;
 
 //메인페이지관련된 요청은여기서
@@ -43,6 +44,7 @@ public class MainPageController
 		int count = cartsvc.cartCount();
 		log.info("2번");
 		List<ProductBoard> pblist = PBSvc.findTop30ByOrderByPnumDesc();
+		Collections.reverse(pblist);
 		log.info("3번");
 		System.out.println("pblist" + pblist);
 		log.info("4번");

@@ -60,11 +60,12 @@ public class ImgsService {
 	}
 	
 	public List<Imgs> findImgsByPId(List<Product> plist){
-		List<Integer> pIdList = new ArrayList<>();
+		List<Imgs> imgList = new ArrayList<>();
 		for(Product p :plist) {
-			pIdList.add(p.getProductId());
+			List<Imgs> ilist = imgRepo.findByProductId(p.getProductId());
+			imgList.add(ilist.get(0));
 		}
-		return imgRepo.findImgsByProductIdIn(pIdList);
+		return imgList;
 	}
 	
 	public List<Imgs> findAllByProductId(int pid) {

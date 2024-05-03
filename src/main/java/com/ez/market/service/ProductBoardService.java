@@ -47,7 +47,7 @@ public class ProductBoardService {
 	public List<ProductBoard> findTop30ByOrderByPnumDesc() {
         return pbRepo.findTop30ByOrderByPnumDesc();
     }  
-
+	public List<ProductBoard> findTop30ByPnum(){return findTop30ByPnum(); }
 	public List<ProductBoard> getTop() {
         QProductBoard qProductBoard = new QProductBoard("pb");
         return new JPAQueryFactory(entityManager)

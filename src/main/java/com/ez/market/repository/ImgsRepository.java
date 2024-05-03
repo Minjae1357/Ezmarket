@@ -13,6 +13,6 @@ public interface ImgsRepository extends JpaRepository<Imgs, Integer>,
                                         QuerydslPredicateExecutor<Imgs>
 {
 	List<Imgs> findImgsByProductIdIn(List<Integer> pIdList);
-	Imgs findByProductId(int productid);
+	List<Imgs> findByProductId(int productid);
 	List<Imgs> findAllByProductId(int productId);
 }
