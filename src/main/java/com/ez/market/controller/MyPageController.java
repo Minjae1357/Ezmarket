@@ -53,7 +53,7 @@ public class MyPageController
 		return "cart/usersOrderPage";
 	}
 	@GetMapping("review")
-	public String writeReview(Model m,@RequestParam("productName") String productName,@RequestParam("userid") String uid){
+	public String writeReview(Model m,@RequestParam("productName") String productName){
 		Authentication id = SecurityContextHolder.getContext().getAuthentication();
 		String userid = id.getName();
 		System.out.println(productName+"확인"+userid);
