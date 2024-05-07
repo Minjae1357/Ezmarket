@@ -135,8 +135,8 @@ $(document).ready(function() {
 	    <button type="submit">검색</button>
 	</form>
 	
-	<div class="searchdiv" th:if="${searchdate1 != '' || searchdate2 != ''}" th:text="'\''+${searchdate1}+'\''+' 부터 ' + '\'' + ${searchdate2} + '\'' + ' 까지 검색 결과'"></div>
-	
+	<div class="searchdiv" th:if="${searchdate1 != null and searchdate2 != null}" th:text="'\''+${searchdate1}+'\''+' 부터 ' + '\'' + ${searchdate2} + '\'' + ' 까지 검색 결과'"></div>
+
     <table>
         <tr>
 			<th></th>

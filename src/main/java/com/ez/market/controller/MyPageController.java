@@ -61,7 +61,7 @@ public class MyPageController
 		m.addAttribute("pnum",pnum.getProductId());
 		m.addAttribute("userid",userid);
 		return "user/reviewForm";
-	}
+	} 
 
 	@PostMapping("addReview")
 	@ResponseBody
