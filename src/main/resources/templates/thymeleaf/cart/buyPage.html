@@ -135,6 +135,31 @@ function qtyset(element) {
         element.value = max;
     }
 }
+function toggleContent(id) {
+    var element = document.getElementById(id);
+    if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+    } else {
+        element.classList.add("hidden");
+    }
+}
+// 클릭된 탭에 'active' 클래스를 추가합니다.
+$('.sidebar a').click(function () {
+    $('.sidebar a').removeClass('active');
+    $(this).addClass('active');
+    var section = $(this).text().toLowerCase();
+    updateContent(section);
+});
+
+
+// 스크롤 이벤트 리스너
+window.addEventListener('scroll', function() {
+    var header = document.querySelector('header');
+    // 스크롤 위치가 100px 이상일 때 'scrolled' 클래스를 추가하고, 그렇지 않으면 제거
+    header.classList.toggle('scrolled', window.scrollY > 100);
+});
+function updateContent(pageName) {
+}
 </script>
 </head>
 <body>
@@ -159,19 +184,19 @@ function qtyset(element) {
             <li><a href="javascript:void(0);" onclick="toggleContent('tops')">Tops</a></li>
             <li id="tops" class="hidden">
                 <ul>
-                    <li><a href="/productboard/list">전체</a></li>
+                    <li><a href="/productboard/list/Tops">전체</a></li>
                     <li><a href="/productboard/list/맨투맨">맨투맨</a></li>
-                    <li><a href="#">후드티셔츠</a></li>
-                    <li><a href="#">니트스웨터</a></li>
+                    <li><a href="/productboard/list/후드티셔츠">후드티셔츠</a></li>
+                    <li><a href="/productboard/list/니트스웨터">니트스웨터</a></li>
                 </ul>
             </li>
             <li><a href="javascript:void(0);" onclick="toggleContent('bottoms')">Bottoms</a></li>
             <li id="bottoms" class="hidden">
                 <ul>
-                    <li><a href="/productboard/list">전체</a></li>
-                    <li><a href="#">데님 팬츠</a></li>
-                    <li><a href="#">코튼 팬츠</a></li>
-                    <li><a href="#">기타 바지</a></li>
+                    <li><a href="/productboard/list/Bottoms">전체</a></li>
+                    <li><a href="/productboard/list/데님팬츠">데님 팬츠</a></li>
+                    <li><a href="/productboard/list/코튼팬츠">코튼 팬츠</a></li>
+                    <li><a href="/productboard/list/기타">기타 바지</a></li>
                 </ul>
             </li>
         </ul>

@@ -54,11 +54,38 @@ th{
 td {
     text-align:center;
     padding: 8px;
+	vertical-align: middle;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script type="text/javascript">
+	$(document).ready(function() {
+		// 폼 submit 이벤트를 감지하여 AJAX를 통해 데이터를 서버에 전송
+		$('#searchForm').submit(function(event) {
+			event.preventDefault(); // 폼의 기본 동작(페이지 리로드) 방지
 
+			// 검색 날짜 가져오기
+			var searchdate1 = $('#searchdate1').val();
+			var searchdate2 = $('#searchdate2').val();
+
+			// AJAX를 통해 서버에 데이터 전송
+			$.ajax({
+				type: 'GET',
+				url: '/cart/searchdate', // 요청을 보낼 URL
+				data: { // 전송할 데이터
+					searchdate1: searchdate1,
+					searchdate2: searchdate2
+				},
+				success: function(response) { // 요청이 성공한 경우 실행될 함수
+					// 응답을 받아와서 해당 부분을 업데이트
+					$('#usersOrderListContainer').html(response);
+				},
+				error: function(xhr, status, error) { // 요청이 실패한 경우 실행될 함수
+					console.error('Error:', error);
+				}
+			});
+		});
+	});
 // 체크삭제
 function delcheck(){
 	var obj = {};
@@ -144,7 +171,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
-<div class="all">
+<div class="all" id="usersOrderListContainer">
 	
 	<h2>주문내역</h2>
 	
@@ -189,8 +216,8 @@ $(document).ready(function() {
 				<a th:if="${uo.orderResult !=1}" th:href="'orderInfo/'+${uo.oNum}"><button class="smallButton">배송정보<br> 확인</button></a>
 			</td>
 			<td>
-				<a th:href="@{/mypage/review(productName=${uo.productName})}"><br>
-					<button class="smallButton" >리뷰 작성하기</button></a>
+				<a th:href="@{/mypage/review(productName=${uo.productName})}">
+					<button class="smallButton" >리뷰<br>작성하기</button></a>
 			</td>
         </tr>
     </table>
