@@ -276,6 +276,7 @@ header {
       cursor: pointer;
       height: 40px;
       line-height: 1.5;
+      margin: 5px;
   }
   .bigButton{
       font-family: inherit;

@@ -42,7 +42,6 @@ public class CategoryService {
 		for (Category category:clist){
 			cNumList.add(category.getCNum());
 		}
-
 		return cNumList;
 	}
 	
