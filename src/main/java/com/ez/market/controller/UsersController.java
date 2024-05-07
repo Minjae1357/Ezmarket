@@ -45,7 +45,6 @@ public class UsersController
 	@PostMapping("/check")
 	public Map<String,Object> idCheck(@RequestParam String userid)
 	{
-		System.out.println("엄");
 		boolean idcheck = usersvc.idCheck(userid);
 		Map<String,Object> map = new HashMap<>();
 		map.put("check", idcheck);
@@ -159,7 +158,6 @@ public class UsersController
 	
 	@PostMapping("/clearSessionMessage")
 	public String clearSessionMessage(HttpSession session){
-		log.info("이거실행엄준식"+session.getAttribute("message"));
 		session.removeAttribute("message");
 		session.removeAttribute("useremail");
 		return "redirect:/user/loginForm";

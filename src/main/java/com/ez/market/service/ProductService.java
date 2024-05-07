@@ -47,8 +47,6 @@ public class ProductService {
 	@PersistenceContext
 	private EntityManager entityManager;
 	@Autowired
-    private JPAQueryFactory queryFactory;
-	@Autowired
 	private CategoryRepository cateRepo;
 	
 	@Transactional
@@ -57,8 +55,6 @@ public class ProductService {
 	    QUsersOrder userorder = QUsersOrder.usersOrder;
 	    QProduct product = QProduct.product;
 	    QImgs imgs = QImgs.imgs; 
-	    QSizes sizes = QSizes.sizes;
-	    QOrderInfo orderinfo = QOrderInfo.orderInfo;
 
 	    List<UsersOrderList> list = queryFactory
 	            .select(Projections.constructor(UsersOrderList.class,	                 

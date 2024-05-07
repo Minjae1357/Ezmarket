@@ -61,26 +61,11 @@ public class CartController
 	@PersistenceContext
 	EntityManager entityManager;
 	
-	// 테스트용 데이터 생성을 위한 코드(삭제할 것)
-	@GetMapping("pwd")
-	@ResponseBody
-	public String pwd()
-	{
-		BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
-		System.out.println("aaa->" + enc.encode("aaa"));
-		System.out.println("bbb->" + enc.encode("bbb"));
-		System.out.println("ccc->" + enc.encode("ccc"));
-		System.out.println("ddd->" + enc.encode("ddd"));
-		return "hi pwd"; 
-	}
 	
 	// 장바구니 리스트 띄우기
 	@GetMapping("list")
 	public String list(Model model) {
-		System.out.println("엄준식");
 		List<CartPage> cartList = cartsvc.getCartList();
-		//System.out.println("#################"+cartList.get(1).getSize());
-		System.out.println("엄준식" + cartList);
 		model.addAttribute("cartList", cartList); 
 		model.addAttribute("searchtext", "");
 		return "cart/listPage";
