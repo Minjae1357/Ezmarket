@@ -256,7 +256,7 @@ public class CartService {
 								.from(IMG)
 								.where(IMG.productId.eq(PD.productId)))))
 				.join(SIZE).on(PD.productId.eq(SIZE.productId))
-				.where(UO.userid.eq(userid)) 
+				.where(UO.userid.eq(userid),UO.sizeNum.eq(SIZE.size)) 
 				.fetch(); 
 		return orderList;
 	}
