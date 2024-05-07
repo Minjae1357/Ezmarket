@@ -67,7 +67,7 @@ public class AdminService
 		long executed = queryFactory.update(userorder)
 									.set(userorder.status, status)
 									.where(userorder.oNum.eq(orderid))
-									.execute();
+									.execute(); 
 				return executed>0;
 	}
 	
