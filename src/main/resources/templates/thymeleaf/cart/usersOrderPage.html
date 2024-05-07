@@ -1,16 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>주문내역</title>
+<title>주문내역 | Ezmarket</title>
+    <link rel="stylesheet" href="/menu.css">
 <style>
 .searchdiv {
     display: flex;
-    justify-content: center; /* 가로 방향에서 중앙 정렬 */
-    align-items: center; /* 세로 방향에서 중앙 정렬 */
-    margin: 10px 0; /* 상하 마진 추가로 조정 */
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    border: 1px solid #ccc;
+    background-color: black;
+    padding: 5px;
+    color:white;
 }
-	
+.searchInput{
+    width: 200px;
+    height: 30px;
+}
+.searchButton{
+    background-color: black;
+    color:white;
+    border:0px;
+    justify-content: center;
+    cursor: pointer;
+}
 .image1 {
 width: auto;
 height: 150px;
@@ -25,14 +40,19 @@ h2 {
 }
 
 table {
-font-family: Arial, sans-serif;
-margin: 0 auto;
-border: 5px solid black;
-border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
 }
 
+th{
+    height: 50px;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
 td {
-    border: 5px solid black;
+    text-align:center;
     padding: 8px;
 }
 </style>
@@ -130,9 +150,9 @@ $(document).ready(function() {
 	
 	<!-- 날짜로 검색 -->
 	<form class="searchdiv" id="searchForm" action="/cart/searchdate" method="GET">
-	    <input type="date" id="searchdate1" name="searchdate1">&nbsp;부터&nbsp;
-	    <input type="date" id="searchdate2" name="searchdate2">&nbsp;까지&nbsp;
-	    <button type="submit">검색</button>
+	    <input class="searchInput" type="date" id="searchdate1" name="searchdate1">&nbsp;~&nbsp;
+	    <input class="searchInput" type="date" id="searchdate2" name="searchdate2">&nbsp;&nbsp;
+	    <button class="searchButton" type="submit">SEARCH</button>
 	</form>
 	
 	<div class="searchdiv" th:if="${searchdate1 != null and searchdate2 != null}" th:text="'\''+${searchdate1}+'\''+' 부터 ' + '\'' + ${searchdate2} + '\'' + ' 까지 검색 결과'"></div>
@@ -161,16 +181,16 @@ $(document).ready(function() {
 			<td>
 				<span th:text="${uo.orderResult == 1 ? '배송준비중' : uo.orderResult == 2 ? '배송중' : uo.orderResult == 3 ? '배송완료' : '취소or결제 ???'}"></span>
 				<a th:if="${uo.orderResult != 3}">
-					<button type="button" th:attr="onclick=|receipt('${uo.oNum}', '${uo.productName}');|">물품<br>수령 확인</button>
+					<button class="smallButton" type="button" th:attr="onclick=|receipt('${uo.oNum}', '${uo.productName}');|">물품<br>수령 확인</button>
 				</a>
 			</td>
 			<td>
-				<a th:if="${uo.orderResult ==1}" th:href="'orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인/변경</button></a>
-				<a th:if="${uo.orderResult !=1}" th:href="'orderInfo/'+${uo.oNum}"><button>배송정보<br> 확인</button></a>
+				<a th:if="${uo.orderResult ==1}" th:href="'orderInfo/'+${uo.oNum}"><button class="smallButton">배송정보<br> 확인/변경</button></a>
+				<a th:if="${uo.orderResult !=1}" th:href="'orderInfo/'+${uo.oNum}"><button class="smallButton">배송정보<br> 확인</button></a>
 			</td>
 			<td>
 				<a th:href="@{/mypage/review(productName=${uo.productName})}"><br>
-					<button>리뷰 작성하기</button></a>
+					<button class="smallButton" >리뷰 작성하기</button></a>
 			</td>
         </tr>
     </table>

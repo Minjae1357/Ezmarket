@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>장바구니</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>장바구니 | Ezamarket</title>
+	<link rel="stylesheet" href="/menu.css">
 <style>
 	 
 .image1 {
@@ -21,20 +23,38 @@ h2 {
 table {
 font-family: Arial, sans-serif;
 margin: 0 auto;
-border: 5px solid black;
+border: 1px solid #ccc;
 border-collapse: collapse;
 }
-
+th{
+	height: 50px;
+	padding: 8px;
+	border-bottom: 1px solid #ccc;
+}
 td {
-    border: 5px solid black;
-    padding: 8px;
+	text-align:center;
+	padding: 8px;
 }
 
 .searchdiv {
     display: flex;
-    justify-content: center; /* 가로 방향에서 중앙 정렬 */
-    align-items: center; /* 세로 방향에서 중앙 정렬 */
-    margin: 10px 0; /* 상하 마진 추가로 조정 */
+    justify-content: center;
+    align-items: center;
+	height: 50px;
+	border: 1px solid #ccc;
+	background-color: black;
+	padding: 5px;
+}
+.searchInput{
+	width: 300px;
+	height: 30px;
+}
+.searchButton{
+	background-color: black;
+	color:white;
+	border:0px;
+	justify-content: center;
+	cursor: pointer;
 }
 
 
@@ -160,21 +180,61 @@ $(document).ready(function() {
 
 </head>
 <body>
-<div class="all">
+<header>
+	<div class="logo"><a href="/main/menu">EzMarket</a></div>
+	<!-- 네비게이션 바 -->
+
+	<nav>
+		<div class="shopping-cart">
+			<a href="/cart/list">
+				<img src="/cart.jpg" alt="Shopping Cart">  <!-- alt는 사진오류나면 나오는글 -->
+				<span id="cart-count"th:text="${count}">0</span> <!-- 초기 상품 개수는 0으로 설정 mainpageController에서 설정-->
+			</a>
+		</div>
+		<a href="/mypage"><img src="/mypage.jpg" alt="mypage 사진"></a> <!-- 홈 링크 -->
+		<a href="/logout"><img src="/logout.jpg" alt="logout 사진"></a> <!-- 로그아웃 링크 -->
+	</nav>
+</header>
+<div class="container">
+	<aside class="sidebar">
+		<ul>
+			<li><a href="javascript:void(0);" onclick="toggleContent('tops')">Tops</a></li>
+			<li id="tops" class="hidden">
+				<ul>
+					<li><a href="/productboard/list">전체</a></li>
+					<li><a href="/productboard/list/맨투맨">맨투맨</a></li>
+					<li><a href="#">후드티셔츠</a></li>
+					<li><a href="#">니트스웨터</a></li>
+				</ul>
+			</li>
+			<li><a href="javascript:void(0);" onclick="toggleContent('bottoms')">Bottoms</a></li>
+			<li id="bottoms" class="hidden">
+				<ul>
+					<li><a href="/productboard/list">전체</a></li>
+					<li><a href="#">데님 팬츠</a></li>
+					<li><a href="#">코튼 팬츠</a></li>
+					<li><a href="#">기타 바지</a></li>
+				</ul>
+			</li>
+		</ul>
+	</aside>
+	<main class="main-content" id="main-content">
+	<div class="all">
 	<h2>내 장바구니</h2>
 	
 	<!-- 상품이름으로 검색 -->
 	<form class="searchdiv" id="searchForm" action="/cart/search" method="GET">
-	    <input type="text" id="searchtext" name="searchtext">
-	    <button type="submit">검색</button>
+	    <input class ="searchInput"type="text" id="searchtext" name="searchtext">
+	    <button class="searchButton" type="submit">SEARCH</button>
 	</form>
 	
 	<div class="searchdiv" th:if="${searchtext != ''}" th:text="'\''+${searchtext}+'\''+' 으로 검색 결과'"></div>
+
 	<form  id="cartForm" method="get" action="/cart/buypage"> <!-- 구매페이지 이동에 필요한 코드 -->
     <table>
         <tr>
-			<th></th>
-			<th><button type="button" id="selectAll">전체선택</button></th>
+			<th>순번</th>
+			<th><button class="smallButton" type="button" id="selectAll">전체선택</button></th>
             <th>상품이미지</th>
             <th>상품이름</th>
             <th>상품가격</th>
@@ -198,12 +258,28 @@ $(document).ready(function() {
 			<td th:text="${c.productName}"></td>
 			<td th:text="${c.productPrice}"></td>
 			<td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
-			<td><button type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
+			<td><button class="smallButton" type="button" th:attr="onclick=|del('${c.cnum}');|">삭제</button></td>
 		</tr>
 	</table>
 	</form>
-	<button type="button" onclick="buypage();">구매페이지로 이동</button>
-	<button type="button" onclick="delcheck();">선택항목 삭제</button>
+		<div class="center">
+		<button class="bigButton" type="button" onclick="buypage();">구매페이지로 이동</button>
+		<button class="bigButton" type="button" onclick="delcheck();">선택항목 삭제</button>
+		</div>
+</div>
+	</main>
+</div>
+<div class ="footer-info">
+	COMPANY.
+	<span class="">(주)EzMarket</span>
+	<br>
+	OWNER.
+	<span>강주영,정민재,조민규</span><br>
+	<span>팀프로젝트</span><br>
+	<span>팀프로젝트</span><br>
+	<span>팀프로젝트</span><br>
+	<span>팀프로젝트</span>
+	<br>
 </div>
 </body>
 </html>
