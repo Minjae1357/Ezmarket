@@ -32,6 +32,10 @@ header {
     font-size: 1.5em;
     color: #333333;
   }
+  a{
+      text-decoration: none;
+      color: black;
+  }
   /* 네비게이션 바 스타일링: 리스트 스타일 제거, 여백 제거, 배경색 설정, 오버플로우 숨김 처리 */
   .navbar {
     list-style-type: none;
@@ -266,6 +270,29 @@ header {
       resize: none;
       width: 400px;
       height: 5em;
+  }
+  .smallButton{
+      border: 1px solid #ccc;
+      cursor: pointer;
+      height: 40px;
+      line-height: 1.5;
+  }
+  .bigButton{
+      font-family: inherit;
+      font-weight: 700;
+      color:white;
+      background-color: black;
+      font-size: 20px;
+      border: 0px;
+      cursor: pointer;
+      line-height: 1.5;
+      width: 270px;
+      height: 60px;
+      padding: 10px;
+  }
+  .center{
+      padding: 10px;
+      text-align: center;
   }
   .rating{
 
