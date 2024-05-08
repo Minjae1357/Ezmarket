@@ -37,12 +37,27 @@ public class CategoryService {
 	}
 
 	public List<Integer> findcNumBycKind(String ckind) {
-		List<Category> clist = cateRepo.findBycKind(ckind);
+		List<Category> clist;
+		switch (ckind) {
+			case "Tops":
+				clist = cateRepo.findBycKind("맨투맨");
+				clist.addAll(cateRepo.findBycKind("후드티셔츠"));
+				clist.addAll(cateRepo.findBycKind("니트스웨터"));
+				break;
+			case "Bottoms":
+				clist = cateRepo.findBycKind("데님팬츠");
+				clist.addAll(cateRepo.findBycKind("코튼팬츠"));
+				clist.addAll(cateRepo.findBycKind("기타"));
+			default:
+				clist = cateRepo.findBycKind(ckind);
+				break;
+		}
 		List<Integer> cNumList = new ArrayList<>();
-		for (Category category:clist){
+		for (Category category : clist) {
 			cNumList.add(category.getCNum());
 		}
 		return cNumList;
 	}
-	
+
+
 }
