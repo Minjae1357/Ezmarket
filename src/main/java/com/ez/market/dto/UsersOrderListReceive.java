@@ -29,6 +29,7 @@ public class UsersOrderListReceive {
         private String orderQty;
         private String totalPrice;
         private String delcnum;
+        private String snum;
     }
     
     @Data

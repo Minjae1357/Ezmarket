@@ -87,6 +87,7 @@ public class CartController
 	@GetMapping("buypage")
 	public String gobuyPage(Model model, @RequestParam String check,@RequestParam String size)
 	{ 
+		System.out.println("사이즈정보"+size);
 		List<BuyPage> buyList = cartsvc.getCheckList(check,size);
 		model.addAttribute("buyList", buyList);
 		return "cart/buyPage";
@@ -116,6 +117,7 @@ public class CartController
 	@PostMapping("addUO")
 	@ResponseBody
 	public Map<String,Object> addUO(@RequestBody UsersOrderListReceive uoRecive) {	
+		System.out.println(uoRecive);
 		// UsersOrderListRecive dto 사용, 이 클래스는 (productId, orderQty, totalPrice, cnum)리스트와 orderinfo 객체 하나를 담는 dto
 		boolean added = cartsvc.addUO(uoRecive);
 		Map<String,Object> map = new HashMap<>();

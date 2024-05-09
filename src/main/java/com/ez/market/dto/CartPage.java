@@ -20,7 +20,7 @@ import lombok.ToString;
 public class CartPage
 { 
 	@Nonnull
-	private int cnum; 
+	private int cnum;  
 	private String productName;
 	private int productPrice;
 	private String imgSrc;

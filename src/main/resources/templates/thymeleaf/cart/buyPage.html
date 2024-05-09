@@ -74,29 +74,52 @@ $(document).ready(function() {	// 페이지 로드 완료되면 실행되게 한
 // 주문정보(users_order) 넘기기
 // 상품아이디, 수량, 총가격(한 행의 총가격) 정보 넘기기 
 function buy() {
-    var uoList = [];	// 주문테이블 여러 행을 담기 위한 배열 생성
-    $("#ordertable tr").each(function(index) {	// 반복, tr(행) : 모든 행을 순회하기 위해 사용
-        if (index === 0) return true; // 첫행은 무시
+    var uoList = [];
+    $("#ordertable tr").each(function(index) {
+        if (index === 0) return true;
 
-        var productId = $(this).find("td:nth-child(1)").text(); // 상품아이디 담기, td 1번째 요소 가져오기
-        var qty = $(this).find("input[type='number']").val(); // 수량 담기
+        var productId = $(this).find("td:nth-child(1)").text();
+        var qty = $(this).find("input[type='number']").val();
         var totalPrice = $(this).find("td:last-child").text().replace(" 원", "");
-        var delcnum = $(this).find("td:nth-child(2)").text();	// 구매시 카트에서 삭제할 cnum
-        if (productId && qty && totalPrice && delcnum) {	// 위 코드에서 값이 정상적으로 추출되었는지 확인
-            uoList.push({productId: productId, orderQty: qty, totalPrice: totalPrice, delcnum: delcnum});
+        var delcnum = $(this).find("td:nth-child(2)").text();
+        var sizeText = $(this).find("td:nth-child(7)").text(); // 사이즈 텍스트 가져오기
+
+        // 사이즈 텍스트를 숫자로 변경
+        var size = 0; // 기본값은 S로 설정
+        switch (sizeText) {
+            case 'M':
+                size = 1;
+                break;
+            case 'L':
+                size = 2;
+                break;
+            case 'XL':
+                size = 3;
+                break;
+            case 'XXL':
+                size = 4;
+                break;
+            // 'S'일 때는 기본값인 0 그대로 유지
+        }
+
+        if (productId && qty && totalPrice && delcnum) {
+            uoList.push({
+                productId: productId,
+                orderQty: qty,
+                totalPrice: totalPrice,
+                delcnum: delcnum,
+                snum: size // 변경된 사이즈 값 추가
+            });
         }
     });
-    
-    // 배송정보
+
     var oi = {
         resName: $("input[name='resName']").val(),
         resAddress: $("input[name='resAddress']").val(),
         resPhone: $("input[name='resPhone']").val(),
         resRequirement: $("input[name='resRequirement']").val()
     };
-    alert(JSON.stringify(oi));
 
-    // 데이터 객체 생성
     var UOLT = {
         uoList: uoList,
         oi: oi
@@ -109,8 +132,8 @@ function buy() {
         contentType: "application/json",
         cache: false,
         beforeSend : function(xhr) {
-			xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
-		},
+            xhr.setRequestHeader("[[${_csrf.headerName}]]", "[[${_csrf.token}]]");
+        },
         success: function(res) {
             alert(res.added ? '추가 성공' : '추가 실패');
             if (res.added) {
@@ -122,6 +145,7 @@ function buy() {
         }
     });
 }
+
 
 // 수량 min, max 값 제한하기
 function qtyset(element) {
@@ -222,7 +246,7 @@ function updateContent(pageName) {
             <td><img class="image1" th:src="${c.imgSrc}"></td>
             <td th:text="${c.productName}"></td>
             <td th:id="'price'+${c.cnum}" th:data-price="${c.productPrice}" th:text="${c.productPrice} +' 원'"></td>
-            <td th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
+            <td th:id="'size'+${c.size}" th:text="${c.size == 0 ? 'S' : c.size == 1 ? 'M' : c.size == 2 ? 'L' : c.size == 3 ? 'XL' : c.size == 4 ? 'XXL' : '-'}"></td>
             <td><a th:text="'재고 '+${c.inventory}+' 개'"></a><br><input type="number" class="qty" th:id="'qty'+${c.cnum}" th:min="1" th:max="${c.inventory}" value="1" oninput="qtyset(this)"> 개</td>
             <td th:id="'totalPrice'+${c.cnum}" th:text="${c.productPrice} +' 원'"></td>
         </tr>

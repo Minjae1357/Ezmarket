@@ -182,7 +182,7 @@ public List<CartPage> getCartList(){
 			int productId = Integer.parseInt(_uo.getProductId());
 	        int orderQty = Integer.parseInt(_uo.getOrderQty());
 	        int totalPrice = Integer.parseInt(_uo.getTotalPrice());
-
+	        int sizenum = Integer.parseInt(_uo.getSnum());
 	        // 재고보다 주문량이 더 많으면 실패처리
 	        int inventory = getinventory(productId);
 	        if(inventory<orderQty) {
@@ -196,6 +196,7 @@ public List<CartPage> getCartList(){
 			uo.setOrderQty(orderQty);
 			uo.setOrderResult(1);
 			uo.setUserid(userid);
+			uo.setSizeNum(sizenum);
 			uoList.add(uo);
 			
 			// 카트에서 삭제
