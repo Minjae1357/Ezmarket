@@ -257,7 +257,7 @@ public List<CartPage> getCartList(){
 				.select(Projections.constructor(OrderPage.class, 
 						UO.oNum, UO.status, UO.totalPrice, UO.orderQty,
 						UO.pdate, UO.orderResult, PD.productName,
-						PD.productPrice, SIZE.size, IMG.imgSrc))
+						PD.productPrice, IMG.imgSrc, SIZE.size))
 				.from(UO)
 				.join(PD).on(UO.productId.eq(PD.productId))
 				.join(IMG).on(PD.productId.eq(IMG.productId)
