@@ -32,8 +32,6 @@
 ---
 
 ## 주요 기능
-아래와 같이 내용을 조금 더 정리하고 포맷을 깔끔하게 유지해 보았습니다:
-
 ---
 
 ### 1. **사용자 로그인 페이지**  
@@ -106,11 +104,47 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
    구글 계정으로 인증이 완료되면 EzMarket과 연동되어 이메일인증이 완료됩니다.
 
 ---
+
+
+### 3. **쇼핑몰 페이지**
+EzMarket은 JPA와 QueryDSL을 사용하여 대부분의 데이터를 불러오고 있습니다. 사용자는 다양한 상품을 확인하고, 쇼핑몰 내에서 여러 기능을 활용할 수 있습니다.
+
+**1. 상품 리스트 및 상세 페이지**  
+상품 리스트는 QueryDSL을 통해 검색 및 필터링이 가능하며, 사용자는 원하는 상품을 클릭하여 상세 정보를 확인할 수 있습니다.  
+![list](https://github.com/user-attachments/assets/c203bc54-e85d-4eb0-bb12-5d9960a1b5e5)  
+![detail](https://github.com/user-attachments/assets/ec44360a-40d4-4602-b43d-6a70a3abb686)
+
+**2. 쇼핑몰 주요 아이콘**  
+화면 상단에는 사용자가 빠르게 접근할 수 있는 주요 아이콘이 배치되어 있습니다.  
+![아이콘](https://github.com/user-attachments/assets/560ec1a1-5c45-4111-ae76-1e000c6f917e)  
+- **장바구니**: 선택한 상품을 장바구니에 추가하여 한 번에 결제할 수 있습니다.  
+- **마이페이지**: 사용자 정보와 주문 내역을 확인할 수 있는 페이지입니다.  
+- **로그아웃**: 사용자가 시스템에서 안전하게 로그아웃할 수 있습니다.  
+
+**3. 마이페이지**  
+마이페이지에서는 사용자 정보와 함께 주문 내역을 관리할 수 있습니다.  
+![마이페이지](https://github.com/user-attachments/assets/84d8e3ed-d2fc-4128-9ded-afe3fd854904)  
+- **주문 내역**: 사용자는 이전에 주문한 내역을 조회하고, 상태를 확인할 수 있습니다.  
+![주문내](https://github.com/user-attachments/assets/ebe49d71-9747-42be-83e0-d6158f9f42f3)
+
+---
   
-3. **장바구니 및 결제**
+5. **장바구니**
+장바구니는 쇼핑몰메인페이지에서 상품을 선택한후에 장바구니에 담으면됨 이거는 순서가 물품을선택하고 장바구니에담으면 
+![스크린샷 2024-11-09 134213](https://github.com/user-attachments/assets/e9b4ddad-598c-48f9-86a9-3fb30f59ba7b)
+장바구니 카운트가 1오르고
+![스크린샷 2024-11-09 134225](https://github.com/user-attachments/assets/7ecbea43-8953-4f41-83f8-6723771e2694)
+여기서 사이즈를 선택하고
+![스크린샷 2024-11-09 134230](https://github.com/user-attachments/assets/b023a705-f05b-4aba-af3e-960d82d9035a)
+여기서 상세정보를 입력하고
+![스크린샷 2024-11-09 134245](https://github.com/user-attachments/assets/597f73cf-f4e8-44d9-8380-dd5afb6b041e)
+마이페이지에 주문내역에서확인이가능하다
+![스크린샷 2024-11-09 134408](https://github.com/user-attachments/assets/f5ab5163-1d87-45de-b5c5-fa45510cfd39)
+여기서는 jpa와 쿼리디에스엘을사용해서 정보를보여주고 받아온정보를 분할해서 데이터베이스에 저장하는방식으로했습니다
 
 
-4. **주문 관리**  
+
+6. **주문 관리**  
 
 
 
