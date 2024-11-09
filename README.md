@@ -42,11 +42,10 @@
    이 페이지에서는 사용자가 아이디와 비밀번호로 로그인할 수 있습니다.
    로그인 폼은 action="/doLogin"과 method="post"로 설정되어 있어, Spring Security의 loginProcessingUrl("/doLogin")과 연동됩니다. 사용자가 입력한 아이디와 비밀번호는 서버로 전송되어 인증 처리를 받게 됩니다
 
-(https://github.com/user-attachments/assets/6beeeb5d-8beb-4cbb-bbab-a3fa8013535d)
- 3. 회원가입  
-EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
+ 2. **회원가입**  
+   EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
 
-  **1. 일반 이메일 회원가입**  
+  (1). 일반 이메일 회원가입**  
       사용자는 이메일과 비밀번호를 입력하여 일반적인 방식으로 회원가입할 수 있습니다. 이 방식은 **이메일 인증**을 통해 보안을 강화하며, 인증된 이메일만 회원가입이 완료됩니다.  
   
       ![회원가입페이지](https://github.com/user-attachments/assets/6beeeb5d-8beb-4cbb-bbab-a3fa8013535d)
@@ -63,7 +62,7 @@ EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
       ![이메일인증확인](https://github.com/user-attachments/assets/9afd1a27-cf5a-481b-9273-41d5f24b17d9)  
       코드가 올바르게 입력되면, **이메일 인증이 성공적으로 완료**됩니다.  
   
-  **2. 구글 계정 연동**  
+  (2). 구글 계정 연동**  
   
       사용자는 **구글 OAuth2 인증**을 통해 구글 계정으로 간편하게 회원가입할 수 있습니다. 이를 통해 별도의 비밀번호 설정 없이 빠르고 안전하게 인증할 수 있습니다.  
       
