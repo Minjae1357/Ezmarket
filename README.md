@@ -36,17 +36,53 @@
 ---
 
 ## 💡 주요 기능
-1. **사용자 로그인 페이지**  
-   ![로그인페이지](https://github.com/user-attachments/assets/3ec23d07-a3d4-471e-9b20-367b944a656b)
+아래와 같이 내용을 조금 더 정리하고 포맷을 깔끔하게 유지해 보았습니다:
 
-   이 페이지에서는 사용자가 아이디와 비밀번호로 로그인할 수 있습니다.
-   로그인 폼은 action="/doLogin"과 method="post"로 설정되어 있어, Spring Security의 loginProcessingUrl("/doLogin")과 연동됩니다. 사용자가 입력한 아이디와 비밀번호는 서버로 전송되어 인증 처리를 받게 됩니다
+---
 
+### 1. **사용자 로그인 페이지**  
+![로그인페이지](https://github.com/user-attachments/assets/3ec23d07-a3d4-471e-9b20-367b944a656b)  
+
+이 페이지에서는 사용자가 아이디와 비밀번호로 로그인할 수 있습니다. 로그인 폼은 `action="/doLogin"`과 `method="post"`로 설정되어 있으며, Spring Security의 `loginProcessingUrl("/doLogin")`과 연동됩니다. 사용자가 입력한 아이디와 비밀번호는 서버로 전송되어 인증 처리를 받습니다.
+
+로그인 시 **`master`**라는 이름의 사용자가(Admin 권한을 가진 사용자) 로그인하면 **관리자 페이지**로 이동하며, 일반 사용자는 **상품 메인 페이지**로 리다이렉트됩니다. 이 처리는 **Spring Security의 Custom Success Handler**를 통해 관리됩니다.
+
+#### CustomAuthenticationSuccessHandler 예시:
+```java
+public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
+        // 사용자의 권한 체크
+        Collection<?> authorities = authentication.getAuthorities();
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.toString().equals("ROLE_ADMIN"));
+        System.out.println(authorities);
+        log.info("권한 : " + authorities);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal);
+        if (isAdmin) {
+            // 관리자 권한을 가진 사용자일 경우 관리자 페이지로 리다이렉트
+            response.sendRedirect("/admin/dashboard");
+        } else {
+            // 일반 사용자일 경우 메인 페이지로 리다이렉트
+            response.sendRedirect("/main/menu");
+        }
+    }
+}
+```
+
+### 관리 페이지  
+![관리자 데시보드](https://github.com/user-attachments/assets/b2c61aa8-ada6-4f97-a11e-498b731335ab)  
+
+### 일반 사용자 메인 페이지  
+![일반메인페이지지](https://github.com/user-attachments/assets/e68db682-3ddb-418d-8ab7-efc9f60b3cf8)  
+
+---
+   
  2. **회원가입**  
    EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
-
-  블록이 제거된 형태로 아래에 정리해 드리겠습니다. 들여쓰기를 조정하고 불필요한 공백을 제거하여 텍스트가 블록으로 처리되지 않도록 수정하였습니다.
-
 ---
 
    ### (1). 일반 이메일 회원가입  
@@ -71,22 +107,17 @@
    로그인 폼에서 '구글 로그인' 버튼을 클릭하면, **구글 로그인 화면**이 나타나며, 사용자는 구글 계정으로 인증을 진행할 수 있습니다.
    
    ![구글로그인으로 회원가입들어가기](https://github.com/user-attachments/assets/ca2dd108-6184-4124-ab50-df3ccc303c28)  
-   구글 계정으로 인증이 완료되면, 이메일 인증 과정 없이 구글 계정이 EzMarket과 연동되어 회원가입이 완료됩니다.
+   구글 계정으로 인증이 완료되면, 이메일 인증 과정 없이 구글 계정이 EzMarket과 연동되어 이메일인증이 완료됩니다.
 
 ---
-
-
-
-   
-
   
-4. **장바구니 및 결제**  
+3. **장바구니 및 결제**
 
 
-5. **주문 관리**  
+4. **주문 관리**  
 
 
-6. **검색 및 추천 시스템**  
+
 
 ---
 
