@@ -107,7 +107,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
    로그인 폼에서 '구글 로그인' 버튼을 클릭하면, **구글 로그인 화면**이 나타나며, 사용자는 구글 계정으로 인증을 진행할 수 있습니다.
    
    ![구글로그인으로 회원가입들어가기](https://github.com/user-attachments/assets/ca2dd108-6184-4124-ab50-df3ccc303c28)  
-   구글 계정으로 인증이 완료되면, 이메일 인증 과정 없이 구글 계정이 EzMarket과 연동되어 이메일인증이 완료됩니다.
+   구글 계정으로 인증이 완료되면 EzMarket과 연동되어 이메일인증이 완료됩니다.
 
 ---
   
