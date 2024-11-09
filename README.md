@@ -18,7 +18,7 @@
 7. [문의](#문의)
 
 ---
- 📝 ## 프로젝트 개요
+ ## 프로젝트 개요
 - **기간**: 2024.3.8 ~ 2024.5.8
 - **목표**: 쇼핑몰을 판매 관리 하는것을 목표로 만들었습니다.
 - **역할**: 백엔드/프론트
@@ -26,7 +26,7 @@
 
 ---
 
-## 🛠️ 기술 스택
+## 기술 스택
 - **프론트엔드**: JavaScript, HTML, CSS, jQuery, JSP, Thymeleaf
 - **백엔드**: Java, Spring Boot, JPA, Spring Data JPA, QueryDSL, Spring Security
 - **데이터베이스**: Oracle
@@ -34,7 +34,7 @@
 
 ---
 
-## 💡 주요 기능
+## 주요 기능
 아래와 같이 내용을 조금 더 정리하고 포맷을 깔끔하게 유지해 보았습니다:
 
 ---
@@ -120,7 +120,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 ---
 
-## 📧 문의
+## 문의
 - **이름**: [정민재]
 - **이메일**: [vovodla74@gmail.com]
 - **GitHub**: [https://github.com/Minjae1357]
