@@ -38,20 +38,23 @@
 ## 💡 주요 기능
 1. **사용자 로그인 페이지**  
    ![로그인페이지](https://github.com/user-attachments/assets/3ec23d07-a3d4-471e-9b20-367b944a656b)
+
    이 페이지에서는 사용자가 아이디와 비밀번호로 로그인할 수 있습니다.
    로그인 폼은 action="/doLogin"과 method="post"로 설정되어 있어, Spring Security의 loginProcessingUrl("/doLogin")과 연동됩니다. 사용자가 입력한 아이디와 비밀번호는 서버로 전송되어 인증 처리를 받게 됩니다
 
-
- 2. 회원가입  
+(https://github.com/user-attachments/assets/6beeeb5d-8beb-4cbb-bbab-a3fa8013535d)
+ 3. 회원가입  
 EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
 
   **1. 일반 이메일 회원가입**  
       사용자는 이메일과 비밀번호를 입력하여 일반적인 방식으로 회원가입할 수 있습니다. 이 방식은 **이메일 인증**을 통해 보안을 강화하며, 인증된 이메일만 회원가입이 완료됩니다.  
   
-      ![회원가입페이지](https://github.com/user-attachments/assets/6beeeb5d-8beb-4cbb-bbab-a3fa8013535d)  
+      ![회원가입페이지](https://github.com/user-attachments/assets/6beeeb5d-8beb-4cbb-bbab-a3fa8013535d)
+      
       사용자가 이메일을 입력하고 '이메일 확인' 버튼을 클릭하면, 아래와 같이 **코드 입력 필드와 확인 버튼**이 나타납니다.  
       
       ![회원가입용이메일넣기](https://github.com/user-attachments/assets/ec2a4239-a3a2-4a92-a8b7-31f896dd59cc)  
+      
       이메일로 발송된 인증 코드를 확인한 후, EzMarket 회원가입 페이지에 돌아와 코드를 입력하면 **이메일 인증이 완료**됩니다.  
       
       ![네이버인증코드](https://github.com/user-attachments/assets/21e22912-e2b9-41ae-aae2-2c267cc49d36)  
