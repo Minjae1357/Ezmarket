@@ -42,7 +42,7 @@
    로그인 폼은 action="/doLogin"과 method="post"로 설정되어 있어, Spring Security의 loginProcessingUrl("/doLogin")과 연동됩니다. 사용자가 입력한 아이디와 비밀번호는 서버로 전송되어 인증 처리를 받게 됩니다
 
 
-### 2. 회원가입  
+ 2. 회원가입  
 EzMarket에서는 두 가지 방식으로 회원가입이 가능합니다:
 
   **1. 일반 이메일 회원가입**  
